@@ -1,14 +1,27 @@
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
 }
 
-enum Locale { EN, DE, FR, ES, IT, JA, KO }
-enum Status { DRAFT, STAGED, PUBLISHED }
+enum Locale {
+  EN
+  DE
+  FR
+  ES
+  IT
+  JA
+  KO
+}
+
+enum Status {
+  DRAFT
+  STAGED
+  PUBLISHED
+}
 
 model Category {
   id        String   @id @default(cuid())
@@ -19,12 +32,13 @@ model Category {
   updatedAt DateTime @updatedAt
 
   translations CategoryTranslation[]
+  reports      Report[] // Added inverse relation
 
-  @@index ([slug, parentId])
+  @@index([slug, parentId])
 }
 
 model CategoryTranslation {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   categoryId  String
   locale      Locale
   name        String
@@ -34,53 +48,54 @@ model CategoryTranslation {
 
   category Category @relation(fields: [categoryId], references: [id])
 
-  @@unique ([categoryId, locale])
-  @@index ([locale, name])
+  @@unique([categoryId, locale])
+  @@index([locale, name])
 }
 
 model Report {
-  id          String   @id @default(cuid())
-  slug        String   @unique
+  id          String    @id @default(cuid())
+  slug        String    @unique
   categoryId  String
-  status      Status   @default(DRAFT)
+  status      Status    @default(DRAFT)
   publishedAt DateTime?
   price       Float?
   pages       Int?
-  featured    Boolean? @default(false)
+  featured    Boolean?  @default(false)
   heroImage   String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
-  translations ReportTranslation[]
+    translations ReportTranslation[]
+  category    Category @relation(fields: [categoryId], references: [id]) // Added relation
 
-  @@index ([slug, categoryId, publishedAt])
+  @@index([slug, categoryId, publishedAt])
 }
 
 model ReportTranslation {
-  id         String   @id @default(cuid())
-  reportId   String
-  locale     Locale
-  title      String
-  summary    String
-  bodyHtml   String?
-  seoTitle   String?
-  seoDesc    String?
+  id           String  @id @default(cuid())
+  reportId     String
+  locale       Locale
+  title        String
+  summary      String
+  bodyHtml     String?
+  seoTitle     String?
+  seoDesc      String?
   keywordsJson String?
 
   report Report @relation(fields: [reportId], references: [id])
 
-  @@unique ([reportId, locale])
-  @@index ([locale, title])
+  @@unique([reportId, locale])
+  @@index([locale, title])
 }
 
 model RedirectMap {
-  id        String  @id @default(cuid())
-  oldPath   String
-  newPath   String
-  locale    Locale?
-  httpStatus Int    @default(301)
+  id         String  @id @default(cuid())
+  oldPath    String
+  newPath    String
+  locale     Locale?
+  httpStatus Int     @default(301)
 
-  @@unique ([oldPath, locale])
+  @@unique([oldPath, locale])
 }
 
 model MediaAsset {
@@ -97,7 +112,7 @@ model User {
   id           String  @id @default(cuid())
   email        String  @unique
   name         String?
-  role         String  // Admin, Editor, Viewer
+  role         String // Admin, Editor, Viewer
   passwordHash String?
 }
 
@@ -108,7 +123,7 @@ model AIGenerationQueue {
   locale      Locale
   prompt      String
   outputJson  String?
-  status      String   // PENDING_REVIEW, APPROVED, REJECTED, ERROR
+  status      String // PENDING_REVIEW, APPROVED, REJECTED, ERROR
   tokenCount  Int?
   costCents   Float?
   createdAt   DateTime @default(now())

@@ -19,5 +19,43 @@
   "Footer": {
     "about": "Über uns",
     "contact": "Kontaktiere uns"
+  },
+  "HomePage": {
+    "title": "Startseite",
+    "categoriesSectionTitle": "Kategorien",
+    "featuredReportsSectionTitle": "Ausgewählte Berichte"
+  },
+  "SignInPage": {
+    "signInTitle": "Anmelden",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "Ihre E-Mail",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Ihr Passwort",
+    "signInButton": "Anmelden"
+  },
+  "CreateUserPage": {
+    "createUserTitle": "Neuen Benutzer erstellen",
+    "emailLabel": "E-Mail",
+    "emailPlaceholder": "E-Mail des Benutzers",
+    "passwordLabel": "Passwort",
+    "passwordPlaceholder": "Passwort des Benutzers",
+    "roleLabel": "Rolle",
+    "roleViewer": "Betrachter",
+    "roleEditor": "Redakteur",
+    "roleAdmin": "Administrator",
+    "createUserButton": "Benutzer erstellen",
+    "userCreatedSuccess": "Benutzer erfolgreich erstellt!",
+    "userCreationError": "Fehler beim Erstellen des Benutzers."
+  },
+  "AIStagingPage": {
+    "loading": "KI-Warteschlange wird geladen...",
+    "error": "Fehler beim Laden der KI-Warteschlange",
+    "aiStagingTitle": "KI-Inhaltsbereitstellung",
+    "noItems": "Keine KI-Elemente in der Warteschlange zur Überprüfung.",
+    "prompt": "Eingabeaufforderung",
+    "locale": "Gebietsschema",
+    "status": "Status",
+    "approveButton": "Genehmigen",
+    "rejectButton": "Ablehnen"
   }
 }

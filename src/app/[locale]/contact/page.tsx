@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Container, Section, TextInput, TextArea, Button, FormRow, ValidationMessage } from '@/components';
 import { useLocale } from 'next-intl';
 import { createLead } from '@/lib/data/adapter';
+import { Locale } from '@prisma/client';
 
 
 
@@ -38,7 +39,7 @@ export default function ContactPage() {
 
     try {
       // Use the adapter directly for client-side lead creation
-      const res = await createLead({ ...formData, locale });
+      const res = await createLead({ ...formData, locale: locale.toUpperCase() as keyof typeof Locale });
 
       if (res.id) {
         setSuccess(true);

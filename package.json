@@ -5,22 +5,31 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/runlog.cjs \"Dev start\" && next dev -p 3000",
-    "build": "cross-env DEMO_NO_DB=true node scripts/prebuild-warn.cjs && node scripts/runlog.cjs \"Build start\" && next build",
+    "build": "node scripts/prebuild-warn.cjs && node scripts/runlog.cjs \"Build start\" && cross-env DEMO_NO_DB= next build",
     "start": "node scripts/runlog.cjs \"Prod start\" && next start -p 3000",
     "typecheck": "tsc -b apps/web --pretty",
     "lint": "eslint .",
-    "smoke": "node scripts/smoke.js"
+    "smoke": "node scripts/smoke.js",
+    "db:format": "dotenv -e .env.local -- pnpm dlx prisma format --schema packages/database/prisma/schema.prisma",
+    "db:validate": "dotenv -e .env.local -- pnpm dlx prisma validate --schema packages/database/prisma/schema.prisma",
+    "db:migrate-dev": "dotenv -e .env.local -- pnpm dlx prisma migrate dev --name init --schema packages/database/prisma/schema.prisma",
+    "db:seed": "dotenv -e .env.local -- pnpm dlx prisma db seed --schema packages/database/prisma/schema.prisma",
+    "db:reset-and-seed": "dotenv -e .env.local -- pnpm dlx prisma migrate reset --schema packages/database/prisma/schema.prisma && dotenv -e .env.local -- pnpm dlx prisma db seed --schema packages/database/prisma/schema.prisma"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@auth/prisma-adapter": "2.10.0",
     "@faker-js/faker": "^8.4.1",
+    "bcryptjs": "^3.0.2",
     "dotenv-cli": "^7.4.2",
     "lru-cache": "^10.0.2",
     "next": "^14.2.4",
+    "next-auth": "4.24.11",
     "next-intl": "^3.15.4",
+    "openai": "^5.12.2",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "schema-dts": "^1.1.5"

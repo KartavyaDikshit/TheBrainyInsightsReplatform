@@ -19,5 +19,32 @@
   "Footer": {
     "about": "About Us",
     "contact": "Contact Us"
+  },
+  "HomePage": {
+    "title": "Home Page",
+    "categoriesSectionTitle": "Categories",
+    "featuredReportsSectionTitle": "Featured Reports"
+  },
+  "SignInPage": {
+    "signInTitle": "Sign In",
+    "emailLabel": "Email",
+    "emailPlaceholder": "Your email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "Your password",
+    "signInButton": "Sign In"
+  },
+  "CreateUserPage": {
+    "createUserTitle": "Create New User",
+    "emailLabel": "Email",
+    "emailPlaceholder": "User's email",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "User's password",
+    "roleLabel": "Role",
+    "roleViewer": "Viewer",
+    "roleEditor": "Editor",
+    "roleAdmin": "Admin",
+    "createUserButton": "Create User",
+    "userCreatedSuccess": "User created successfully!",
+    "userCreationError": "Error creating user."
   }
 }

@@ -1,5 +1,8 @@
-import * as memory from './memory';
-export type { Category, Report } from './memory';
+import { getPrisma } from './db';
+import { toLocaleEnum } from '../../../packages/lib/src/utils';
+import { Lead } from '@prisma/client'; // Import Locale enum
+
+const prisma = getPrisma();
 
 // Define the transformed types
 export interface TransformedCategory {
@@ -13,7 +16,7 @@ export interface TransformedReport {
   id: string;
   slug: string;
   categorySlug: string;
-  featured?: boolean;
+  featured: boolean | null; // Changed from featured?: boolean;
   title: string;
   summary: string;
   bodyHtml: string;
@@ -22,119 +25,199 @@ export interface TransformedReport {
   keywords: string;
 }
 
-const DEMO_NO_DB = process.env.DEMO_NO_DB === 'true';
-
-async function ensureDemoMode() {
-    if (!DEMO_NO_DB) {
-        throw new Error('Database not enabled. Set DEMO_NO_DB=true in your environment.');
+function parseKeywords(keywordsJson: string | null): string {
+  if (!keywordsJson) return '';
+  try {
+    const keywordsArray = JSON.parse(keywordsJson);
+    if (Array.isArray(keywordsArray)) {
+      return keywordsArray.join(', ');
     }
-    await memory.loadStubsOnce();
+  } catch (e) {
+    console.error('Error parsing keywordsJson:', e);
+  }
+  return '';
 }
+
+
 
 export function getConfig() {
     return {
-        demo: DEMO_NO_DB,
         locales: (process.env.LOCALES || 'en').split(','),
         defaultLocale: process.env.DEFAULT_LOCALE || 'en',
     };
 }
 
 export async function listCategories(locale: string): Promise<TransformedCategory[]> {
-    await ensureDemoMode();
-    const categories = memory.getCategories();
+    const categories = await prisma.category.findMany({
+        include: {
+            translations: {
+                where: {
+                    OR: [
+                        { locale: toLocaleEnum(locale) },
+                        { locale: toLocaleEnum('en') } // Fallback to English if specific locale not found
+                    ]
+                }
+            }
+        }
+    });
     return categories.map(c => ({
         id: c.id,
         slug: c.slug,
-        name: c.translations[locale]?.name || c.translations.en.name,
-        description: c.translations[locale]?.description || c.translations.en.description,
+        name: c.translations.find(t => t.locale === (toLocaleEnum(locale)))?.name || c.translations.find(t => t.locale === toLocaleEnum('en'))?.name || '',
+        description: c.translations.find(t => t.locale === (toLocaleEnum(locale)))?.description || c.translations.find(t => t.locale === toLocaleEnum('en'))?.description || '',
     }));
 }
 
 export async function getCategoryBySlug(slug: string, locale: string): Promise<TransformedCategory | undefined> {
-    await ensureDemoMode();
-    const category = memory.getCategories().find(c => c.slug === slug);
+    const category = await prisma.category.findUnique({
+        where: { slug: slug },
+        include: {
+            translations: {
+                where: {
+                    OR: [
+                        { locale: toLocaleEnum(locale) },
+                        { locale: toLocaleEnum('en') }
+                    ]
+                }
+            }
+        }
+    });
     if (!category) return undefined;
     return {
         id: category.id,
         slug: category.slug,
-        name: category.translations[locale]?.name || category.translations.en.name,
-        description: category.translations[locale]?.description || category.translations.en.description,
+        name: category.translations.find(t => t.locale === (toLocaleEnum(locale)))?.name || category.translations.find(t => t.locale === toLocaleEnum('en'))?.name || '',
+        description: category.translations.find(t => t.locale === (toLocaleEnum(locale)))?.description || category.translations.find(t => t.locale === toLocaleEnum('en'))?.description || '',
     };
 }
 
 export async function listReports({ locale, categorySlug, page = 1, size = 12, featured }: { locale: string; categorySlug?: string; page?: number; size?: number; featured?: boolean }): Promise<TransformedReport[]> {
-    await ensureDemoMode();
-    let reports = memory.getReports();
+    const where: any = {};
     if (categorySlug) {
-        reports = reports.filter(r => r.categorySlug === categorySlug);
+        where.categorySlug = categorySlug;
     }
     if (featured !== undefined) {
-        reports = reports.filter(r => r.featured === featured);
+        where.featured = featured;
     }
-    const start = (page - 1) * size;
-    const end = start + size;
-    return reports.slice(start, end).map(r => ({
+
+    const reports = await prisma.report.findMany({
+        where,
+        skip: (page - 1) * size,
+        take: size,
+        include: {
+            translations: {
+                where: {
+                    OR: [
+                        { locale: toLocaleEnum(locale) },
+                        { locale: toLocaleEnum('en') }
+                    ]
+                }
+            },
+            category: true // Explicitly include the category
+        }
+    });
+
+    return reports.map(r => ({
         id: r.id,
         slug: r.slug,
-        categorySlug: r.categorySlug,
+        categorySlug: r.category.slug, // Access from r.category.slug
         featured: r.featured,
-        title: r.translations[locale]?.title || r.translations.en.title,
-        summary: r.translations[locale]?.summary || r.translations.en.summary,
-        bodyHtml: r.translations[locale]?.bodyHtml || r.translations.en.bodyHtml,
-        seoTitle: r.translations[locale]?.seoTitle || r.translations.en.seoTitle,
-        seoDesc: r.translations[locale]?.seoDesc || r.translations.en.seoDesc,
-        keywords: r.translations[locale]?.keywords || r.translations.en.keywords,
+        title: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.title || r.translations.find(t => t.locale === toLocaleEnum('en'))?.title || '',
+        summary: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.summary || r.translations.find(t => t.locale === toLocaleEnum('en'))?.summary || '',
+        bodyHtml: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.bodyHtml || r.translations.find(t => t.locale === toLocaleEnum('en'))?.bodyHtml || '',
+        seoTitle: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoTitle || r.translations.find(t => t.locale === toLocaleEnum('en'))?.seoTitle || '',
+        seoDesc: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoDesc || r.translations.find(t => t.locale === toLocaleEnum('en'))?.seoDesc || '',
+        keywords: parseKeywords(r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.keywordsJson ?? null) || parseKeywords(r.translations.find(t => t.locale === toLocaleEnum('en'))?.keywordsJson ?? null) || '',
     }));
 }
 
 export async function getReportBySlug(slug: string, locale: string): Promise<TransformedReport | undefined> {
-    await ensureDemoMode();
-    const report = memory.getReports().find(r => r.slug === slug);
+    const report = await prisma.report.findUnique({
+        where: { slug: slug },
+        include: {
+            translations: {
+                where: {
+                    OR: [
+                        { locale: toLocaleEnum(locale) },
+                        { locale: toLocaleEnum('en') }
+                    ]
+                }
+            },
+            category: true // Explicitly include the category
+        }
+    });
     if (!report) return undefined;
     return {
         id: report.id,
         slug: report.slug,
-        categorySlug: report.categorySlug,
+        categorySlug: report.category.slug, // Access from report.category.slug
         featured: report.featured,
-        title: report.translations[locale]?.title || report.translations.en.title,
-        summary: report.translations[locale]?.summary || report.translations.en.summary,
-        bodyHtml: report.translations[locale]?.bodyHtml || report.translations.en.bodyHtml,
-        seoTitle: report.translations[locale]?.seoTitle || report.translations.en.seoTitle,
-        seoDesc: report.translations[locale]?.seoDesc || report.translations.en.seoDesc,
-        keywords: report.translations[locale]?.keywords || report.translations.en.keywords,
+        title: report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.title || report.translations.find(t => t.locale === toLocaleEnum('en'))?.title || '',
+        summary: report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.summary || report.translations.find(t => t.locale === toLocaleEnum('en'))?.summary || '',
+        bodyHtml: report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.bodyHtml || report.translations.find(t => t.locale === toLocaleEnum('en'))?.bodyHtml || '',
+        seoTitle: report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoTitle || report.translations.find(t => t.locale === toLocaleEnum('en'))?.seoTitle || '',
+        seoDesc: report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoDesc || report.translations.find(t => t.locale === toLocaleEnum('en'))?.seoDesc || '',
+        keywords: parseKeywords(report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.keywordsJson ?? null) || parseKeywords(report.translations.find(t => t.locale === toLocaleEnum('en'))?.keywordsJson ?? null) || '',
     };
 }
 
 export async function search({ q, locale, page = 1, size = 10 }: { q: string; locale: string; page?: number; size?: number }): Promise<TransformedReport[]> {
-    await ensureDemoMode();
-    const reports = memory.getReports().filter(r => 
-        (r.translations[locale]?.title || r.translations.en.title).toLowerCase().includes(q.toLowerCase())
-    );
-    const start = (page - 1) * size;
-    const end = start + size;
-    return reports.slice(start, end).map(r => ({
+    const reports = await prisma.report.findMany({
+        where: {
+            translations: {
+                some: {
+                    OR: [
+                        { title: { contains: q }, locale: toLocaleEnum(locale) },
+                        { title: { contains: q }, locale: toLocaleEnum('en') }
+                    ]
+                }
+            }
+        },
+        skip: (page - 1) * size,
+        take: size,
+        include: {
+            translations: {
+                where: {
+                    OR: [
+                        { locale: toLocaleEnum(locale) },
+                        { locale: toLocaleEnum('en') }
+                    ]
+                }
+            },
+            category: true // Explicitly include the category
+        }
+    });
+
+    return reports.map(r => ({
         id: r.id,
         slug: r.slug,
-        categorySlug: r.categorySlug,
+        categorySlug: r.category.slug, // Access from r.category.slug
         featured: r.featured,
-        title: r.translations[locale]?.title || r.translations.en.title,
-        summary: r.translations[locale]?.summary || r.translations.en.summary,
-        bodyHtml: r.translations[locale]?.bodyHtml || r.translations.en.bodyHtml,
-        seoTitle: r.translations[locale]?.seoTitle || r.translations.en.seoTitle,
-        seoDesc: r.translations[locale]?.seoDesc || r.translations.en.seoDesc,
-        keywords: r.translations[locale]?.keywords || r.translations.en.keywords,
+        title: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.title || r.translations.find(t => t.locale === toLocaleEnum('en'))?.title || '',
+                summary: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.summary || r.translations.find(t => t.locale === toLocaleEnum('en'))?.summary || '',
+        bodyHtml: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.bodyHtml || r.translations.find(t => t.locale === toLocaleEnum('en'))?.bodyHtml || '',
+        seoTitle: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoTitle || r.translations.find(t => t.locale === toLocaleEnum('en'))?.seoTitle || '',
+        seoDesc: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoDesc || r.translations.find(t => t.locale === toLocaleEnum('en'))?.seoDesc || '',
+        keywords: parseKeywords(r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.keywordsJson ?? null) || parseKeywords(r.translations.find(t => t.locale === toLocaleEnum('en'))?.keywordsJson ?? null) || '',
     }));
 }
 
 export async function listRedirects() {
-    await ensureDemoMode();
-    return memory.getRedirects();
+    return prisma.redirectMap.findMany();
 }
 
 export async function listSitemapEntries() {
-    await ensureDemoMode();
-    const reports = memory.getReports();
-    const categories = memory.getCategories();
+    const reports = await prisma.report.findMany({
+        include: {
+            translations: true, // Include translations for sitemap generation
+            category: true // Include category for sitemap generation
+        }
+    });
+    const categories = await prisma.category.findMany({
+        include: {
+            translations: true // Include translations for sitemap generation
+        }
+    });
     const locales = getConfig().locales;
     const baseUrl = process.env.BASE_URL || 'http://localhost:3000';
 
@@ -143,7 +226,7 @@ export async function listSitemapEntries() {
     reports.forEach(report => {
         const alternates: { [key: string]: string } = {};
         locales.forEach(locale => {
-            alternates[locale] = `${baseUrl}/${locale}/reports/${report.slug}`;
+            alternates[toLocaleEnum(locale)] = `${baseUrl}/${locale}/reports/${report.slug}`;
         });
         entries.push({
             url: `${baseUrl}/en/reports/${report.slug}`,
@@ -155,7 +238,7 @@ export async function listSitemapEntries() {
     categories.forEach(category => {
         const alternates: { [key: string]: string } = {};
         locales.forEach(locale => {
-            alternates[locale] = `${baseUrl}/${locale}/categories/${category.slug}`;
+            alternates[toLocaleEnum(locale)] = `${baseUrl}/${locale}/categories/${category.slug}`;
         });
         entries.push({
             url: `${baseUrl}/en/categories/${category.slug}`,
@@ -167,27 +250,28 @@ export async function listSitemapEntries() {
     return entries;
 }
 
-export async function createLead(leadData: Omit<memory.Lead, 'id'>) {
-    await ensureDemoMode();
-    return memory.addLead(leadData);
+export async function createLead(leadData: Omit<Lead, 'id' | 'createdAt'>) {
+    return prisma.lead.create({ data: leadData });
 }
 
 export async function listLeads() {
-    await ensureDemoMode();
-    return memory.getLeads();
+    return prisma.lead.findMany();
 }
 
 export async function listAIQueue() {
-    await ensureDemoMode();
-    return memory.getAIQueue();
+    return prisma.aIGenerationQueue.findMany();
 }
 
 export async function approveAIItem(id: string) {
-    await ensureDemoMode();
-    return memory.updateAIQueueItem(id, 'APPROVED');
+    return prisma.aIGenerationQueue.update({
+        where: { id: id },
+        data: { status: 'APPROVED' }
+    });
 }
 
 export async function rejectAIItem(id: string) {
-    await ensureDemoMode();
-    return memory.updateAIQueueItem(id, 'REJECTED');
+    return prisma.aIGenerationQueue.update({
+        where: { id: id },
+        data: { status: 'REJECTED' }
+    });
 }

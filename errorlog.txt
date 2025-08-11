@@ -1,0 +1,531 @@
+PS C:\Users\User\TheBrainyInsightsReplatform> npm run start
+
+> thebrainyinsights-replatform@1.0.0 start
+> node scripts/runlog.cjs "Prod start" && next start -p 3000
+
+  ▲ Next.js 14.2.31
+  - Local:        http://localhost:3000
+
+ ✓ Starting...
+ ✓ Ready in 907ms
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+l [Error]: MISSING_MESSAGE: HomePage (fr)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48823
+    at t.createBaseTranslator (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48873)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46905
+    at t.eX (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46957)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:1997
+    at async d (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:2152) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'HomePage (fr)'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+l [Error]: MISSING_MESSAGE: HomePage (es)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48823
+    at t.createBaseTranslator (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48873)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46905
+    at t.eX (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46957)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:1997
+    at async d (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:2152) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'HomePage (es)'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+l [Error]: MISSING_MESSAGE: HomePage (it)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48823
+    at t.createBaseTranslator (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48873)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46905
+    at t.eX (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46957)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:1997
+    at async d (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:2152) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'HomePage (it)'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+l [Error]: MISSING_MESSAGE: HomePage (ja)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48823
+    at t.createBaseTranslator (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48873)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46905
+    at t.eX (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46957)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:1997
+    at async d (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:2152) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'HomePage (ja)'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+l [Error]: MISSING_MESSAGE: HomePage (ko)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48823
+    at t.createBaseTranslator (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:48873)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46905
+    at t.eX (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46957)
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:1997
+    at async d (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\page.js:1:2152) {
+  code: 'MISSING_MESSAGE',
+  originalMessage: 'HomePage (ko)'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+Error: Cannot find module './undefined.json'
+    at C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:319
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7882
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45207
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:45959
+    at async C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\8490.js:1:46291
+    at async c (C:\Users\User\TheBrainyInsightsReplatform\.next\server\chunks\3814.js:1:7208) {
+  code: 'MODULE_NOT_FOUND',
+  digest: '1609735555'
+}
+ ⨯ Error: NextAuth not initialized during build.
+    at GET (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2599)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at GET (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2599)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at GET (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2599)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at GET (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2599)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at GET (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2599)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at GET (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2599)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at GET (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2599)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+ ⨯ Error: NextAuth not initialized during build.
+    at POST (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\api\auth\[...nextauth]\route.js:1:2664)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\next-server\app-route.runtime.prod.js:6:38417
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:140:36
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
+    at NoopTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18093)
+    at ProxyTracer.startActiveSpan (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:18854)
+    at C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\server\lib\trace\tracer.js:122:103
+    at NoopContextManager.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:7062)
+    at ContextAPI.with (C:\Users\User\TheBrainyInsightsReplatform\node_modules\.pnpm\next@14.2.31_react-dom@18.3.1_react@18.3.1__react@18.3.1\node_modules\next\dist\compiled\@opentelemetry\api\index.js:1:518)
