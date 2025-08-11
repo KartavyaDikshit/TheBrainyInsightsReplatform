@@ -1,0 +1,23 @@
+{
+  "Index": {
+    "title": "Marktforschungsberichte & Beratung"
+  },
+  "Reports": {
+    "title": "Alle Marktforschungsberichte"
+  },
+  "Categories": {
+    "title": "Alle Berichtskategorien"
+  },
+  "Search": {
+    "title": "Berichte suchen"
+  },
+  "Header": {
+    "reports": "Berichte",
+    "categories": "Kategorien",
+    "contact": "Kontaktiere uns"
+  },
+  "Footer": {
+    "about": "Über uns",
+    "contact": "Kontaktiere uns"
+  }
+}

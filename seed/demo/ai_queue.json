@@ -1,0 +1,32 @@
+[
+  {
+    "id": "ai-1",
+    "target": "report/rep-1",
+    "locale": "es",
+    "status": "PENDING_REVIEW",
+    "preview": {
+      "title": "Mercado mundial de chipsets de IA, 2025-2030",
+      "summary": "Se espera que el mercado mundial de chipsets de IA crezca a una tasa compuesta anual del 35% de 2025 a 2030."
+    }
+  },
+  {
+    "id": "ai-2",
+    "target": "report/rep-2",
+    "locale": "it",
+    "status": "PENDING_REVIEW",
+    "preview": {
+      "title": "Crescita e tendenze del mercato della telemedicina",
+      "summary": "Si prevede che il mercato della telemedicina raggiungerà i 130,5 miliardi di dollari entro il 2025."
+    }
+  },
+  {
+    "id": "ai-3",
+    "target": "category/energy",
+    "locale": "ja",
+    "status": "PENDING_REVIEW",
+    "preview": {
+        "name": "エネルギー",
+        "description": "エネルギーの未来"
+    }
+  }
+]

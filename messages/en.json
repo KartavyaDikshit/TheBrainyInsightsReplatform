@@ -1,0 +1,23 @@
+{
+  "Index": {
+    "title": "Market Research Reports & Consulting"
+  },
+  "Reports": {
+    "title": "All Market Research Reports"
+  },
+  "Categories": {
+    "title": "All Report Categories"
+  },
+  "Search": {
+    "title": "Search Reports"
+  },
+  "Header": {
+    "reports": "Reports",
+    "categories": "Categories",
+    "contact": "Contact Us"
+  },
+  "Footer": {
+    "about": "About Us",
+    "contact": "Contact Us"
+  }
+}

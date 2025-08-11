@@ -1,0 +1,23 @@
+{
+  "Index": {
+    "title": "市場調査レポートとコンサルティング"
+  },
+  "Reports": {
+    "title": "すべての市場調査レポート"
+  },
+  "Categories": {
+    "title": "すべてのレポートカテゴリ"
+  },
+  "Search": {
+    "title": "レポートの検索"
+  },
+  "Header": {
+    "reports": "レポート",
+    "categories": "カテゴリ",
+    "contact": "お問い合わせ"
+  },
+  "Footer": {
+    "about": "私たちに関しては",
+    "contact": "お問い合わせ"
+  }
+}

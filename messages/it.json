@@ -1,0 +1,23 @@
+{
+  "Index": {
+    "title": "Rapporti di ricerche di mercato e consulenza"
+  },
+  "Reports": {
+    "title": "Tutti i rapporti di ricerche di mercato"
+  },
+  "Categories": {
+    "title": "Tutte le categorie di rapporti"
+  },
+  "Search": {
+    "title": "Cerca rapporti"
+  },
+  "Header": {
+    "reports": "Rapporti",
+    "categories": "Categorie",
+    "contact": "Contattaci"
+  },
+  "Footer": {
+    "about": "Chi siamo",
+    "contact": "Contattaci"
+  }
+}

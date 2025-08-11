@@ -1,0 +1,23 @@
+{
+  "Index": {
+    "title": "Informes de investigación de mercado y consultoría"
+  },
+  "Reports": {
+    "title": "Todos los informes de investigación de mercado"
+  },
+  "Categories": {
+    "title": "Todas las categorías de informes"
+  },
+  "Search": {
+    "title": "Buscar informes"
+  },
+  "Header": {
+    "reports": "Informes",
+    "categories": "Categorías",
+    "contact": "Contáctenos"
+  },
+  "Footer": {
+    "about": "Sobre nosotros",
+    "contact": "Contáctenos"
+  }
+}

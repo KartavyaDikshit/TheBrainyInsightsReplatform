@@ -1,0 +1,80 @@
+[
+  {
+    "id": "technology",
+    "slug": "technology",
+    "translations": {
+      "en": { "name": "Technology", "description": "Latest trends in technology" },
+      "de": { "name": "Technologie", "description": "Neueste Technologietrends" },
+      "fr": { "name": "Technologie", "description": "Dernières tendances technologiques" },
+      "es": { "name": "Tecnología", "description": "Últimas tendencias en tecnología" },
+      "it": { "name": "Tecnologia", "description": "Ultime tendenze tecnologiche" },
+      "ja": { "name": "テクノロジー", "description": "テクノロジーの最新トレンド" },
+      "ko": { "name": "기술", "description": "기술의 최신 동향" }
+    }
+  },
+  {
+    "id": "healthcare",
+    "slug": "healthcare",
+    "translations": {
+        "en": { "name": "Healthcare", "description": "Innovations in healthcare" },
+        "de": { "name": "Gesundheitswesen", "description": "Innovationen im Gesundheitswesen" },
+        "fr": { "name": "Soins de santé", "description": "Innovations dans le domaine de la santé" },
+        "es": { "name": "Cuidado de la salud", "description": "Innovaciones en el cuidado de la salud" },
+        "it": { "name": "Assistenza sanitaria", "description": "Innovazioni nel settore sanitario" },
+        "ja": { "name": "ヘルスケア", "description": "ヘルスケアにおけるイノベーション" },
+        "ko": { "name": "보건 의료", "description": "의료 혁신" }
+    }
+  },
+  {
+    "id": "energy",
+    "slug": "energy",
+    "translations": {
+        "en": { "name": "Energy", "description": "The future of energy" },
+        "de": { "name": "Energie", "description": "Die Zukunft der Energie" },
+        "fr": { "name": "Énergie", "description": "L'avenir de l'énergie" },
+        "es": { "name": "Energía", "description": "El futuro de la energía" },
+        "it": { "name": "Energia", "description": "Il futuro dell'energia" },
+        "ja": { "name": "エネルギー", "description": "エネルギーの未来" },
+        "ko": { "name": "에너지", "description": "에너지의 미래" }
+    }
+  },
+  {
+    "id": "finance",
+    "slug": "finance",
+    "translations": {
+        "en": { "name": "Finance", "description": "Financial markets and trends" },
+        "de": { "name": "Finanzen", "description": "Finanzmärkte und -trends" },
+        "fr": { "name": "La finance", "description": "Marchés et tendances financiers" },
+        "es": { "name": "Finanzas", "description": "Mercados y tendencias financieras" },
+        "it": { "name": "Finanza", "description": "Mercati e tendenze finanziarie" },
+        "ja": { "name": "ファイナンス", "description": "金融市場と動向" },
+        "ko": { "name": "재원", "description": "금융 시장 및 동향" }
+    }
+  },
+  {
+    "id": "consumer",
+    "slug": "consumer",
+    "translations": {
+        "en": { "name": "Consumer Goods", "description": "Trends in consumer goods" },
+        "de": { "name": "Konsumgüter", "description": "Trends bei Konsumgütern" },
+        "fr": { "name": "Biens de consommation", "description": "Tendances des biens de consommation" },
+        "es": { "name": "Bienes de consumo", "description": "Tendencias en bienes de consumo" },
+        "it": { "name": "Beni di consumo", "description": "Tendenze nei beni di consumo" },
+        "ja": { "name": "消費財", "description": "消費財の動向" },
+        "ko": { "name": "소비재", "description": "소비재 동향" }
+    }
+  },
+  {
+    "id": "industrials",
+    "slug": "industrials",
+    "translations": {
+        "en": { "name": "Industrials", "description": "Industrial markets and manufacturing" },
+        "de": { "name": "Industrie", "description": "Industriemärkte und Fertigung" },
+        "fr": { "name": "Industriels", "description": "Marchés industriels et fabrication" },
+        "es": { "name": "Industriales", "description": "Mercados industriales y fabricación" },
+        "it": { "name": "Industriali", "description": "Mercati industriali e produzione" },
+        "ja": { "name": "産業", "description": "産業市場と製造" },
+        "ko": { "name": "산업재", "description": "산업 시장 및 제조" }
+    }
+  }
+]

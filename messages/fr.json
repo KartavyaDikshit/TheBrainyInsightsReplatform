@@ -1,0 +1,23 @@
+{
+  "Index": {
+    "title": "Rapports d'études de marché & conseil"
+  },
+  "Reports": {
+    "title": "Tous les rapports d'études de marché"
+  },
+  "Categories": {
+    "title": "Toutes les catégories de rapports"
+  },
+  "Search": {
+    "title": "Rechercher des rapports"
+  },
+  "Header": {
+    "reports": "Rapports",
+    "categories": "Catégories",
+    "contact": "Contactez-nous"
+  },
+  "Footer": {
+    "about": "À propos de nous",
+    "contact": "Contactez-nous"
+  }
+}

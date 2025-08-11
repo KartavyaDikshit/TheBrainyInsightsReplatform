@@ -1,0 +1,4 @@
+datasource db { provider = "sqlite"; url = "file:./tmp.db" }
+generator client { provider = "prisma-client-js" }
+enum Locale { EN DE }
+model X { id String @id @default(cuid()) }

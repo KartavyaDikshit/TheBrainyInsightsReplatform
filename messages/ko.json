@@ -1,0 +1,23 @@
+{
+  "Index": {
+    "title": "시장 조사 보고서 및 컨설팅"
+  },
+  "Reports": {
+    "title": "모든 시장 조사 보고서"
+  },
+  "Categories": {
+    "title": "모든 보고서 카테고리"
+  },
+  "Search": {
+    "title": "보고서 검색"
+  },
+  "Header": {
+    "reports": "보고서",
+    "categories": "카테고리",
+    "contact": "문의하기"
+  },
+  "Footer": {
+    "about": "회사 소개",
+    "contact": "문의하기"
+  }
+}
