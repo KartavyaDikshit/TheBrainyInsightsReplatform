@@ -1,0 +1,635 @@
+/* Delimiter changed to ; */
+/* Connecting to 127.0.0.1 via MariaDB or MySQL (TCP/IP), username root, using password: No ... */
+/* Access denied for user 'root'@'localhost' (using password: NO) */
+/* Connecting to 127.0.0.1 via MariaDB or MySQL (TCP/IP), username root, using password: Yes ... */
+SELECT CONNECTION_ID();
+SHOW VARIABLES;
+/* Changing character set from utf8mb4 to utf8mb4 */
+/* Characterset: utf8mb4 */
+SHOW /*!50002 GLOBAL */ STATUS;
+SELECT NOW();
+/* Connected. Thread-ID: 6 */
+/* Reading function definitions from C:\Program Files\Common Files\MariaDBShared\HeidiSQL\functions-mariadb.ini */
+SHOW TABLES FROM `information_schema`;
+SHOW DATABASES;
+/* Entering session "Unnamed" */
+/* Scaling controls to screen DPI: 150% */
+USE `information_schema`;
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='information_schema';
+SHOW TABLE STATUS FROM `information_schema`;
+SHOW FUNCTION STATUS WHERE `Db`='information_schema';
+SHOW PROCEDURE STATUS WHERE `Db`='information_schema';
+SHOW TRIGGERS FROM `information_schema`;
+SELECT *, EVENT_SCHEMA AS `Db`, EVENT_NAME AS `Name` FROM information_schema.`EVENTS` WHERE `EVENT_SCHEMA`='information_schema';
+USE `mysql`;
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='mysql';
+SHOW TABLE STATUS FROM `mysql`;
+SHOW FUNCTION STATUS WHERE `Db`='mysql';
+SHOW PROCEDURE STATUS WHERE `Db`='mysql';
+SHOW TRIGGERS FROM `mysql`;
+SELECT *, EVENT_SCHEMA AS `Db`, EVENT_NAME AS `Name` FROM information_schema.`EVENTS` WHERE `EVENT_SCHEMA`='mysql';
+USE `performance_schema`;
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='performance_schema';
+SHOW TABLE STATUS FROM `performance_schema`;
+SHOW FUNCTION STATUS WHERE `Db`='performance_schema';
+SHOW PROCEDURE STATUS WHERE `Db`='performance_schema';
+SHOW TRIGGERS FROM `performance_schema`;
+SELECT *, EVENT_SCHEMA AS `Db`, EVENT_NAME AS `Name` FROM information_schema.`EVENTS` WHERE `EVENT_SCHEMA`='performance_schema';
+USE `sys`;
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='sys';
+SHOW TABLE STATUS FROM `sys`;
+SHOW FUNCTION STATUS WHERE `Db`='sys';
+SHOW PROCEDURE STATUS WHERE `Db`='sys';
+SHOW TRIGGERS FROM `sys`;
+SELECT *, EVENT_SCHEMA AS `Db`, EVENT_NAME AS `Name` FROM information_schema.`EVENTS` WHERE `EVENT_SCHEMA`='sys';
+USE `tbi`;
+SELECT `DEFAULT_COLLATION_NAME` FROM `information_schema`.`SCHEMATA` WHERE `SCHEMA_NAME`='tbi';
+SHOW TABLE STATUS FROM `tbi`;
+SHOW FUNCTION STATUS WHERE `Db`='tbi';
+SHOW PROCEDURE STATUS WHERE `Db`='tbi';
+SHOW TRIGGERS FROM `tbi`;
+SELECT *, EVENT_SCHEMA AS `Db`, EVENT_NAME AS `Name` FROM information_schema.`EVENTS` WHERE `EVENT_SCHEMA`='tbi';
+USE `sys`;
+USE `tbi`;
+/* Loading file "C:\Users\User\TheBrainyInsightsReplatform\Legacy\myphpadmin\tbi_db.sql" (18.6 KiB) into query tab #1 */
+-- phpMyAdmin SQL Dump
+-- version 5.2.2
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost:3306
+-- Generation Time: Aug 14, 2025 at 01:23 AM
+-- Server version: 10.11.14-MariaDB
+-- PHP Version: 8.4.10
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+--
+-- Database: `tbi_db`
+--
+CREATE DATABASE IF NOT EXISTS `tbi_db` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `tbi_db`;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_admin`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+-- Last update: Aug 13, 2025 at 05:41 PM
+--
+
+DROP TABLE IF EXISTS `tbl_admin`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_admin' */
+CREATE TABLE IF NOT EXISTS `tbl_admin` (
+  `admin_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `role` enum('superadmin','manager','user') NOT NULL,
+  `profile_image` varchar(128) DEFAULT NULL,
+  `first_name` varchar(64) DEFAULT NULL,
+  `last_name` varchar(64) DEFAULT NULL,
+  `username` varchar(128) NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `password` varchar(256) NOT NULL,
+  `status` enum('Active','Inactive') NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`admin_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_blog`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_blog`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_blog' */
+CREATE TABLE IF NOT EXISTS `tbl_blog` (
+  `blog_id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) UNSIGNED DEFAULT NULL,
+  `title` varchar(128) DEFAULT NULL,
+  `slug` varchar(128) DEFAULT NULL,
+  `published_date` date DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
+  `meta_title` varchar(128) DEFAULT NULL,
+  `meta_keyword` varchar(256) DEFAULT NULL,
+  `meta_description` varchar(256) DEFAULT NULL,
+  `status` enum('Active','Inactive') NOT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`blog_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_category`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_category`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_category' */
+CREATE TABLE IF NOT EXISTS `tbl_category` (
+  `category_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `shortcode` varchar(16) NOT NULL,
+  `slug` varchar(128) DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
+  `title` varchar(128) NOT NULL,
+  `icon` varchar(64) DEFAULT NULL,
+  `featured` enum('Yes','No') DEFAULT NULL,
+  `status` enum('Active','Inactive') NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_category_jp`
+--
+-- Creation: Jul 27, 2025 at 09:08 PM
+--
+
+DROP TABLE IF EXISTS `tbl_category_jp`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_category_jp' */
+CREATE TABLE IF NOT EXISTS `tbl_category_jp` (
+  `category_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `shortcode` varchar(16) NOT NULL,
+  `slug` varchar(128) DEFAULT NULL,
+  `description` mediumtext DEFAULT NULL,
+  `title` varchar(128) NOT NULL,
+  `icon` varchar(64) DEFAULT NULL,
+  `featured` enum('Yes','No') DEFAULT NULL,
+  `status` enum('Active','Inactive') NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_country`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_country`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_country' */
+CREATE TABLE IF NOT EXISTS `tbl_country` (
+  `country_id` int(11) NOT NULL AUTO_INCREMENT,
+  `region` varchar(64) DEFAULT NULL,
+  `name` varchar(150) NOT NULL,
+  `shortname` varchar(3) NOT NULL,
+  `phonecode` int(11) NOT NULL,
+  PRIMARY KEY (`country_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_enquiry`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_enquiry`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_enquiry' */
+CREATE TABLE IF NOT EXISTS `tbl_enquiry` (
+  `enquiry_id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_id` int(11) UNSIGNED DEFAULT NULL,
+  `fname` varchar(64) NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `phone` varchar(16) NOT NULL,
+  `job_title` varchar(24) DEFAULT NULL,
+  `company` varchar(64) DEFAULT NULL,
+  `comment` varchar(256) DEFAULT NULL,
+  `status` enum('Seen','Unseen') NOT NULL DEFAULT 'Unseen',
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`enquiry_id`),
+  KEY `report_id` (`report_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_faq`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_faq`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_faq' */
+CREATE TABLE IF NOT EXISTS `tbl_faq` (
+  `faq_id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_id` int(10) UNSIGNED DEFAULT NULL,
+  `question` varchar(256) DEFAULT NULL,
+  `answer` varchar(256) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`faq_id`),
+  KEY `report_id` (`report_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_faq_jp`
+--
+-- Creation: Jul 27, 2025 at 09:08 PM
+--
+
+DROP TABLE IF EXISTS `tbl_faq_jp`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_faq_jp' */
+CREATE TABLE IF NOT EXISTS `tbl_faq_jp` (
+  `faq_id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_id` int(10) UNSIGNED DEFAULT NULL,
+  `question` varchar(256) DEFAULT NULL,
+  `answer` varchar(256) DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`faq_id`),
+  KEY `report_id` (`report_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_media`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_media`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_media' */
+CREATE TABLE IF NOT EXISTS `tbl_media` (
+  `media_id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) UNSIGNED DEFAULT NULL,
+  `title` varchar(128) NOT NULL,
+  `link` varchar(256) NOT NULL,
+  `description` mediumtext NOT NULL,
+  `published_date` date DEFAULT NULL,
+  `meta_title` varchar(128) DEFAULT NULL,
+  `meta_keyword` varchar(256) DEFAULT NULL,
+  `meta_description` varchar(256) DEFAULT NULL,
+  `status` enum('Active','Inactive') NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`media_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_order`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_order`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_order' */
+CREATE TABLE IF NOT EXISTS `tbl_order` (
+  `order_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `ip_address` varchar(32) NOT NULL,
+  `subtotal` float(10,2) NOT NULL,
+  `discount` float(10,2) NOT NULL,
+  `total` float(10,2) NOT NULL,
+  `items` int(11) NOT NULL,
+  `order_date` date NOT NULL,
+  `payment_mode` varchar(64) DEFAULT NULL,
+  `txn_id` varchar(24) DEFAULT NULL,
+  `payer_id` varchar(24) DEFAULT NULL,
+  `fname` varchar(24) DEFAULT NULL,
+  `lname` varchar(24) DEFAULT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `phone` varchar(16) DEFAULT NULL,
+  `country` varchar(100) DEFAULT NULL,
+  `state` varchar(100) DEFAULT NULL,
+  `city` varchar(100) DEFAULT NULL,
+  `zipcode` varchar(11) DEFAULT NULL,
+  `address` varchar(500) DEFAULT NULL,
+  `payment_date` date DEFAULT NULL,
+  `error` varchar(64) DEFAULT NULL,
+  `status` enum('Pending','Processing','Cancel','Completed','Failure') NOT NULL DEFAULT 'Pending',
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_order_item`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_order_item`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_order_item' */
+CREATE TABLE IF NOT EXISTS `tbl_order_item` (
+  `order_item_id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) UNSIGNED DEFAULT NULL,
+  `report_id` int(11) UNSIGNED DEFAULT NULL,
+  `license` enum('single','multiple','corporate') DEFAULT NULL,
+  `price` float(10,2) NOT NULL,
+  `quantity` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`order_item_id`),
+  KEY `report_id` (`report_id`),
+  KEY `order_id` (`order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_press`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_press`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_press' */
+CREATE TABLE IF NOT EXISTS `tbl_press` (
+  `press_id` int(11) NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) UNSIGNED DEFAULT NULL,
+  `title` varchar(128) NOT NULL,
+  `slug` varchar(128) NOT NULL,
+  `description` mediumtext NOT NULL,
+  `published_date` date DEFAULT NULL,
+  `meta_title` varchar(128) DEFAULT NULL,
+  `meta_keyword` varchar(256) DEFAULT NULL,
+  `meta_description` varchar(256) DEFAULT NULL,
+  `status` enum('Active','Inactive') NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`press_id`),
+  KEY `category_id` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_report`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_report`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_report' */
+CREATE TABLE IF NOT EXISTS `tbl_report` (
+  `report_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) UNSIGNED DEFAULT NULL,
+  `sku` varchar(24) DEFAULT NULL,
+  `picture` varchar(256) DEFAULT NULL,
+  `slug` varchar(2048) NOT NULL,
+  `keywords` varchar(2048) NOT NULL,
+  `title` varchar(2048) NOT NULL,
+  `description` longtext NOT NULL,
+  `toc` longtext NOT NULL,
+  `tof` longtext DEFAULT NULL,
+  `segmentation` mediumtext DEFAULT NULL,
+  `price` float(10,2) DEFAULT NULL,
+  `mprice` float(10,2) DEFAULT NULL,
+  `cprice` float(10,2) DEFAULT NULL,
+  `published_date` date NOT NULL,
+  `pages` varchar(64) NOT NULL,
+  `base_year` int(11) DEFAULT NULL,
+  `historical_data` varchar(128) DEFAULT NULL,
+  `report_link` varchar(300) NOT NULL,
+  `companies` mediumtext DEFAULT NULL,
+  `types` mediumtext DEFAULT NULL,
+  `applications` mediumtext DEFAULT NULL,
+  `ratings` float DEFAULT NULL,
+  `reviews` int(11) DEFAULT NULL,
+  `meta_title` varchar(2048) NOT NULL,
+  `meta_keyword` varchar(2048) NOT NULL,
+  `meta_description` varchar(2048) NOT NULL,
+  `featured` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `admin_id` int(10) UNSIGNED DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`report_id`),
+  KEY `category_id` (`category_id`),
+  KEY `admin_id` (`admin_id`),
+  KEY `category_id_2` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+SHOW WARNINGS;
+/* Note: (1831) Duplicate index `category_id_2`. This is deprecated and will be disallowed in a future release */
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_report_jp`
+--
+-- Creation: Jul 27, 2025 at 09:08 PM
+--
+
+DROP TABLE IF EXISTS `tbl_report_jp`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_report_jp' */
+CREATE TABLE IF NOT EXISTS `tbl_report_jp` (
+  `report_id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `category_id` int(11) UNSIGNED DEFAULT NULL,
+  `sku` varchar(24) DEFAULT NULL,
+  `picture` varchar(256) DEFAULT NULL,
+  `slug` varchar(2048) NOT NULL,
+  `keywords` varchar(2048) NOT NULL,
+  `title` varchar(2048) NOT NULL,
+  `description` longtext NOT NULL,
+  `toc` longtext NOT NULL,
+  `tof` longtext DEFAULT NULL,
+  `segmentation` mediumtext DEFAULT NULL,
+  `price` float(10,2) DEFAULT NULL,
+  `mprice` float(10,2) DEFAULT NULL,
+  `cprice` float(10,2) DEFAULT NULL,
+  `published_date` date NOT NULL,
+  `pages` varchar(64) NOT NULL,
+  `base_year` int(11) DEFAULT NULL,
+  `historical_data` varchar(128) DEFAULT NULL,
+  `report_link` varchar(300) NOT NULL,
+  `companies` mediumtext DEFAULT NULL,
+  `types` mediumtext DEFAULT NULL,
+  `applications` mediumtext DEFAULT NULL,
+  `ratings` float DEFAULT NULL,
+  `reviews` int(11) DEFAULT NULL,
+  `meta_title` varchar(2048) NOT NULL,
+  `meta_keyword` varchar(2048) NOT NULL,
+  `meta_description` varchar(2048) NOT NULL,
+  `featured` enum('Yes','No') NOT NULL DEFAULT 'No',
+  `status` enum('Active','Inactive') NOT NULL DEFAULT 'Active',
+  `admin_id` int(10) UNSIGNED DEFAULT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`report_id`),
+  KEY `category_id` (`category_id`),
+  KEY `admin_id` (`admin_id`),
+  KEY `category_id_2` (`category_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+SHOW WARNINGS;
+/* Note: (1831) Duplicate index `category_id_2`. This is deprecated and will be disallowed in a future release */
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_request`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+-- Last update: Aug 13, 2025 at 05:15 PM
+--
+
+DROP TABLE IF EXISTS `tbl_request`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_request' */
+CREATE TABLE IF NOT EXISTS `tbl_request` (
+  `request_id` int(11) NOT NULL AUTO_INCREMENT,
+  `report_id` int(11) UNSIGNED DEFAULT NULL,
+  `full_name` varchar(128) NOT NULL,
+  `email` varchar(128) NOT NULL,
+  `phone` varchar(25) DEFAULT NULL,
+  `designation` varchar(100) DEFAULT NULL,
+  `company` varchar(100) DEFAULT NULL,
+  `comment` text DEFAULT NULL,
+  `publisher` varchar(64) DEFAULT NULL,
+  `type` varchar(128) DEFAULT NULL,
+  `country` varchar(128) DEFAULT NULL,
+  `region` varchar(8) DEFAULT NULL,
+  `phonecode` varchar(8) DEFAULT NULL,
+  `shortname` varchar(8) DEFAULT NULL,
+  `status` enum('Seen','Unseen') NOT NULL DEFAULT 'Unseen',
+  `processed` enum('Yes','No') DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`request_id`),
+  KEY `report_id` (`report_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_testimonial`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_testimonial`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_testimonial' */
+CREATE TABLE IF NOT EXISTS `tbl_testimonial` (
+  `testimonial_id` int(11) NOT NULL AUTO_INCREMENT,
+  `content` mediumtext NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `logo` varchar(128) DEFAULT NULL,
+  `place` varchar(128) NOT NULL,
+  `status` enum('Active','Inactive') NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`testimonial_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_url`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_url`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_url' */
+CREATE TABLE IF NOT EXISTS `tbl_url` (
+  `url_id` int(11) NOT NULL AUTO_INCREMENT,
+  `source_url` varchar(256) NOT NULL,
+  `target_url` varchar(256) NOT NULL,
+  `status` enum('Active','Inactive') NOT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`url_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_user`
+--
+-- Creation: Aug 05, 2025 at 03:55 PM
+--
+
+DROP TABLE IF EXISTS `tbl_user`;
+SHOW WARNINGS;
+/* Note: (1051) Unknown table 'tbi_db.tbl_user' */
+CREATE TABLE IF NOT EXISTS `tbl_user` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `first_name` varchar(128) DEFAULT NULL,
+  `last_name` varchar(128) DEFAULT NULL,
+  `email` varchar(128) DEFAULT NULL,
+  `phone` varchar(16) DEFAULT NULL,
+  `password` varchar(256) DEFAULT NULL,
+  `status` enum('Pending','Active','Inactive') NOT NULL,
+  `updated_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `created_at` datetime NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_general_ci;
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `tbl_blog`
+--
+ALTER TABLE `tbl_blog`
+  ADD CONSTRAINT `tbl_blog_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+/* Info: Records: 0  Duplicates: 0  Warnings: 0 */
+--
+-- Constraints for table `tbl_enquiry`
+--
+ALTER TABLE `tbl_enquiry`
+  ADD CONSTRAINT `tbl_enquiry_ibfk_1` FOREIGN KEY (`report_id`) REFERENCES `tbl_report` (`report_id`) ON DELETE CASCADE ON UPDATE SET NULL;
+/* Info: Records: 0  Duplicates: 0  Warnings: 0 */
+--
+-- Constraints for table `tbl_faq`
+--
+ALTER TABLE `tbl_faq`
+  ADD CONSTRAINT `tbl_faq_ibfk_1` FOREIGN KEY (`report_id`) REFERENCES `tbl_report` (`report_id`) ON DELETE CASCADE ON UPDATE SET NULL;
+/* Info: Records: 0  Duplicates: 0  Warnings: 0 */
+--
+-- Constraints for table `tbl_media`
+--
+ALTER TABLE `tbl_media`
+  ADD CONSTRAINT `tbl_media_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+/* Info: Records: 0  Duplicates: 0  Warnings: 0 */
+--
+-- Constraints for table `tbl_order_item`
+--
+ALTER TABLE `tbl_order_item`
+  ADD CONSTRAINT `tbl_order_item_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `tbl_order` (`order_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `tbl_order_item_ibfk_2` FOREIGN KEY (`report_id`) REFERENCES `tbl_report` (`report_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+/* Info: Records: 0  Duplicates: 0  Warnings: 0 */
+--
+-- Constraints for table `tbl_press`
+--
+ALTER TABLE `tbl_press`
+  ADD CONSTRAINT `tbl_press_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+/* Info: Records: 0  Duplicates: 0  Warnings: 0 */
+--
+-- Constraints for table `tbl_report`
+--
+ALTER TABLE `tbl_report`
+  ADD CONSTRAINT `tbl_report_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`category_id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `tbl_report_ibfk_2` FOREIGN KEY (`admin_id`) REFERENCES `tbl_admin` (`admin_id`) ON DELETE CASCADE ON UPDATE SET NULL,
+  ADD CONSTRAINT `tbl_report_ibfk_3` FOREIGN KEY (`category_id`) REFERENCES `tbl_category` (`category_id`) ON DELETE CASCADE ON UPDATE SET NULL;
+/* Info: Records: 0  Duplicates: 0  Warnings: 0 */
+--
+-- Constraints for table `tbl_request`
+--
+ALTER TABLE `tbl_request`
+  ADD CONSTRAINT `tbl_request_ibfk_1` FOREIGN KEY (`report_id`) REFERENCES `tbl_report` (`report_id`) ON DELETE SET NULL ON UPDATE CASCADE;
+/* Info: Records: 0  Duplicates: 0  Warnings: 0 */
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/* Affected rows: 1  Found rows: 0  Warnings: 20  Duration for 54 queries: 0.640 sec. */

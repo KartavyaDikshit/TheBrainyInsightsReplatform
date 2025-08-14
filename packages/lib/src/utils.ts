@@ -1,4 +1,4 @@
-import { Locale } from '@prisma/client';
+import { Locale } from '../../../src/types/prisma-enums'; // Corrected import path
 
 export function toLocaleEnum(input: string): Locale {
   const key = input?.toUpperCase();

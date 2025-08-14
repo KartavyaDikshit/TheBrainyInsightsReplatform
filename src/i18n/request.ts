@@ -13,6 +13,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
 
   return {
     messages: (await import(`../../messages/${finalLocale}.json`)).default,
-    locale: finalLocale // Explicitly return the locale
+    locale: finalLocale,
+    timeZone: 'Europe/Berlin' // Added timeZone configuration
   };
 });

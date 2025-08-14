@@ -19,5 +19,10 @@
   "Footer": {
     "about": "私たちに関しては",
     "contact": "お問い合わせ"
+  },
+  "HomePage": {
+    "title": "ホームページ",
+    "categoriesSectionTitle": "カテゴリ",
+    "featuredReportsSectionTitle": "注目レポート"
   }
 }

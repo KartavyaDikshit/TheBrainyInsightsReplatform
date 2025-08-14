@@ -1,0 +1,67 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+  background-color: #f8f9fa;
+}
+
+.formCard {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.formCard h1 {
+  color: #343a40;
+  margin-bottom: 30px;
+  font-size: 2rem;
+}
+
+.inputGroup {
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.inputGroup label {
+  display: block;
+  margin-bottom: 8px;
+  color: #495057;
+  font-weight: 600;
+}
+
+.inputGroup input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 1rem;
+  box-sizing: border-box; /* Include padding in width */
+}
+
+.inputGroup input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}

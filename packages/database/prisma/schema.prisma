@@ -23,16 +23,47 @@ enum Status {
   PUBLISHED
 }
 
+enum UserStatus {
+  Active
+  Inactive
+  Pending
+}
+
+enum EnquiryStatus {
+  Seen
+  Unseen
+}
+
+enum OrderStatus {
+  Pending
+  Processing
+  Cancel
+  Completed
+  Failure
+}
+
+enum LicenseType {
+  single
+  multiple
+  corporate
+}
+
 model Category {
   id        String   @id @default(cuid())
+  shortcode String   @unique // Added from tbl_category
   slug      String   @unique
   parentId  String?
-  status    Status   @default(DRAFT)
+  icon      String?  // Added from tbl_category
+  featured  Boolean? @default(false) // Added from tbl_category
+  status    Status   @default(DRAFT) // Will map Active/Inactive from legacy
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   translations CategoryTranslation[]
   reports      Report[] // Added inverse relation
+  blogs        Blog[] // Added inverse relation for Blog
+  media        Media[] // Inverse relation for category_id in tbl_media
+  presses      Press[] // Inverse relation for category_id in tbl_press
 
   @@index([slug, parentId])
 }
@@ -42,7 +73,7 @@ model CategoryTranslation {
   categoryId  String
   locale      Locale
   name        String
-  description String?
+  description String? @db.MediumText
   seoTitle    String?
   seoDesc     String?
 
@@ -53,20 +84,41 @@ model CategoryTranslation {
 }
 
 model Report {
-  id          String    @id @default(cuid())
-  slug        String    @unique
-  categoryId  String
-  status      Status    @default(DRAFT)
-  publishedAt DateTime?
-  price       Float?
-  pages       Int?
-  featured    Boolean?  @default(false)
-  heroImage   String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id               String    @id @default(cuid())
+  slug             String    @unique
+  categoryId       String
+  status           Status    @default(DRAFT)
+  publishedAt      DateTime?
+  price            Float?
+  featured         Boolean?  @default(false)
+  heroImage        String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+  adminId          String?
+  sku              String?   // Added from tbl_report
+  picture          String?   // Added from tbl_report
+  tocHtml          String?   @db.LongText // Added from tbl_report
+  tofHtml          String?   @db.LongText // Added from tbl_report
+  segmentation     String?   @db.MediumText // Added from tbl_report
+  mprice           Float?    // Added from tbl_report
+  cprice           Float?    // Added from tbl_report
+  pages            String?   // Mapped tbl_report.pages (varchar) directly here
+  baseYear         Int?      // Added from tbl_report
+  historicalData   String?   // Added from tbl_report
+  reportLink       String?   // Added from tbl_report
+  companies        String?   @db.MediumText // Added from tbl_report
+  types            String?   @db.MediumText // Added from tbl_report
+  applications     String?   @db.MediumText // Added from tbl_report
+  ratings          Float?    // Added from tbl_report
+  reviews          Int?      // Added from tbl_report
 
-    translations ReportTranslation[]
-  category    Category @relation(fields: [categoryId], references: [id]) // Added relation
+  translations ReportTranslation[]
+  category     Category          @relation(fields: [categoryId], references: [id])
+  admin        User?             @relation("AdminReports", fields: [adminId], references: [id])
+  enquiries    Lead[]
+  faqs         FAQ[]
+  orderItems   OrderItem[]
+  requests     Request[] // Added inverse relation for tbl_request
 
   @@index([slug, categoryId, publishedAt])
 }
@@ -75,17 +127,35 @@ model ReportTranslation {
   id           String  @id @default(cuid())
   reportId     String
   locale       Locale
-  title        String
-  summary      String
+  title        String @db.VarChar(2048)
+  summary      String @db.LongText
   bodyHtml     String?
-  seoTitle     String?
-  seoDesc      String?
-  keywordsJson String?
+  seoTitle     String? @db.VarChar(2048)
+  seoDesc      String? @db.VarChar(2048)
+  keywordsJson String? @db.LongText // Added from tbl_report.keywords and meta_keyword
 
   report Report @relation(fields: [reportId], references: [id])
 
   @@unique([reportId, locale])
-  @@index([locale, title])
+}
+
+model Blog {
+  id           String    @id @default(cuid())
+  categoryId   String?
+  title        String?
+  slug         String?   @unique
+  publishedAt  DateTime? @db.Date
+  description  String?   @db.MediumText
+  seoTitle     String?
+  seoKeywords  String?
+  seoDescription String?
+  status       UserStatus // Using UserStatus enum for Active/Inactive
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  category Category? @relation(fields: [categoryId], references: [id])
+
+  @@index([slug, categoryId, publishedAt])
 }
 
 model RedirectMap {
@@ -109,11 +179,177 @@ model MediaAsset {
 }
 
 model User {
-  id           String  @id @default(cuid())
-  email        String  @unique
+  id           String     @id @default(cuid())
+  email        String     @unique
   name         String?
-  role         String // Admin, Editor, Viewer
+  role         String // Admin, Editor, Viewer, superadmin, manager, user (from legacy)
   passwordHash String?
+  profileImage String? // From tbl_admin
+  firstName    String? // From tbl_admin
+  lastName    String? // From tbl_admin
+  username     String?    @unique // From tbl_admin
+  status       UserStatus @default(Active) // Added default value
+  phone        String?
+
+  reports Report[] @relation("AdminReports") // Inverse relation for admin_id in tbl_report
+}
+
+model Country {
+  id        String  @id @default(cuid())
+  region    String?
+  name      String
+  shortname String  @unique
+  phonecode Int
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  reportId  String? // Added from tbl_enquiry
+  name      String
+  email     String
+  phone     String? // Added from tbl_enquiry
+  jobTitle  String? // Added from tbl_enquiry
+  company   String?
+  message   String
+  status    EnquiryStatus @default(Unseen) // Added from tbl_enquiry
+  locale    Locale // Keep existing locale field
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt // Added from tbl_enquiry
+
+  report Report? @relation(fields: [reportId], references: [id]) // Relation to Report model
+}
+
+model FAQ {
+  id        String   @id @default(cuid())
+  reportId  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations FAQTranslation[] // Relation to FAQTranslation
+  report       Report?          @relation(fields: [reportId], references: [id]) // Relation to Report model
+}
+
+model FAQTranslation {
+  id        String  @id @default(cuid())
+  faqId     String
+  locale    Locale
+  question  String?
+  answer    String? @db.VarChar(256)
+
+  faq FAQ @relation(fields: [faqId], references: [id])
+
+  @@unique([faqId, locale])
+}
+
+model Media {
+  id           String    @id @default(cuid())
+  categoryId   String?
+  title        String
+  link         String
+  description  String    @db.MediumText
+  publishedAt  DateTime? @db.Date
+  seoTitle     String?
+  seoKeywords  String?
+  seoDescription String?
+  status       UserStatus // Using UserStatus enum for Active/Inactive
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  category Category? @relation(fields: [categoryId], references: [id])
+}
+
+model Order {
+  id           String      @id @default(cuid())
+  ipAddress    String
+  subtotal     Float       
+  discount     Float       
+  total        Float       
+  itemCount    Int         @map("items") // Renamed to avoid conflict with Prisma keyword
+  orderDate    DateTime    @db.Date
+  paymentMode  String?
+  transactionId String?    @map("txn_id")
+  payerId      String?    
+  firstName    String?     @map("fname")
+  lastName     String?     @map("lname")
+  email        String?
+  phone        String?
+  country      String?
+  state        String?
+  city         String?
+  zipCode      String?     @map("zipcode")
+  address      String?     @db.VarChar(500)
+  paymentDate  DateTime?   @db.Date
+  errorMessage String?     @map("error")
+  status       OrderStatus @default(Pending)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  orderItems OrderItem[] // Inverse relation for order_id in tbl_order_item
+}
+
+model OrderItem {
+  id        String      @id @default(cuid())
+  orderId   String?
+  reportId  String?
+  license   LicenseType?
+  price     Float       
+  quantity  Int         @default(1)
+
+  order  Order?  @relation(fields: [orderId], references: [id])
+  report Report? @relation(fields: [reportId], references: [id])
+}
+
+model Press {
+  id           String    @id @default(cuid())
+  categoryId   String?
+  title        String
+  slug         String    @unique
+  description  String    @db.MediumText
+  publishedAt  DateTime? @db.Date
+  seoTitle     String?
+  seoKeywords  String?
+  seoDescription String? @db.VarChar(256)
+  status       UserStatus // Using UserStatus enum for Active/Inactive
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  category Category? @relation(fields: [categoryId], references: [id])
+}
+
+model Request {
+  id           String   @id @default(cuid())
+  reportId     String?
+  fullName     String
+  email        String
+  phone        String?
+  designation  String?
+  company      String?
+  comment      String?  @db.Text
+  publisher    String?
+  type         String?
+  country      String?
+  region       String?
+  phoneCode    String?
+  shortName    String?
+  status       EnquiryStatus @default(Unseen)
+  isProcessed  Boolean?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  report Report? @relation(fields: [reportId], references: [id])
+}
+
+model Testimonial {
+  id        String   @id @default(cuid()) @map("testimonial_id")
+  content   String   @db.MediumText
+  name      String   @db.VarChar(128)
+  logo      String?  @db.VarChar(128)
+  place     String   @db.VarChar(128)
+  status    UserStatus // Reusing UserStatus enum for Active/Inactive
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("tbl_testimonial")
 }
 
 model AIGenerationQueue {
@@ -140,14 +376,4 @@ model AILog {
   costCents    Float
   status       String
   createdAt    DateTime @default(now())
-}
-
-model Lead {
-  id        String   @id @default(cuid())
-  name      String
-  email     String
-  company   String?
-  message   String
-  locale    Locale
-  createdAt DateTime @default(now())
 }

@@ -1,6 +1,6 @@
 import globals from "globals";
 import pluginJs from "@eslint/js";
-// import tseslint from "typescript-eslint";
+import tseslint from "typescript-eslint";
 import react from "eslint-plugin-react";
 import nextPlugin from "@next/eslint-plugin-next";
 
@@ -25,31 +25,31 @@ export default [
   {
     files: ["apps/web/**/*.{ts,tsx}", "!apps/web/.next/**"],
     languageOptions: {
-      // parser: tseslint.parser,
+      parser: tseslint.parser,
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
         ecmaVersion: "latest",
         sourceType: "module",
-        // project: ["./apps/web/tsconfig.json"],
+        project: ["./apps/web/tsconfig.json"],
       },
       globals: globals.browser,
     },
     plugins: {
-      // "@typescript-eslint": tseslint.plugin,
+      "@typescript-eslint": tseslint.plugin,
       react: react,
       "@next/next": nextPlugin,
     },
     rules: {
       ...pluginJs.configs.recommended.rules,
-      // ...tseslint.configs.recommended.rules,
+      ...tseslint.configs.recommended.rules,
       ...react.configs.recommended.rules,
       ...nextPlugin.configs.recommended.rules,
       ...nextPlugin.configs["core-web-vitals"].rules,
       "react/react-in-jsx-scope": "off", // Next.js doesn't require React to be in scope
       "react/jsx-uses-react": "off", // Not needed with new JSX transform
-      // "@typescript-eslint/no-explicit-any": "off", // Removed
+      "@typescript-eslint/no-explicit-any": "off", // Removed
     },
     settings: {
       react: {
@@ -61,42 +61,42 @@ export default [
   {
     files: ["packages/lib/**/*.{ts,tsx}", "!apps/web/.next/**"],
     languageOptions: {
-      // parser: tseslint.parser,
+      parser: tseslint.parser,
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
-        // project: ["./packages/lib/tsconfig.json"],
+        project: ["./packages/lib/tsconfig.json"],
       },
       globals: globals.node,
     },
     plugins: {
-      // "@typescript-eslint": tseslint.plugin,
+      "@typescript-eslint": tseslint.plugin,
     },
     rules: {
       ...pluginJs.configs.recommended.rules,
-      // ...tseslint.configs.recommended.rules,
-      // "@typescript-eslint/no-explicit-any": "off", // Removed
+      ...tseslint.configs.recommended.rules,
+      "@typescript-eslint/no-explicit-any": "off", // Removed
     },
   },
   // Configuration for other TypeScript files (e.g., scripts)
   {
     files: ["scripts/**/*.{ts,tsx}", "*.{ts,tsx}", "!apps/web/**/*.{ts,tsx}", "!packages/lib/**/*.{ts,tsx}", "!apps/web/.next/**"],
     languageOptions: {
-      // parser: tseslint.parser,
+      parser: tseslint.parser,
       parserOptions: {
         ecmaVersion: "latest",
         sourceType: "module",
-        // project: null,
+        project: null,
       },
       globals: globals.node,
     },
     plugins: {
-      // "@typescript-eslint": tseslint.plugin,
+      "@typescript-eslint": tseslint.plugin,
     },
     rules: {
       ...pluginJs.configs.recommended.rules,
-      // ...tseslint.configs.recommended.rules,
-      // "@typescript-eslint/no-explicit-any": "off", // Removed
+      ...tseslint.configs.recommended.rules,
+      "@typescript-eslint/no-explicit-any": "off", // Removed
     },
   },
 ];

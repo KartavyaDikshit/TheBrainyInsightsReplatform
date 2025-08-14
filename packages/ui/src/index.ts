@@ -3,7 +3,7 @@ export { default as SiteFooter } from './SiteFooter';
 export { default as Container } from './Container';
 export { default as Section } from './Section';
 export { default as MainNav } from './MainNav';
-export { default as LanguageSwitcher } from './LanguageSwitcher';
+export { default as LocaleSwitcher } from './LocaleSwitcher';
 export { default as MobileMenu } from './MobileMenu';
 export { default as SeoHelmet } from './SeoHelmet';
 export { default as JsonLd } from './JsonLd';

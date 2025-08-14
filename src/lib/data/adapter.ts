@@ -10,6 +10,8 @@ export interface TransformedCategory {
   slug: string;
   name: string;
   description: string;
+  seoTitle: string; // Added
+  seoDesc: string;  // Added
 }
 
 export interface TransformedReport {
@@ -23,6 +25,8 @@ export interface TransformedReport {
   seoTitle: string;
   seoDesc: string;
   keywords: string;
+  publishedAt: Date | null;
+  createdAt: Date;
 }
 
 function parseKeywords(keywordsJson: string | null): string {
@@ -65,6 +69,8 @@ export async function listCategories(locale: string): Promise<TransformedCategor
         slug: c.slug,
         name: c.translations.find(t => t.locale === (toLocaleEnum(locale)))?.name || c.translations.find(t => t.locale === toLocaleEnum('en'))?.name || '',
         description: c.translations.find(t => t.locale === (toLocaleEnum(locale)))?.description || c.translations.find(t => t.locale === toLocaleEnum('en'))?.description || '',
+        seoTitle: c.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoTitle || c.translations.find(t => t.locale === toLocaleEnum('en'))?.seoTitle || '',
+        seoDesc: c.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoDesc || c.translations.find(t => t.locale === toLocaleEnum('en'))?.seoDesc || '',
     }));
 }
 
@@ -88,6 +94,8 @@ export async function getCategoryBySlug(slug: string, locale: string): Promise<T
         slug: category.slug,
         name: category.translations.find(t => t.locale === (toLocaleEnum(locale)))?.name || category.translations.find(t => t.locale === toLocaleEnum('en'))?.name || '',
         description: category.translations.find(t => t.locale === (toLocaleEnum(locale)))?.description || category.translations.find(t => t.locale === toLocaleEnum('en'))?.description || '',
+        seoTitle: category.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoTitle || category.translations.find(t => t.locale === toLocaleEnum('en'))?.seoTitle || '',
+        seoDesc: category.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoDesc || category.translations.find(t => t.locale === toLocaleEnum('en'))?.seoDesc || '',
     };
 }
 
@@ -128,6 +136,8 @@ export async function listReports({ locale, categorySlug, page = 1, size = 12, f
         seoTitle: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoTitle || r.translations.find(t => t.locale === toLocaleEnum('en'))?.seoTitle || '',
         seoDesc: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoDesc || r.translations.find(t => t.locale === toLocaleEnum('en'))?.seoDesc || '',
         keywords: parseKeywords(r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.keywordsJson ?? null) || parseKeywords(r.translations.find(t => t.locale === toLocaleEnum('en'))?.keywordsJson ?? null) || '',
+        publishedAt: r.publishedAt,
+        createdAt: r.createdAt,
     }));
 }
 
@@ -158,6 +168,8 @@ export async function getReportBySlug(slug: string, locale: string): Promise<Tra
         seoTitle: report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoTitle || report.translations.find(t => t.locale === toLocaleEnum('en'))?.seoTitle || '',
         seoDesc: report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoDesc || report.translations.find(t => t.locale === toLocaleEnum('en'))?.seoDesc || '',
         keywords: parseKeywords(report.translations.find(t => t.locale === (toLocaleEnum(locale)))?.keywordsJson ?? null) || parseKeywords(report.translations.find(t => t.locale === toLocaleEnum('en'))?.keywordsJson ?? null) || '',
+        publishedAt: report.publishedAt,
+        createdAt: report.createdAt,
     };
 }
 
@@ -199,6 +211,8 @@ export async function search({ q, locale, page = 1, size = 10 }: { q: string; lo
         seoTitle: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoTitle || r.translations.find(t => t.locale === toLocaleEnum('en'))?.seoTitle || '',
         seoDesc: r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.seoDesc || r.translations.find(t => t.locale === toLocaleEnum('en'))?.seoDesc || '',
         keywords: parseKeywords(r.translations.find(t => t.locale === (toLocaleEnum(locale)))?.keywordsJson ?? null) || parseKeywords(r.translations.find(t => t.locale === toLocaleEnum('en'))?.keywordsJson ?? null) || '',
+        publishedAt: r.publishedAt,
+        createdAt: r.createdAt,
     }));
 }
 
@@ -229,8 +243,8 @@ export async function listSitemapEntries() {
             alternates[toLocaleEnum(locale)] = `${baseUrl}/${locale}/reports/${report.slug}`;
         });
         entries.push({
-            url: `${baseUrl}/en/reports/${report.slug}`,
-            lastModified: new Date().toISOString(),
+            url: `${baseUrl}/${getConfig().defaultLocale}/reports/${report.slug}`,
+            lastModified: report.updatedAt ? new Date(report.updatedAt).toISOString() : new Date(report.createdAt).toISOString(),
             alternates,
         });
     });
@@ -241,8 +255,8 @@ export async function listSitemapEntries() {
             alternates[toLocaleEnum(locale)] = `${baseUrl}/${locale}/categories/${category.slug}`;
         });
         entries.push({
-            url: `${baseUrl}/en/categories/${category.slug}`,
-            lastModified: new Date().toISOString(),
+            url: `${baseUrl}/${getConfig().defaultLocale}/categories/${category.slug}`,
+            lastModified: category.updatedAt ? new Date(category.updatedAt).toISOString() : new Date(category.createdAt).toISOString(),
             alternates,
         });
     });
@@ -250,7 +264,7 @@ export async function listSitemapEntries() {
     return entries;
 }
 
-export async function createLead(leadData: Omit<Lead, 'id' | 'createdAt'>) {
+export async function createLead(leadData: Omit<Lead, 'id' | 'createdAt' | 'updatedAt'>) {
     return prisma.lead.create({ data: leadData });
 }
 

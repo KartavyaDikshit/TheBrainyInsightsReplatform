@@ -19,5 +19,10 @@
   "Footer": {
     "about": "회사 소개",
     "contact": "문의하기"
+  },
+  "HomePage": {
+    "title": "홈페이지",
+    "categoriesSectionTitle": "카테고리",
+    "featuredReportsSectionTitle": "주요 보고서"
   }
 }

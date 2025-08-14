@@ -3,9 +3,11 @@ import { Container, ReportCard, Section, Pagination, SearchBar } from '@/compone
 
 
 
-export default async function SearchPage({ params: { locale }, searchParams }: { params: { locale: string }, searchParams?: { [key: string]: string | string[] | undefined } }) {
-  const query = searchParams?.['q'] as string || '';
-  const page = searchParams?.['page'] ? parseInt(searchParams['page'] as string) : 1;
+export default async function SearchPage({ params, searchParams }: { params: Promise<{ locale: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }) {
+  const { locale } = await params;
+  const awaitedSearchParams = await searchParams;
+  const query = awaitedSearchParams?.['q'] as string || '';
+  const page = awaitedSearchParams?.['page'] ? parseInt(awaitedSearchParams['page'] as string) : 1;
   const reports = await search({ q: query, locale, page });
 
   return (

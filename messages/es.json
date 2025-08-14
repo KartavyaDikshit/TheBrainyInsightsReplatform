@@ -19,5 +19,10 @@
   "Footer": {
     "about": "Sobre nosotros",
     "contact": "Contáctenos"
+  },
+  "HomePage": {
+    "title": "Página de inicio",
+    "categoriesSectionTitle": "Categorías",
+    "featuredReportsSectionTitle": "Informes destacados"
   }
 }

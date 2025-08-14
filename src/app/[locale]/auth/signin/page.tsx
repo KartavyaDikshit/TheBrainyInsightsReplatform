@@ -1,20 +1,21 @@
-'use client';
+"use client"; // Mark as client component
 
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { signIn } from "next-auth/react";
+import { useState } from "react";
+import { useParams } from "next/navigation"; // Import useParams
 
-export default function SignInPage() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const t = useTranslations('SignInPage');
+export default function SignIn() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const params = useParams();
+  const locale = params.locale as string;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError(null);
 
-    const result = await signIn('credentials', {
+    const result = await signIn("credentials", {
       redirect: false,
       email,
       password,
@@ -22,49 +23,75 @@ export default function SignInPage() {
 
     if (result?.error) {
       setError(result.error);
-    } else {
-      // Redirect to a protected page or home page
-      window.location.href = '/en/admin'; // Redirect to admin page after successful login
+    } else if (result?.ok) {
+      // Redirect to home or dashboard on success, preserving locale
+            window.location.href = `/${locale}/`; // Redirect to home or dashboard on success, preserving locale
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="px-8 py-6 mt-4 text-left bg-white shadow-lg">
-        <h3 className="text-2xl font-bold text-center">{t('signInTitle')}</h3>
-        <form onSubmit={handleSubmit}>
-          <div className="mt-4">
-            <div>
-              <label className="block" htmlFor="email">{t('emailLabel')}</label>
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          Sign in to your account
+        </h2>
+      </div>
+
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form className="space-y-6" onSubmit={handleSubmit}>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Email address
+            </label>
+            <div className="mt-2">
               <input
+                id="email"
+                name="email"
                 type="email"
-                placeholder={t('emailPlaceholder')}
-                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                autoComplete="email"
+                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            <div className="mt-4">
-              <label className="block" htmlFor="password">{t('passwordLabel')}</label>
+          </div>
+
+          <div>
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Password
+              </label>
+            </div>
+            <div className="mt-2">
               <input
+                id="password"
+                name="password"
                 type="password"
-                placeholder={t('passwordPlaceholder')}
-                className="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600"
+                autoComplete="current-password"
+                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
-            <div className="flex items-baseline justify-between">
-              <button
-                type="submit"
-                className="px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900"
-              >
-                {t('signInButton')}
-              </button>
-            </div>
+          </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
+          <div>
+            <button
+              type="submit"
+              className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              Sign in
+            </button>
           </div>
         </form>
       </div>

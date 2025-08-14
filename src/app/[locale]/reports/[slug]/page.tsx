@@ -2,10 +2,26 @@ import { getReportBySlug } from '@/lib/data/adapter';
 import { Container, Section, JsonLd, Breadcrumbs } from '@/components';
 import { notFound } from 'next/navigation';
 import { Article, WithContext } from 'schema-dts';
+import { Metadata } from 'next'; // Import Metadata
 
+export async function generateMetadata({ params }: { params: Promise<{ locale: string, slug: string }> }): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const report = await getReportBySlug(slug, locale);
 
+  if (!report) {
+    return {}; // Return empty metadata if report not found
+  }
 
-export default async function ReportPage({ params: { locale, slug } }: { params: { locale: string, slug: string } }) {
+  return {
+    title: report.seoTitle || report.title,
+    description: report.seoDesc || report.summary,
+    keywords: report.keywords,
+    // Add other meta tags as needed, e.g., openGraph, twitter
+  };
+}
+
+export default async function ReportPage({ params }: { params: Promise<{ locale: string, slug: string }> }) {
+  const { locale, slug } = await params;
   const report = await getReportBySlug(slug, locale);
 
   if (!report) {
@@ -26,10 +42,10 @@ export default async function ReportPage({ params: { locale, slug } }: { params:
       name: 'The Brainy Insights',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://www.thebrainyinsights.com/assets/images/logo.png',
+        url: 'https://www.thebrainyinsights.com/og-image.jpg', // Using the placeholder OG image for now
       },
     },
-    datePublished: new Date().toISOString(), // placeholder
+    datePublished: report.publishedAt ? new Date(report.publishedAt).toISOString() : new Date().toISOString(), // placeholder
     mainEntityOfPage: {
       '@type': 'WebPage',
       '@id': `https://www.thebrainyinsights.com/${locale}/reports/${slug}`,

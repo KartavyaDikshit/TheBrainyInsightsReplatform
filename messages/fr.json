@@ -19,5 +19,11 @@
   "Footer": {
     "about": "À propos de nous",
     "contact": "Contactez-nous"
+  },
+  "HomePage": {
+    "welcome": "Bienvenue sur la page d'accueil",
+    "title": "Page d'accueil",
+    "categoriesSectionTitle": "Catégories",
+    "featuredReportsSectionTitle": "Rapports en vedette"
   }
 }

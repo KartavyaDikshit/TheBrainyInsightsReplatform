@@ -1,18 +1,23 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-// import { auth } from '@/auth';
+import { auth } from '@/auth'; // Use alias for auth.ts
 
 const prisma = new PrismaClient();
 
-export async function GET() {
-  return NextResponse.json({ message: 'Method Not Allowed' }, { status: 405 });
+export async function GET(request: Request) {
+    return NextResponse.json({ message: 'Method Not Allowed' }, { status: 405 });
 }
 
 export async function POST(request: Request) {
-  // const session = await auth();
-  // if (!session || (session.user?.role !== 'ADMIN' && session.user?.role !== 'EDITOR')) {
-  //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  // }
+  // Manual fix: Bypass API logic during build phase
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return NextResponse.json({ message: 'API bypassed during build' }, { status: 200 });
+  }
+
+  const session = await auth();
+  if (!session || session.user?.role !== 'Admin') {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
 
   try {
     const { id } = await request.json(); // Expect the ID of the AI queue item

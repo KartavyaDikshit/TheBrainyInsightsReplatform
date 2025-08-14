@@ -1,23 +1,24 @@
 import NextAuth, { User, Session, SessionStrategy } from 'next-auth';
 import { JWT } from 'next-auth/jwt';
 import Credentials from 'next-auth/providers/credentials';
-import { PrismaAdapter } from '@auth/prisma-adapter';
+import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { PrismaClient } from '@prisma/client';
-import bcrypt from 'bcryptjs'; // For password hashing
+import bcrypt from 'bcryptjs';
+import { NextResponse } from 'next/server'; // Import NextResponse
 
 const prisma = new PrismaClient();
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma) as any,
-  session: { strategy: 'jwt' as SessionStrategy }, // Use JWT for session management
+  session: { strategy: 'jwt' as SessionStrategy },
   providers: [
     Credentials({
       credentials: {
         email: {},
         password: {},
       },
-      async authorize(credentials: Record<string, string> | undefined) { // Explicitly type credentials
-        if (!credentials) { // Add this check
+      async authorize(credentials: Record<string, string> | undefined) {
+        if (!credentials) {
           return null;
         }
         if (!credentials.email || !credentials.password) {
@@ -31,16 +32,15 @@ export const authOptions = {
         if (user && user.passwordHash) {
           const isValid = await bcrypt.compare(String(credentials.password), user.passwordHash);
           if (isValid) {
-            // Return user object without passwordHash
             return {
               id: user.id,
               email: user.email,
               name: user.name,
-              role: user.role, // Include role in the session
+              role: user.role,
             };
           }
         }
-        return null; // Invalid credentials
+        return null;
       },
     }),
   ],
@@ -50,7 +50,7 @@ export const authOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
-        token.role = user.role; // Add role to JWT
+        token.role = user.role;
       }
       return token;
     },
@@ -59,33 +59,31 @@ export const authOptions = {
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.name = token.name;
-        session.user.role = token.role; // Add role to session
+        session.user.role = token.role;
       }
       return session;
     },
   },
   pages: {
-    signIn: '/en/auth/signin', // Custom sign-in page
+    signIn: '/en/auth/signin',
   },
 };
 
-
-
-// Conditionally initialize NextAuth
-let nextAuthInstance;
-if (typeof window === 'undefined' && process.env.NEXT_AUTH_URL) { // Only initialize on server and if NEXT_AUTH_URL is set
-  nextAuthInstance = NextAuth(authOptions);
+// Conditionally initialize NextAuth handlers
+let handlers;
+if (process.env.NEXTAUTH_SECRET) {
+  handlers = NextAuth(authOptions);
 } else {
-  // Provide dummy handlers for build time or client side
-  nextAuthInstance = {
-    handlers: {
-      GET: () => { throw new Error("NextAuth not initialized during build."); },
-      POST: () => { throw new Error("NextAuth not initialized during build."); }
-    },
-    auth: () => { throw new Error("NextAuth not initialized during build."); },
-    signIn: () => { throw new Error("NextAuth not initialized during build."); },
-    signOut: () => { throw new Error("NextAuth not initialized during build."); }
+  // Provide dummy handlers during build if secret is not available
+  // This prevents the "Cannot read properties of undefined (reading 'GET')" error
+  handlers = {
+    GET: async () => NextResponse.json({ message: 'Auth not initialized' }, { status: 500 }),
+    POST: async () => NextResponse.json({ message: 'Auth not initialized' }, { status: 500 }),
+    auth: async () => null,
+    signIn: async () => {},
+    signOut: async () => {},
   };
 }
 
-export const { handlers: { GET, POST }, auth, signIn, signOut } = nextAuthInstance;
+export const { GET, POST } = handlers;
+export const { auth, signIn, signOut } = handlers;

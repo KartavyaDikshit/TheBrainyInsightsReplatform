@@ -1,34 +1,41 @@
-import { Section, Container, CategoryCard, ReportCard } from '@/components';
-import { listCategories, listReports } from '@/lib/data/adapter';
-import { getTranslations } from 'next-intl/server';
+import Link from "next/link";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../../auth";
 
+interface HomePageProps {
+  params: Promise<{
+    locale: string;
+  }>;
+}
 
-export default async function Home({ params: { locale } }: { params: { locale: string } }) {
-  const categories = await listCategories(locale);
-  const reports = await listReports({ locale, featured: true, size: 4 });
-  const t = await getTranslations('HomePage'); // 'HomePage' is a namespace for translations
+export default async function Home({ params }: HomePageProps) {
+  const { locale } = await params;
+
+  const session = await getServerSession(authOptions);
 
   return (
-    <>
-      <Section>
-        <Container>
-          <h1 className="text-3xl font-bold mb-4">{t('title')}</h1>
-          
-          <h2 className="text-2xl font-bold mt-8 mb-4">{t('categoriesSectionTitle')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {categories.map((category) => (
-              <CategoryCard key={category.id} category={category} locale={locale} />
-            ))}
-          </div>
-
-          <h2 className="text-2xl font-bold mt-8 mb-4">{t('featuredReportsSectionTitle')}</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {reports.map((report) => (
-              <ReportCard key={report.id} report={report} locale={locale} />
-            ))}
-          </div>
-        </Container>
-      </Section>
-    </>
+    <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+          Welcome to TheBrainyInsights Replatform!
+        </h2>
+      </div>
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm text-center">
+        {!session ? (
+          <p>
+            <Link href={`/${locale}/auth/signin`} className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              Sign In
+            </Link>
+          </p>
+        ) : (
+          <p>
+            You are logged in. Go to your{' '}
+            <Link href={`/${locale}/dashboard`} className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+              Dashboard
+            </Link>
+          </p>
+        )}
+      </div>
+    </div>
   );
 }
