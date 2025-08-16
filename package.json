@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node scripts/runlog.cjs \"Dev start\" && next dev -p 3000",
-    "build": "node scripts/prebuild-warn.cjs && node scripts/runlog.cjs \"Build start\" && cross-env DEBUG_CACHE_HANDLER=true DATABASE_URL=\"mysql://tbi_user:karta123@localhost:3306/tbi\" DEMO_NO_DB= NEXT_AUTH_URL=http://localhost:3000 NEXTAUTH_SECRET=super-secret-key-for-build next build",
+    "build": "node scripts/prebuild-warn.cjs && node scripts/runlog.cjs \"Build start\" && dotenv -e .env.production -- cross-env DEBUG_CACHE_HANDLER=true DATABASE_URL=\"mysql://tbi_user:karta123@localhost:3306/tbi\" DEMO_NO_DB= NEXT_AUTH_URL=http://localhost:3000 NEXTAUTH_SECRET=super-secret-key-for-build next build",
     "start": "node scripts/runlog.cjs \"Prod start\" && next start -p 3000",
     "cache:health": "curl http://localhost:3000/api/health/redis",
     "cache:metrics": "curl http://localhost:3000/api/metrics/redis",

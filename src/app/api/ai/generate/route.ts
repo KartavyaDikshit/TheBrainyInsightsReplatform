@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { OpenAI } from 'openai';
 import { PrismaClient } from '@prisma/client';
-import { auth } from '@/auth'; // Import auth from your auth.ts
+import { auth } from '@/lib/auth'; // Import auth from your auth.ts
 
 export const dynamic = 'force-dynamic';
 

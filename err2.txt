@@ -1,0 +1,222 @@
+PS C:\Users\User\TheBrainyInsightsReplatform> pnpm run build
+
+> thebrainyinsights-replatform@1.0.0 build C:\Users\User\TheBrainyInsightsReplatform
+> node scripts/prebuild-warn.cjs && node scripts/runlog.cjs "Build start" && cross-env DEBUG_CACHE_HANDLER=true DATABASE_URL="mysql://tbi_user:karta123@localhost:3306/tbi" DEMO_NO_DB= NEXT_AUTH_URL=http://localhost:3000 NEXTAUTH_SECRET=super-secret-key-for-build next build
+
+   ▲ Next.js 15.4.6
+   - Environments: .env.local, .env.production
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 9.0s
+   Skipping validation of types
+   Skipping linting
+   Collecting page data  .[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.642Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.660Z',
+  stack: undefined
+}
+   Collecting page data  ..[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.697Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.704Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.721Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.729Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.734Z',
+  stack: undefined
+}
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.738Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.750Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.764Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.768Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.783Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.799Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.816Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.830Z',
+  stack: undefined
+}
+[Redis] Connection failed: [Error: ERR Client sent AUTH, but no password is set]
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.846Z',
+  stack: undefined
+}
+   Collecting page data  ...[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.877Z',
+  stack: undefined
+}
+[Redis] Connection failed: [Error: ERR Client sent AUTH, but no password is set]
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.908Z',
+  stack: undefined
+}
+[Redis] Connection failed: [Error: ERR Client sent AUTH, but no password is set]
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.925Z',
+  stack: undefined
+}
+[Redis] Connection failed: [Error: ERR Client sent AUTH, but no password is set]
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:36.957Z',
+  stack: undefined
+}
+[Redis] Connection failed: [Error: ERR Client sent AUTH, but no password is set]
+ ✓ Collecting page data
+[Redis] Client connected successfully
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:41.644Z',
+  stack: undefined
+}
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:41.647Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:41.708Z',
+  stack: undefined
+}
+[Redis] Client connected successfully
+[Redis Client Error] {
+  error: 'ERR Client sent AUTH, but no password is set',
+  timestamp: '2025-08-16T15:47:41.818Z',
+  stack: undefined
+}
+[Redis] Connection failed: [Error: ERR Client sent AUTH, but no password is set]
+ ✓ Generating static pages (15/15)
+ ✓ Collecting build traces
+ ✓ Finalizing page optimization
+
+Route (app)                                 Size  First Load JS
+┌ ○ /_not-found                            996 B         101 kB
+├ ƒ /[locale]                              178 B         104 kB
+├ ƒ /[locale]/about                      1.56 kB         124 kB
+├ ƒ /[locale]/admin                        422 B         104 kB
+├ ƒ /[locale]/admin/leads                1.56 kB         124 kB
+├ ƒ /[locale]/admin/redirects            1.56 kB         124 kB
+├ ƒ /[locale]/admin/reports              1.56 kB         124 kB
+├ ƒ /[locale]/admin/staging                983 B         117 kB
+├ ƒ /[locale]/admin/users/create         1.06 kB         117 kB
+├ ƒ /[locale]/api/auth/[...nextauth]       183 B         100 kB
+├ ƒ /[locale]/auth/error                   850 B         104 kB
+├ ƒ /[locale]/auth/signin                1.08 kB         104 kB
+├ ƒ /[locale]/blog/[slug]                1.56 kB         124 kB
+├ ƒ /[locale]/blogs                        178 B         104 kB
+├ ƒ /[locale]/categories                   178 B         104 kB
+├ ƒ /[locale]/categories/[slug]          1.56 kB         124 kB
+├ ƒ /[locale]/category/[slug]              183 B         100 kB
+├ ƒ /[locale]/contact                    2.61 kB         125 kB
+├ ƒ /[locale]/dashboard                    521 B         103 kB
+├ ƒ /[locale]/faqs                       1.56 kB         124 kB
+├ ƒ /[locale]/press/[slug]               1.56 kB         124 kB
+├ ƒ /[locale]/presses                      178 B         104 kB
+├ ƒ /[locale]/report/[slug]              5.45 kB         106 kB
+├ ƒ /[locale]/reports                      178 B         104 kB
+├ ƒ /[locale]/reports/[slug]             1.56 kB         124 kB
+├ ƒ /[locale]/search                     1.56 kB         124 kB
+├ ƒ /[locale]/services                   1.56 kB         124 kB
+├ ƒ /api/admin/users                       183 B         100 kB
+├ ƒ /api/ai/approve                        183 B         100 kB
+├ ƒ /api/ai/generate                       183 B         100 kB
+├ ƒ /api/ai/reject                         183 B         100 kB
+├ ƒ /api/ai/staging                        183 B         100 kB
+├ ƒ /api/cache/invalidate                  183 B         100 kB
+├ ƒ /api/categories/[slug]                 183 B         100 kB
+├ ƒ /api/contact                           183 B         100 kB
+├ ƒ /api/example/cached                    183 B         100 kB
+├ ƒ /api/health/redis                      183 B         100 kB
+├ ƒ /api/leads                             183 B         100 kB
+├ ƒ /api/metrics/redis                     183 B         100 kB
+├ ƒ /api/reports/[slug]                    183 B         100 kB
+├ ƒ /api/search                            183 B         100 kB
+├ ƒ /api/sitemap-data                      183 B         100 kB
+├ ○ /robots.txt                            183 B         100 kB
+└ ○ /sitemap.xml                           183 B         100 kB
++ First Load JS shared by all             100 kB
+  ├ chunks/4872-4a39b9cf6e701806.js      44.1 kB
+  ├ chunks/adc24f93-8fbbb00eab6ac025.js  54.1 kB
+  └ other shared chunks (total)          2.01 kB
+
+
+ƒ Middleware                             51.1 kB
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand

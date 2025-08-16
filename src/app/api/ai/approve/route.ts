@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-import { auth } from '@/auth'; // Use alias for auth.ts
+import { auth } from '@/lib/auth'; // Use alias for auth.ts
 
 const prisma = new PrismaClient();
 

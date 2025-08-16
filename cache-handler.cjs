@@ -36,16 +36,23 @@ class RedisCacheHandler {
     if (this.client && this.isConnected) return;
 
     try {
-      this.client = createClient({
+      console.log("REDIS_PASSWORD in cache-handler:", process.env.REDIS_PASSWORD);
+
+      const clientOptions = {
         url: process.env.REDIS_URL || 'redis://localhost:6379',
-        password: process.env.REDIS_PASSWORD,
         socket: {
           reconnectStrategy: (retries) => {
             logCacheOperation('RECONNECT_ATTEMPT', 'redis', { retries });
             return retries < 3 ? Math.min(retries * 50, 500) : false;
           }
         }
-      });
+      };
+
+      if (process.env.REDIS_PASSWORD) {
+        clientOptions.password = process.env.REDIS_PASSWORD;
+      }
+
+      this.client = createClient(clientOptions);
 
       this.client.on('error', (error) => {
         logCacheOperation('ERROR', 'redis_client', { error: error.message });

@@ -28,38 +28,43 @@ class RedisManager {
     if (this.isConnected) return true; // Already connected
 
     try {
-      const config: RedisConfig = {
-        url: process.env.REDIS_URL || 'redis://localhost:6379',
-        password: process.env.REDIS_PASSWORD,
-        maxRetries: 3,
-        retryDelayOnFailover: 100,
-        maxRetriesPerRequest: 3
-      };
+      console.log("REDIS_PASSWORD in redis-client:", process.env.REDIS_PASSWORD);
 
-      // Primary client for cache operations
-      this.client = createClient({
-        url: config.url,
-        password: config.password,
+      const url = process.env.REDIS_URL || 'redis://localhost:6379';
+      const password = process.env.REDIS_PASSWORD;
+
+      const clientOptions: any = {
+        url,
         socket: {
-          reconnectStrategy: (retries) => {
+          reconnectStrategy: (retries: number) => {
             // Only retry a few times during build to avoid excessive logging
             if (process.env.NODE_ENV === 'production' || process.env.NODE_ENV === 'development') {
-              if (retries < config.maxRetries) {
+              if (retries < 3) {
                 return Math.min(retries * 50, 500);
               }
             }
             return false; // Do not retry further
           }
         }
-      });
+      };
 
-      // IORedis client for advanced operations
-      this.ioredisClient = new Redis(config.url, {
-        password: config.password,
-        maxRetriesPerRequest: config.maxRetriesPerRequest,
-        retryDelayOnFailover: config.retryDelayOnFailover,
+      if (password) {
+        clientOptions.password = password;
+      }
+
+      this.client = createClient(clientOptions);
+
+      const ioredisOptions: any = {
+        maxRetriesPerRequest: 3,
+        retryDelayOnFailover: 100,
         lazyConnect: true
-      });
+      };
+
+      if (password) {
+        ioredisOptions.password = password;
+      }
+
+      this.ioredisClient = new Redis(url, ioredisOptions);
 
 
       this.client.on('error', (error) => {
