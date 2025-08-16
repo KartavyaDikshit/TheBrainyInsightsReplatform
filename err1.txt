@@ -1,0 +1,368 @@
+PS C:\Users\User\TheBrainyInsightsReplatform> pnpm dev
+
+> thebrainyinsights-replatform@1.0.0 dev C:\Users\User\TheBrainyInsightsReplatform
+> node scripts/runlog.cjs "Dev start" && next dev -p 3000
+
+   ▲ Next.js 15.4.6
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.1.6:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 3.8s
+ ✓ Compiled /middleware in 612ms
+ ✓ Compiled (293 modules)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+ ○ Compiling /[locale] ...
+Warning: You're using `next/head` inside the `app` directory, please migrate to the Metadata API. See https://nextjs.org/docs/app/building-your-application/upgrading/app-router-migration#step-3-migrating-nexthead for more details.
+ ✓ Compiled /[locale] in 7.7s (941 modules)
+Error: Route "/[locale]" used `headers().get('x-forwarded-proto')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+Error: Route "/[locale]" used `headers().get('cookie')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+ GET /en 200 in 9853ms
+ ○ Compiling /_not-found ...
+ ✓ Compiled /_not-found in 628ms (939 modules)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+ GET /api/auth/session 404 in 983ms
+Error: Route "/[locale]" used `headers().get('x-forwarded-proto')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+Error: Route "/[locale]" used `headers().get('cookie')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+ GET /en 200 in 188ms
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+ ○ Compiling /[locale]/dashboard ...
+ ⚠ ./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'getServerSession' is not exported from 'next-auth/next' (imported as 'getServerSession').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+
+./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'authOptions' is not exported from '../../../../auth' (imported as 'authOptions').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+Error: Route "/[locale]" used `headers().get('x-forwarded-proto')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at Home (src\app\[locale]\page.tsx:12:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+Error: Route "/[locale]" used `headers().get('cookie')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at Home (src\app\[locale]\page.tsx:12:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+ GET /en 200 in 182ms
+ ⨯ ReferenceError: "next-auth/next" is deprecated. If you are not ready to migrate, keep using "next-auth@4".
+Read more on https://authjs.dev/getting-started/migrating-to-v5
+    at eval (webpack-internal:///(rsc)/./src/app/[locale]/dashboard/page.tsx:7:72)
+    at <unknown> (rsc)/./src/app/[locale]/dashboard/page.tsx (C:\Users\User\TheBrainyInsightsReplatform\.next\server\app\[locale]\dashboard\page.js:530:1) {
+  type: 'ReferenceError',
+  page: '/en/dashboard'
+}
+ ⚠ ./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'getServerSession' is not exported from 'next-auth/next' (imported as 'getServerSession').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+
+./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'authOptions' is not exported from '../../../../auth' (imported as 'authOptions').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+ ⚠ ./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'getServerSession' is not exported from 'next-auth/next' (imported as 'getServerSession').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+
+./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'authOptions' is not exported from '../../../../auth' (imported as 'authOptions').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+ ⚠ ./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'getServerSession' is not exported from 'next-auth/next' (imported as 'getServerSession').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+
+./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'authOptions' is not exported from '../../../../auth' (imported as 'authOptions').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+ ⚠ ./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'getServerSession' is not exported from 'next-auth/next' (imported as 'getServerSession').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+
+./src/app/[locale]/dashboard/page.tsx
+Attempted import error: 'authOptions' is not exported from '../../../../auth' (imported as 'authOptions').
+
+Import trace for requested module:
+./src/app/[locale]/dashboard/page.tsx
+Error: Route "/[locale]" used `headers().get('x-forwarded-proto')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+Error: Route "/[locale]" used `headers().get('cookie')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+ GET /en 200 in 2342ms
+Error: Route "/[locale]" used `headers().get('x-forwarded-proto')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+Error: Route "/[locale]" used `headers().get('cookie')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+ GET /en/dashboard 500 in 6757ms
+ GET /de 200 in 411ms
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+Error: Route "/[locale]" used `headers().get('x-forwarded-proto')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+Error: Route "/[locale]" used `headers().get('cookie')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+ GET /de 200 in 329ms
+ GET /api/auth/session 404 in 244ms
+ GET /api/auth/session 404 in 61ms
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(middleware)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+Error: Route "/[locale]" used `headers().get('x-forwarded-proto')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+Error: Route "/[locale]" used `headers().get('cookie')`. `headers()` should be awaited before using its value. Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis
+    at createHeadersAccessError (..\..\..\src\server\request\headers.ts:417:9)
+    at syncIODev (..\..\..\src\server\request\headers.ts:405:2)
+    at Promise.get (..\..\..\src\server\request\headers.ts:259:8)
+    at RootLayout (src\app\[locale]\layout.tsx:63:28)
+  415 | ) {
+  416 |   const prefix = route ? `Route "${route}" ` : 'This route '
+> 417 |   return new Error(
+      |         ^
+  418 |     `${prefix}used ${expression}. ` +
+  419 |       `\`headers()\` should be awaited before using its value. ` +
+  420 |       `Learn more: https://nextjs.org/docs/messages/sync-dynamic-apis`
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+[auth][error] MissingSecret: Please define a `secret`.. Read more at https://errors.authjs.dev#missingsecret
+    at assertConfig (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/lib/utils/assert.js:66:16)
+    at Auth (webpack-internal:///(rsc)/./node_modules/.pnpm/@auth+core@0.31.0/node_modules/@auth/core/index.js:88:95)
+    at runNextTicks (node:internal/process/task_queues:65:5)
+    at process.processImmediate (node:internal/timers:459:9)
+    at process.callbackTrampoline (node:internal/async_hooks:130:17)
+ GET /en 200 in 100ms
+ GET /api/auth/session 404 in 129ms
+ GET /api/auth/session 404 in 66ms

@@ -1,31 +1,30 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import createIntlMiddleware from 'next-intl/middleware';
-import auth from 'next-auth/middleware'; // Import auth from next-auth/middleware
-import { Session } from 'next-auth';
-import { locales, defaultLocale } from './config/i18n'; // Import locales and defaultLocale from shared config
+import { locales, defaultLocale } from './config/i18n';
 
-const handleIntlRouting = createIntlMiddleware({
+const intlMiddleware = createIntlMiddleware({
   locales,
   defaultLocale,
   localePrefix: 'always',
 });
 
-const authMiddleware = auth((request) => {
-  return handleIntlRouting(request);
-});
+export default async function middleware(request: NextRequest) {
+  // Apply internationalization middleware
+  const response = intlMiddleware(request);
 
-export const middleware = authMiddleware;
+  // You can add other middleware logic here that is Edge-compatible
+  // For authentication, consider using NextAuth.js's built-in middleware
+  // or checking session tokens directly if they are JWTs.
+  // Do NOT import Node.js-specific code here.
+
+  return response;
+}
 
 export const config = {
-  // Match all request paths except for:
-  // - API routes (starting with /api)
-  // - Next.js internal paths (starting with /_next)
-  // - Static files (containing a dot, e.g., favicon.ico)
-  // - The auth pages themselves, to avoid redirect loops
   matcher: [
-    '/((?!api|_next|auth|[^/.]+\.[^/.]+$).*)/',
-    '/dashboard/:path*', 
-    '/admin/:path*', 
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/dashboard/:path*',
+    '/admin/:path*',
   ],
 };

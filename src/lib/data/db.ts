@@ -1,16 +1,25 @@
 import { PrismaClient } from '@prisma/client';
+import { prismaRedisMiddleware, prismaInvalidationMiddleware } from '../../../packages/database/prisma-redis-cache';
 
-let prisma: PrismaClient | undefined;
+declare global {
+  var prisma: PrismaClient | undefined;
+}
+
+let prisma: PrismaClient;
 
 export function getPrisma(): PrismaClient {
-  if (!prisma) {
-    try {
-      prisma = new PrismaClient();
-    } catch (error) {
-      console.error('Failed to initialize Prisma Client:', error);
-      throw new Error('Database connection not available.');
-    }
+  if (!global.prisma) {
+    global.prisma = new PrismaClient({
+      log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
+    });
+
+    // Temporarily removed Redis caching middleware for debugging
+    // if (process.env.ENABLE_PRISMA_CACHE === 'true') {
+    //   global.prisma.$use(prismaRedisMiddleware);
+    //   global.prisma.$use(prismaInvalidationMiddleware);
+    // }
   }
+  prisma = global.prisma;
   return prisma;
 }
 

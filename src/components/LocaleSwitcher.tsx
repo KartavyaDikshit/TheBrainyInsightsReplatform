@@ -3,6 +3,7 @@
 import { useLocale } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { ChangeEvent, useTransition } from 'react';
+import { locales } from '../config/i18n'; // Import locales
 
 export default function LocaleSwitcher() {
   const [isPending, startTransition] = useTransition();
@@ -25,8 +26,11 @@ export default function LocaleSwitcher() {
         onChange={onSelectChange}
         disabled={isPending}
       >
-        <option value='en'>English</option>
-        <option value='de'>German</option>
+        {locales.map((locale) => (
+          <option key={locale} value={locale}>
+            {locale.toUpperCase()} {/* Display locale code, e.g., EN, DE */}
+          </option>
+        ))}
       </select>
     </label>
   );

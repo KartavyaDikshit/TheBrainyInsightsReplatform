@@ -1,12 +1,14 @@
 import "../globals.css";
 import type { Metadata } from "next";
+import { headers } from 'next/headers';
 import { Inter } from "next/font/google";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { getMessages } from "next-intl/server";
-import { authOptions } from "@/lib/auth"; 
-import { Providers } from "../providers"; 
-import { LocaleSwitcher } from "@/components";
+// import { getMessages } from "next-intl/server";
+import { auth } from "@/lib/auth";
+ 
+// import { Providers } from "../providers"; 
+// import { LocaleSwitcher } from "@/components";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -59,13 +61,13 @@ export default async function RootLayout({
   params: { locale: string };
 }) {
   const { locale } = await params;
-  const session = await getServerSession(authOptions);
-  const messages = await getMessages();
+  // const session = await auth();
+  // const messages = await getMessages();
 
   return (
     <html lang={locale}>
       <body className={inter.className}>
-        <Providers messages={messages} locale={locale}>
+        {/* <Providers messages={messages} locale={locale}> */}
           <header className="bg-gray-800 text-white p-4">
             <nav className="container mx-auto flex justify-between items-center">
               <Link href={`/${locale}/`} className="text-xl font-bold">
@@ -73,17 +75,16 @@ export default async function RootLayout({
               </Link>
               <div className="space-x-4">
                 <Link href={`/${locale}/`}>Home</Link>
-                {session ? (
+                {/* {session ? (
                   <Link href={`/${locale}/dashboard`}>Dashboard</Link>
-                ) : (
+                ) : ( */}
                   <Link href={`/${locale}/auth/signin`}>Sign In</Link>
-                )}
-                <LocaleSwitcher />
+                {/* )} */}
               </div>
             </nav>
           </header>
           <main className="container mx-auto p-4">{children}</main>
-        </Providers>
+        {/* </Providers> */}
       </body>
     </html>
   );

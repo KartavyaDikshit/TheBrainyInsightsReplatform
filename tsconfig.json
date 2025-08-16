@@ -2,12 +2,14 @@
   "extends": "./tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "paths": {
       "@/components": [
         "./packages/ui/src"
       ],
       "@/lib/*": [
-        "./src/lib/*"
+        "src/lib/*"
       ],
       "@/*": [
         "./*"

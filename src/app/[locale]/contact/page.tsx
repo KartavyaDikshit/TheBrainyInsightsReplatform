@@ -4,7 +4,6 @@ import { Container, Section, TextInput, TextArea, Button, FormRow, ValidationMes
 import { JsonLd } from '@/components';
 import { Organization, WithContext } from 'schema-dts';
 import { useLocale } from 'next-intl';
-import { createLead } from '@/lib/data/adapter';
 import { Locale, EnquiryStatus } from '@prisma/client';
 
 
@@ -55,25 +54,27 @@ export default function ContactPage() {
     }
 
     try {
-      // Use the adapter directly for client-side lead creation
-      const res = await createLead({
-        name: formData.name,
-        email: formData.email,
-        company: formData.company || null, // Optional
-        message: formData.message,
-        status: EnquiryStatus.Unseen, // Default status
-        locale: locale.toUpperCase() as Locale,
-        reportId: null, // No report associated with contact form
-        phone: null, // Not collected in this form
-        jobTitle: null, // Not collected in this form
-        
+      const res = await fetch('/api/leads', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          company: formData.company || null,
+          message: formData.message,
+          locale: locale.toUpperCase(),
+        }),
       });
 
-      if (res.id) {
+      const data = await res.json();
+
+      if (res.ok && data.id) {
         setSuccess(true);
         setFormData({ name: '', email: '', company: '', message: '', });
       } else {
-        console.error('Form submission failed');
+        console.error('Form submission failed', data.error);
       }
     } catch (error) {
       console.error('Error submitting form:', error);

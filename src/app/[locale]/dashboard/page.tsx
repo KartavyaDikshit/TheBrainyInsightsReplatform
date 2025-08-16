@@ -1,20 +1,18 @@
-import { getServerSession } from "next-auth/next";
-import { authOptions } from "../../../../auth";
-import { redirect } from "next/navigation";
-import LogoutButton from "./LogoutButton";
+import { auth } from "../../../../auth"
+import { redirect } from "next/navigation"
+import LogoutButton from "./LogoutButton"
 
 interface DashboardPageProps {
-  params: any; // Use any to bypass type checking for params
-  searchParams: any; // Add searchParams to match Next.js PageProps structure, even if not used
+  params: any
+  searchParams: any
 }
 
 export default async function Dashboard({ params }: DashboardPageProps) {
-  const { locale } = params; // Destructure locale from params
-
-  const session = await getServerSession(authOptions);
+  const { locale } = params
+  const session = await auth()
 
   if (!session) {
-    redirect(`/${locale}/auth/signin`); // Redirect to sign-in page with locale
+    redirect(`/${locale}/auth/signin`)
   }
 
   return (
@@ -29,5 +27,5 @@ export default async function Dashboard({ params }: DashboardPageProps) {
         <LogoutButton />
       </div>
     </div>
-  );
+  )
 }
