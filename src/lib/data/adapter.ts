@@ -1,8 +1,8 @@
-import { getPrisma } from './db';
+import { getPrisma, ensurePrismaWithCache } from './db';
 import { toLocaleEnum } from '../../../packages/lib/src/utils';
 import { Lead } from '@prisma/client'; // Import Locale enum
 
-const prisma = getPrisma();
+
 
 // Define the transformed types
 export interface TransformedCategory {
@@ -52,6 +52,7 @@ export function getConfig() {
 }
 
 export async function listCategories(locale: string): Promise<TransformedCategory[]> {
+    const prisma = await ensurePrismaWithCache();
     const categories = await prisma.category.findMany({
         include: {
             translations: {
@@ -75,6 +76,7 @@ export async function listCategories(locale: string): Promise<TransformedCategor
 }
 
 export async function getCategoryBySlug(slug: string, locale: string): Promise<TransformedCategory | undefined> {
+    const prisma = await ensurePrismaWithCache();
     const category = await prisma.category.findUnique({
         where: { slug: slug },
         include: {
@@ -100,6 +102,7 @@ export async function getCategoryBySlug(slug: string, locale: string): Promise<T
 }
 
 export async function listReports({ locale, categorySlug, page = 1, size = 12, featured }: { locale: string; categorySlug?: string; page?: number; size?: number; featured?: boolean }): Promise<TransformedReport[]> {
+    const prisma = await ensurePrismaWithCache();
     const where: any = {};
     if (categorySlug) {
         where.categorySlug = categorySlug;
@@ -142,6 +145,7 @@ export async function listReports({ locale, categorySlug, page = 1, size = 12, f
 }
 
 export async function getReportBySlug(slug: string, locale: string): Promise<TransformedReport | undefined> {
+    const prisma = await ensurePrismaWithCache();
     const report = await prisma.report.findUnique({
         where: { slug: slug },
         include: {
@@ -174,6 +178,7 @@ export async function getReportBySlug(slug: string, locale: string): Promise<Tra
 }
 
 export async function search({ q, locale, page = 1, size = 10 }: { q: string; locale: string; page?: number; size?: number }): Promise<TransformedReport[]> {
+    const prisma = await ensurePrismaWithCache();
     const reports = await prisma.report.findMany({
         where: {
             translations: {
@@ -217,10 +222,12 @@ export async function search({ q, locale, page = 1, size = 10 }: { q: string; lo
 }
 
 export async function listRedirects() {
+    const prisma = await ensurePrismaWithCache();
     return prisma.redirectMap.findMany();
 }
 
 export async function listSitemapEntries() {
+    const prisma = await ensurePrismaWithCache();
     const reports = await prisma.report.findMany({
         include: {
             translations: true, // Include translations for sitemap generation
@@ -265,18 +272,22 @@ export async function listSitemapEntries() {
 }
 
 export async function createLead(leadData: Omit<Lead, 'id' | 'createdAt' | 'updatedAt'>) {
+    const prisma = await ensurePrismaWithCache();
     return prisma.lead.create({ data: leadData });
 }
 
 export async function listLeads() {
+    const prisma = await ensurePrismaWithCache();
     return prisma.lead.findMany();
 }
 
 export async function listAIQueue() {
+    const prisma = await ensurePrismaWithCache();
     return prisma.aIGenerationQueue.findMany();
 }
 
 export async function approveAIItem(id: string) {
+    const prisma = await ensurePrismaWithCache();
     return prisma.aIGenerationQueue.update({
         where: { id: id },
         data: { status: 'APPROVED' }
@@ -284,6 +295,7 @@ export async function approveAIItem(id: string) {
 }
 
 export async function rejectAIItem(id: string) {
+    const prisma = await ensurePrismaWithCache();
     return prisma.aIGenerationQueue.update({
         where: { id: id },
         data: { status: 'REJECTED' }

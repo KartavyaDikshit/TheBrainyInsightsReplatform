@@ -22,11 +22,12 @@ export const metadata: Metadata = {
 };
 
 interface BlogsPageProps {
-  params: any; // Use any to bypass type checking for params
-  searchParams: any; // Add searchParams to match Next.js PageProps structure, even if not used
+  params: Promise<any>; // Use any to bypass type checking for params
+  searchParams: Promise<any>; // Add searchParams to match Next.js PageProps structure, even if not used
 }
 
-export default async function BlogsPage({ params }: BlogsPageProps) {
+export default async function BlogsPage(props: BlogsPageProps) {
+  const params = await props.params;
   const { locale } = params;
 
   const blogs: BlogWithCategory[] = await getAllBlogs(locale as string); // Use the utility function and cast locale

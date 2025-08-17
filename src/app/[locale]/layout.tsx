@@ -2,7 +2,7 @@ import "../globals.css";
 import type { Metadata } from "next";
 import { headers } from 'next/headers';
 import { Inter } from "next/font/google";
-import { getServerSession } from "next-auth";
+import getServerSession from "next-auth";
 import Link from "next/link";
 // import { getMessages } from "next-intl/server";
 import { auth } from "@/lib/auth";
@@ -53,13 +53,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function RootLayout({
-  children,
-  params,
-}: {
-  children: React.ReactNode;
-  params: { locale: string };
-}) {
+export default async function RootLayout(
+  props: {
+    children: React.ReactNode;
+    params: Promise<{ locale: string }>;
+  }
+) {
+  const params = await props.params;
+
+  const {
+    children
+  } = props;
+
   const { locale } = params;
   // const session = await auth();
   // const messages = await getMessages();

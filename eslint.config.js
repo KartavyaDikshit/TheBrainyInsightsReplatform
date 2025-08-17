@@ -6,7 +6,7 @@ import nextPlugin from "@next/eslint-plugin-next";
 
 export default [
   {
-    ignores: [".next/**", ".next/types/**"],
+    ignores: [".next/**", ".next/types/**", "Legacy/**", "www/**"],
   },
   // Global configuration for all files
   {

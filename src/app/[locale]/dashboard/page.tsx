@@ -3,11 +3,12 @@ import { redirect } from "next/navigation"
 import LogoutButton from "./LogoutButton"
 
 interface DashboardPageProps {
-  params: any
-  searchParams: any
+  params: Promise<any>
+  searchParams: Promise<any>
 }
 
-export default async function Dashboard({ params }: DashboardPageProps) {
+export default async function Dashboard(props: DashboardPageProps) {
+  const params = await props.params;
   const { locale } = params
   const session = await auth()
 

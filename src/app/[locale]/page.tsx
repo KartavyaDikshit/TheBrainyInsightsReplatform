@@ -5,9 +5,10 @@ interface HomePageProps {
   params: {
     locale: string;
   };
+  searchParams?: Record<string, string | string[] | undefined>;
 }
 
-export default async function Home({ params }: HomePageProps) {
+export default async function Home({ params, searchParams }: HomePageProps) {
   const { locale } = await params;
   const session = await auth();
 

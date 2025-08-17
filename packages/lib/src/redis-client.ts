@@ -14,6 +14,11 @@ class RedisManager {
   private client: RedisClientType | null = null;
   private ioredisClient: Redis | null = null;
   private isConnected = false;
+  private circuitBreakerOpen = false;
+  private lastAttemptTimestamp = 0;
+  private cooldownPeriod = 5000; // 5 seconds
+  private failedAttempts = 0;
+  private maxFailedAttempts = 3;
 
   private constructor() {}
 
@@ -26,6 +31,12 @@ class RedisManager {
 
   async connect(): Promise<boolean> {
     if (this.isConnected) return true; // Already connected
+
+    const now = Date.now();
+    if (this.circuitBreakerOpen && (now - this.lastAttemptTimestamp < this.cooldownPeriod)) {
+      console.warn('[Redis] Circuit breaker is open. Skipping connection attempt.');
+      return false; // Circuit breaker is open, don't try to connect
+    }
 
     try {
       console.log("REDIS_PASSWORD in redis-client:", process.env.REDIS_PASSWORD);
@@ -74,11 +85,19 @@ class RedisManager {
           stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
         });
         this.isConnected = false; // Ensure connection status is updated on error
+        this.failedAttempts++;
+        this.lastAttemptTimestamp = Date.now();
+        if (this.failedAttempts >= this.maxFailedAttempts) {
+          this.circuitBreakerOpen = true;
+          console.warn('[Redis] Circuit breaker opened due to multiple failures.');
+        }
       });
 
       this.client.on('connect', () => {
         console.log('[Redis] Client connected successfully');
         this.isConnected = true;
+        this.circuitBreakerOpen = false; // Reset circuit breaker on successful connection
+        this.failedAttempts = 0;
       });
 
       this.client.on('disconnect', () => {
@@ -101,20 +120,26 @@ class RedisManager {
     } catch (error) {
       console.error('[Redis] Connection failed:', error);
       this.isConnected = false; // Ensure connection status is updated on failure
+      this.failedAttempts++;
+      this.lastAttemptTimestamp = Date.now();
+      if (this.failedAttempts >= this.maxFailedAttempts) {
+        this.circuitBreakerOpen = true;
+        console.warn('[Redis] Circuit breaker opened due to multiple failures.');
+      }
       return false; // Connection failed
     }
   }
 
-  getClient(): RedisClientType {
-    if (!this.client || !this.isConnected) {
-      throw new Error('Redis client not connected');
+  getClient(): RedisClientType | null {
+    if (!this.isConnected) {
+      return null;
     }
     return this.client;
   }
 
-  getIORedisClient(): Redis {
-    if (!this.ioredisClient) {
-      throw new Error('IORedis client not available');
+  getIORedisClient(): Redis | null {
+    if (!this.isConnected) {
+      return null;
     }
     return this.ioredisClient;
   }
@@ -127,6 +152,8 @@ class RedisManager {
       await this.ioredisClient.disconnect();
     }
     this.isConnected = false;
+    this.circuitBreakerOpen = false;
+    this.failedAttempts = 0;
   }
 
   isHealthy(): boolean {

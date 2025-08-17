@@ -2,12 +2,20 @@ import { NextResponse } from 'next/server';
 import { redisManager } from '@/packages/lib/src/redis-client';
 
 export async function GET() {
+  const redisConnected = await redisManager.connect();
+  if (!redisConnected) {
+    return NextResponse.json({
+      error: 'Redis client not connected',
+      timestamp: new Date().toISOString()
+    }, { status: 500 });
+  }
+
   const client = redisManager.getClient();
   
   try {
     // Get comprehensive Redis metrics
     const info = await client.info('all');
-    const slowlog = await client.eval(`return redis.call('slowlog', 'get', 10)`, 0) as any[];
+    const slowlog = await (client.eval as any)("return redis.call('slowlog', 'get', 10)", 0) as any[];
     
     // Parse metrics into categories
     const metrics = {

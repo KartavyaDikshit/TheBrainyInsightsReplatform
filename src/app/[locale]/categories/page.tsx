@@ -22,11 +22,12 @@ export const metadata: Metadata = {
 };
 
 interface CategoriesPageProps {
-  params: any; // Use any to bypass type checking for params
-  searchParams: any; // Add searchParams to match Next.js PageProps structure, even if not used
+  params: Promise<any>; // Use any to bypass type checking for params
+  searchParams: Promise<any>; // Add searchParams to match Next.js PageProps structure, even if not used
 }
 
-export default async function CategoriesPage({ params }: CategoriesPageProps) {
+export default async function CategoriesPage(props: CategoriesPageProps) {
+  const params = await props.params;
   const { locale } = params;
 
   const categories: CategoryWithTranslations[] = await getAllCategories(locale as string); // Use the utility function and cast locale

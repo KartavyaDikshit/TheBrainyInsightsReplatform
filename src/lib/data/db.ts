@@ -1,5 +1,34 @@
 import { PrismaClient } from '@prisma/client';
-import { prismaRedisMiddleware, prismaInvalidationMiddleware } from '../../../packages/database/prisma-redis-cache';
+import { redisManager } from '../../../packages/lib/src/redis-client';
+
+interface CacheConfig {
+  defaultTTL: number;
+  keyPrefix: string;
+  enableLogging: boolean;
+}
+
+const defaultConfig: CacheConfig = {
+  defaultTTL: 300, // 5 minutes
+  keyPrefix: 'prisma:',
+  enableLogging: process.env.DEBUG_CACHE_HANDLER === 'true'
+};
+
+function generateCacheKey(model: string, operation: string, args: any): string {
+  const argsHash = require('crypto')
+    .createHash('md5')
+    .update(JSON.stringify(args))
+    .digest('hex');
+  
+  return `${defaultConfig.keyPrefix}${model}:${operation}:${argsHash}`;
+}
+
+function logPrismaCache(operation: string, model: string, key: string, hit: boolean) {
+  if (defaultConfig.enableLogging) {
+    const logEntry = `
+[${new Date().toISOString()}] PRISMA_CACHE_${hit ? 'HIT' : 'MISS'}: ${model}.${operation} - ${key}`;
+    require('fs').appendFileSync(require('path').join(process.cwd(), 'REDISLOG.md'), logEntry);
+  }
+}
 
 declare global {
   var prisma: PrismaClient | undefined;
@@ -7,20 +36,107 @@ declare global {
 
 let prisma: PrismaClient;
 
-export function getPrisma(): PrismaClient {
+export async function ensurePrismaWithCache(): Promise<PrismaClient> {
   if (!global.prisma) {
     global.prisma = new PrismaClient({
       log: process.env.NODE_ENV === 'development' ? ['query', 'info', 'warn', 'error'] : ['error'],
     });
 
-    // Temporarily removed Redis caching middleware for debugging
-    // if (process.env.ENABLE_PRISMA_CACHE === 'true') {
-    //   global.prisma.$use(prismaRedisMiddleware);
-    //   global.prisma.$use(prismaInvalidationMiddleware);
-    // }
+    if (process.env.ENABLE_PRISMA_CACHE === 'true' && process.env.NEXT_RUNTIME === 'nodejs') {
+      const redisConnected = await redisManager.connect();
+      if (redisConnected) {
+        global.prisma = global.prisma.$extends({
+          query: {
+            $allModels: {
+              async $allOperations({ model, operation, args, query }) {
+                const cacheableOperations = ['findUnique', 'findFirst', 'findMany', 'count', 'aggregate'];
+
+                if (!model || !cacheableOperations.includes(operation)) {
+                  return query(args);
+                }
+
+                const cacheKey = generateCacheKey(model, operation, args);
+
+                try {
+                  const client = redisManager.getClient();
+
+                  // Try to get from cache
+                  const cached = await client.get(cacheKey);
+                  if (cached) {
+                    logPrismaCache(operation, model, cacheKey, true);
+                    return JSON.parse(cached);
+                  }
+
+                  // Execute query
+                  const result = await query(args);
+
+                  // Cache the result
+                  if (result !== null && result !== undefined) {
+                    const ttl = defaultConfig.defaultTTL;
+                    await client.setEx(cacheKey, ttl, JSON.stringify(result));
+
+                    // Tag for invalidation
+                    await client.sAdd(`tag:model:${model.toLowerCase()}`, cacheKey);
+
+                    logPrismaCache(operation, model, cacheKey, false);
+                  }
+
+                  return result;
+
+                } catch (error) {
+                  console.error('[Prisma Cache Error]', error);
+                  // Fall back to direct query on error
+                  return query(args);
+                }
+              },
+            },
+          },
+        }).$extends({
+          query: {
+            $allModels: {
+              async $allOperations({ model, operation, args, query }) {
+                const writeOperations = ['create', 'update', 'upsert', 'delete', 'createMany', 'updateMany', 'deleteMany'];
+
+                if (model && writeOperations.includes(operation)) {
+                  try {
+                    const client = redisManager.getClient();
+
+                    // Get all cached keys for this model
+                    const tagKey = `tag:model:${model.toLowerCase()}`;
+                    const keys = await client.sMembers(tagKey);
+
+                    if (keys.length > 0) {
+                      await client.del(keys);
+                      await client.del(tagKey);
+
+                      if (defaultConfig.enableLogging) {
+                        const logEntry = `
+[${new Date().toISOString()}] PRISMA_INVALIDATE: ${model} - ${keys.length} keys removed`;
+                        require('fs').appendFileSync(require('path').join(process.cwd(), 'REDISLOG.md'), logEntry);
+                      }
+                    }
+                  } catch (error) {
+                    console.error('[Prisma Invalidation Error]', error);
+                  }
+                }
+
+                return query(args);
+              },
+            },
+          },
+        }) as PrismaClient;
+      }
+    }
   }
   prisma = global.prisma;
   return prisma;
+}
+
+export function getPrisma(): PrismaClient {
+  if (!global.prisma) {
+    throw new Error("Prisma client not initialized. Call ensurePrismaWithCache() first.");
+  }
+  return global.prisma;
 }
 
 // Placeholder for JSON stub data (e.g., from /seed/demo/*.json)

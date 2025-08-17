@@ -2,6 +2,15 @@ import { NextResponse } from 'next/server';
 import { redisManager } from '@/packages/lib/src/redis-client';
 
 export async function GET() {
+  const redisConnected = await redisManager.connect();
+  if (!redisConnected) {
+    return NextResponse.json({
+      status: 'unhealthy',
+      timestamp: new Date().toISOString(),
+      error: 'Redis client not connected'
+    }, { status: 500 });
+  }
+
   try {
     const client = redisManager.getClient();
     
@@ -31,10 +40,10 @@ export async function GET() {
 
     // Check cache keys
     const cacheKeysCount = {
-      nextjs_cache: await client.eval(`return #redis.call('keys', 'next-shared-cache*')`, 0) as number,
-      api_cache: await client.eval(`return #redis.call('keys', 'api:*')`, 0) as number,
-      prisma_cache: await client.eval(`return #redis.call('keys', 'prisma:*')`, 0) as number,
-      session_cache: await client.eval(`return #redis.call('keys', 'user:*')`, 0) as number,
+      nextjs_cache: await (client.eval as any)("return #redis.call('keys', 'next-shared-cache*')", 0) as number,
+      api_cache: await (client.eval as any)("return #redis.call('keys', 'api:*')", 0) as number,
+      prisma_cache: await (client.eval as any)("return #redis.call('keys', 'prisma:*')", 0) as number,
+      session_cache: await (client.eval as any)("return #redis.call('keys', 'user:*')", 0) as number,
     };
 
     const health = {
