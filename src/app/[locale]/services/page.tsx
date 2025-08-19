@@ -1,25 +1,24 @@
-import { Container, Section } from '@/components';
-import { JsonLd } from '@/components';
-import { WebPage, WithContext } from 'schema-dts';
+import React from 'react';
 
+interface Props {
+  params: Promise<{
+    locale: string
+  }>
+}
 
-
-export default function ServicesPage() {
-  const servicesJsonLd: WithContext<WebPage> = {
-    '@context': 'https://schema.org',
-    '@type': 'WebPage',
-    name: 'Our Services - TheBrainyInsights',
-    description: 'Explore the market research services offered by TheBrainyInsights.',
-    url: 'https://www.thebrainyinsights.com/services', // This should be dynamic based on locale
-  };
+export default async function ServicesPage({ params }: Props) {
+  const { locale } = await params;
 
   return (
-    <Section>
-      <JsonLd data={servicesJsonLd} />
-      <Container>
-        <h1>Our Services</h1>
-        {/* Services content */}
-      </Container>
-    </Section>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">Our Services</h1>
+      <p className="text-lg">Explore the comprehensive services offered by TheBrainyInsights Replatform.</p>
+      <ul className="list-disc list-inside mt-4">
+        <li>Market Research Reports</li>
+        <li>AI-Powered Industry Analysis</li>
+        <li>Multilingual Content Generation</li>
+        <li>Custom Research Solutions</li>
+      </ul>
+    </div>
   );
 }

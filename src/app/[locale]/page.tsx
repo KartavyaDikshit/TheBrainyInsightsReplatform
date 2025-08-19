@@ -1,57 +1,77 @@
-import Link from 'next/link';
-import { auth } from '@/lib/auth'; // Import the new auth function
+import JsonLd from "@/packages/ui/src/JsonLd";
 
-interface HomePageProps {
-  params: {
-    locale: string;
-  };
-  searchParams?: Record<string, string | string[] | undefined>;
+interface Props {
+  params: Promise<{
+    locale: string
+  }>
 }
 
-export default async function Home({ params, searchParams }: HomePageProps) {
-  const { locale } = await params;
-  const session = await auth();
-
+export default async function HomePage({ params }: Props) {
+  const { locale } = await params
+  
   return (
-    <div className="bg-white">
-      <main>
-        <div className="relative isolate">
-          <div className="overflow-hidden">
-            <div className="mx-auto max-w-7xl px-6 pb-32 pt-36 sm:pt-60 lg:px-8 lg:pt-32">
-              <div className="mx-auto max-w-2xl gap-x-14 lg:mx-0 lg:flex lg:max-w-none lg:items-center">
-                <div className="w-full max-w-xl lg:shrink-0 xl:max-w-2xl">
-                  <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-                    TheBrainyInsights Replatform
-                  </h1>
-                  <p className="relative mt-6 text-lg leading-8 text-gray-600 sm:max-w-md lg:max-w-none">
-                    Welcome to the future of market research. High SEO, dynamic multilingual support, and AI-powered content generation.
-                  </p>
-                  <div className="mt-10 flex items-center gap-x-6">
-                    {!session ? (
-                      <Link
-                        href={`/${locale}/auth/signin`}
-                        className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      >
-                        Sign In
-                      </Link>
-                    ) : (
-                      <Link
-                        href={`/${locale}/dashboard`}
-                        className="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                      >
-                        Go to Dashboard
-                      </Link>
-                    )}
-                    <Link href="#" className="text-sm font-semibold leading-6 text-gray-900">
-                      Learn more <span aria-hidden="true">→</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+        <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "TheBrainyInsights Replatform",
+          "url": "https://www.thebrainyinsights.com",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "https://www.thebrainyinsights.com/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }}
+      />
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "TheBrainyInsights",
+          "url": "https://www.thebrainyinsights.com",
+          "logo": "https://www.thebrainyinsights.com/logo.png", // Assuming a logo exists
+          "sameAs": [
+            // Add social media links here if available
+            // "https://www.facebook.com/thebrainyinsights",
+            // "https://twitter.com/thebrainyinsights",
+            // "https://www.linkedin.com/company/thebrainyinsights"
+          ]
+        }}
+      />
+      {/* Hero Section */}
+      <section className="hero">
+        <div className="container">
+          <h1>TheBrainyInsights Replatform</h1>
+          <p>Welcome to the future of market research. High SEO, dynamic multilingual support, and AI-powered content generation.</p>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <a href={`/${locale}/auth/signin`} className="btn-primary">Sign In</a>
+            <a href={`/${locale}/about`} className="btn-secondary">Learn more →</a>
+          </div>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section style={{ padding: '4rem 0', background: '#f8fafc' }}>
+        <div className="container">
+          <div className="grid grid-cols-3">
+            <div className="card">
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1e293b' }}>Market Reports</h3>
+              <p style={{ color: '#64748b' }}>Access comprehensive market research reports with AI-powered insights and analysis.</p>
+            </div>
+            <div className="card">
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1e293b' }}>AI-Powered Analysis</h3>
+              <p style={{ color: '#64748b' }}>Generate detailed industry analysis using advanced AI and machine learning algorithms.</p>
+            </div>
+            <div className="card">
+              <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: '#1e293b' }}>Global Reach</h3>
+              <p style={{ color: '#64748b' }}>Multilingual support for 7+ languages with localized market intelligence.</p>
             </div>
           </div>
         </div>
-      </main>
-    </div>
-  );
+      </section>
+    </>
+  )
 }
+
+export const dynamic = 'force-dynamic'

@@ -14,7 +14,7 @@ export default async function SearchPage({ params, searchParams }: { params: Pro
     <Section>
       <Container>
         <h1 className="text-3xl font-bold mb-8">Search</h1>
-        <SearchBar initialQuery={query} />
+        <SearchBar initialQuery={query} locale={locale} />
 
         {query && (
           <>

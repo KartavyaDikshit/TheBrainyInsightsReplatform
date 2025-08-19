@@ -4,15 +4,16 @@ import { useRouter } from 'next/navigation';
 
 interface SearchBarProps {
   initialQuery?: string;
+  locale: string; // Add locale prop
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ initialQuery = '' }) => {
+const SearchBar: React.FC<SearchBarProps> = ({ initialQuery = '', locale }) => {
   const router = useRouter();
   const [query, setQuery] = React.useState(initialQuery);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/search?q=${query}`);
+        router.push(`/${locale}/search?q=${query}`);
   };
 
   return (

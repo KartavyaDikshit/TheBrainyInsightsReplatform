@@ -66,11 +66,12 @@ export default async function RootLayout(
   } = props;
 
   const { locale } = params;
-  // const session = await auth();
-  // const messages = await getMessages();
+
+  const RTL_LOCALES = ['ar', 'he']; // Example RTL locales
+  const isRtl = RTL_LOCALES.includes(locale);
 
   return (
-    <html lang={locale}>
+    <html lang={locale} dir={isRtl ? 'rtl' : 'ltr'}>
       <body className={inter.className}>
         {/* <Providers messages={messages} locale={locale}> */}
           <header className="bg-gray-800 text-white p-4">

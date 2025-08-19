@@ -1,379 +1,477 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated"
+  envFiles = ["./.env"]
+}
+
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-generator client {
-  provider = "prisma-client-js"
-}
-
-enum Locale {
-  EN
-  DE
-  FR
-  ES
-  IT
-  JA
-  KO
-}
-
-enum Status {
-  DRAFT
-  STAGED
-  PUBLISHED
-}
-
-enum UserStatus {
-  Active
-  Inactive
-  Pending
-}
-
-enum EnquiryStatus {
-  Seen
-  Unseen
-}
-
-enum OrderStatus {
-  Pending
-  Processing
-  Cancel
-  Completed
-  Failure
-}
-
-enum LicenseType {
-  single
-  multiple
-  corporate
-}
+// ================================================================
+// CORE CONTENT MODELS
+// ================================================================
 
 model Category {
-  id        String   @id @default(cuid())
-  shortcode String   @unique // Added from tbl_category
-  slug      String   @unique
-  parentId  String?
-  icon      String?  // Added from tbl_category
-  featured  Boolean? @default(false) // Added from tbl_category
-  status    Status   @default(DRAFT) // Will map Active/Inactive from legacy
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  shortcode   String   @unique @db.VarChar(20)
+  slug        String   @unique @db.VarChar(100)
+  title       String   @db.VarChar(200)
+  description String?  @db.Text
+  icon        String?  @db.VarChar(100)
+  featured    Boolean  @default(false)
+  sortOrder   Int      @default(0) @map("sort_order")
+  
+  // SEO
+  metaTitle       String? @map("meta_title") @db.VarChar(200)
+  metaDescription String? @map("meta_description") @db.VarChar(300)
+  
+  // Status
+  status      ContentStatus @default(PUBLISHED)
+  
+  // Analytics
+  viewCount   BigInt   @default(0) @map("view_count")
+  
+  // Timestamps
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
 
+  // Relations
   translations CategoryTranslation[]
-  reports      Report[] // Added inverse relation
-  blogs        Blog[] // Added inverse relation for Blog
-  media        Media[] // Inverse relation for category_id in tbl_media
-  presses      Press[] // Inverse relation for category_id in tbl_press
+  reports      Report[]
+  blogs        Blog[]
 
-  @@index([slug, parentId])
+  @@index([status, featured, sortOrder])
+  @@index([shortcode])
+  @@map("categories")
 }
 
 model CategoryTranslation {
-  id          String  @id @default(cuid())
-  categoryId  String
-  locale      Locale
-  name        String
-  description String? @db.MediumText
-  seoTitle    String?
-  seoDesc     String?
-
-  category Category @relation(fields: [categoryId], references: [id])
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId  String @map("category_id") @db.Uuid
+  locale      String @db.VarChar(5)
+  
+  title       String @db.VarChar(200)
+  description String? @db.Text
+  slug        String @db.VarChar(100)
+  
+  metaTitle       String? @map("meta_title") @db.VarChar(200)
+  metaDescription String? @map("meta_description") @db.VarChar(300)
+  
+  status      TranslationStatus @default(PUBLISHED)
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+  
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@unique([categoryId, locale])
-  @@index([locale, name])
+  @@index([locale, status])
+  @@map("category_translations")
 }
 
 model Report {
-  id               String    @id @default(cuid())
-  slug             String    @unique
-  categoryId       String
-  status           Status    @default(DRAFT)
-  publishedAt      DateTime?
-  price            Float?
-  featured         Boolean?  @default(false)
-  heroImage        String?
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  adminId          String?
-  sku              String?   // Added from tbl_report
-  picture          String?   // Added from tbl_report
-  tocHtml          String?   @db.LongText // Added from tbl_report
-  tofHtml          String?   @db.LongText // Added from tbl_report
-  segmentation     String?   @db.MediumText // Added from tbl_report
-  mprice           Float?    // Added from tbl_report
-  cprice           Float?    // Added from tbl_report
-  pages            String?   // Mapped tbl_report.pages (varchar) directly here
-  baseYear         Int?      // Added from tbl_report
-  historicalData   String?   // Added from tbl_report
-  reportLink       String?   // Added from tbl_report
-  companies        String?   @db.MediumText // Added from tbl_report
-  types            String?   @db.MediumText // Added from tbl_report
-  applications     String?   @db.MediumText // Added from tbl_report
-  ratings          Float?    // Added from tbl_report
-  reviews          Int?      // Added from tbl_report
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId      String?   @map("category_id") @db.Uuid
+  
+  // Identifiers
+  sku             String?   @unique @db.VarChar(50)
+  slug            String    @unique @db.VarChar(150)
+  
+  // Basic Info
+  title           String    @db.VarChar(500)
+  description     String    @db.Text
+  summary         String?   @db.Text
+  
+  // Report Details
+  pages           Int       @default(0)
+  publishedDate   DateTime  @map("published_date") @db.Date
+  baseYear        Int?      @map("base_year")
+  forecastPeriod  String?   @map("forecast_period") @db.VarChar(50)
+  
+  // Content
+  tableOfContents String?   @map("table_of_contents") @db.Text
+  methodology     String?   @db.Text
+  keyFindings     String[]  @map("key_findings")
+  
+  // Market Data (JSON)
+  marketData      Json?     @map("market_data") @db.JsonB
+  keyPlayers      String[]  @map("key_players")
+  regions         String[]
+  
+  // Categorization
+  industryTags    String[]  @map("industry_tags")
+  reportType      String?   @map("report_type") @db.VarChar(50)
+  
+  // SEO
+  keywords        String[]
+  metaTitle       String    @map("meta_title") @db.VarChar(500)
+  metaDescription String    @map("meta_description") @db.VarChar(500)
+  
+  // Pricing (USD)
+  singlePrice     Decimal?  @map("single_price") @db.Decimal(10,2)
+  multiPrice      Decimal?  @map("multi_price") @db.Decimal(10,2)
+  corporatePrice  Decimal?  @map("corporate_price") @db.Decimal(10,2)
+  
+  // Status & Features
+  status          ContentStatus @default(DRAFT)
+  featured        Boolean   @default(false)
+  priority        Int       @default(0)
+  
+  // Analytics
+  viewCount       BigInt    @default(0) @map("view_count")
+  downloadCount   BigInt    @default(0) @map("download_count")
+  
+  // Ratings
+  avgRating       Decimal?  @map("avg_rating") @db.Decimal(3,2)
+  reviewCount     Int       @default(0) @map("review_count")
+  
+  // Timestamps
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
-  translations ReportTranslation[]
-  category     Category          @relation(fields: [categoryId], references: [id])
-  admin        User?             @relation("AdminReports", fields: [adminId], references: [id])
-  enquiries    Lead[]
-  faqs         FAQ[]
-  orderItems   OrderItem[]
-  requests     Request[] // Added inverse relation for tbl_request
+  // Relations
+  category      Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  translations  ReportTranslation[]
+  reviews       ReportReview[]
+  enquiries     Enquiry[]
+  orderItems    OrderItem[]
 
-  @@index([slug, categoryId, publishedAt])
+  @@index([categoryId, status, featured])
+  @@index([publishedDate, status])
+  @@index([avgRating, reviewCount])
+  @@index([industryTags], type: Gin)
+  @@index([keywords], type: Gin)
+  @@map("reports")
 }
 
 model ReportTranslation {
-  id           String  @id @default(cuid())
-  reportId     String
-  locale       Locale
-  title        String @db.VarChar(2048)
-  summary      String @db.LongText
-  bodyHtml     String?
-  seoTitle     String? @db.VarChar(2048)
-  seoDesc      String? @db.VarChar(2048)
-  keywordsJson String? @db.LongText // Added from tbl_report.keywords and meta_keyword
+  id              String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reportId        String @map("report_id") @db.Uuid
+  locale          String @db.VarChar(5)
+  
+  title           String @db.VarChar(500)
+  description     String @db.Text
+  summary         String? @db.Text
+  slug            String @db.VarChar(150)
+  
+  tableOfContents String? @map("table_of_contents") @db.Text
+  methodology     String? @db.Text
+  keyFindings     String[] @map("key_findings")
+  
+  metaTitle       String @map("meta_title") @db.VarChar(500)
+  metaDescription String @map("meta_description") @db.VarChar(500)
+  keywords        String[]
+  
+  status          TranslationStatus @default(DRAFT)
+  
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
 
-  report Report @relation(fields: [reportId], references: [id])
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
 
   @@unique([reportId, locale])
+  @@index([locale, status])
+  @@map("report_translations")
 }
 
-model Blog {
-  id           String    @id @default(cuid())
-  categoryId   String?
-  title        String?
-  slug         String?   @unique
-  publishedAt  DateTime? @db.Date
-  description  String?   @db.MediumText
-  seoTitle     String?
-  seoKeywords  String?
-  seoDescription String?
-  status       UserStatus // Using UserStatus enum for Active/Inactive
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  category Category? @relation(fields: [categoryId], references: [id])
-
-  @@index([slug, categoryId, publishedAt])
-}
-
-model RedirectMap {
-  id         String  @id @default(cuid())
-  oldPath    String
-  newPath    String
-  locale     Locale?
-  httpStatus Int     @default(301)
-
-  @@unique([oldPath, locale])
-}
-
-model MediaAsset {
-  id           String  @id @default(cuid())
-  originalPath String
-  publicPath   String
-  width        Int?
-  height       Int?
-  mime         String?
-  hash         String?
-}
+// ================================================================
+// USER MANAGEMENT
+// ================================================================
 
 model User {
-  id           String     @id @default(cuid())
-  email        String     @unique
-  name         String?
-  role         String // Admin, Editor, Viewer, superadmin, manager, user (from legacy)
-  passwordHash String?
-  profileImage String? // From tbl_admin
-  firstName    String? // From tbl_admin
-  lastName    String? // From tbl_admin
-  username     String?    @unique // From tbl_admin
-  status       UserStatus @default(Active) // Added default value
-  phone        String?
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email       String     @unique @db.VarChar(255)
+  firstName   String?    @map("first_name") @db.VarChar(100)
+  lastName    String?    @map("last_name") @db.VarChar(100)
+  phone       String?    @db.VarChar(20)
+  company     String?    @db.VarChar(200)
+  country     String?    @db.VarChar(100)
+  
+  // Auth
+  password    String?    @db.VarChar(255)
+  emailVerified Boolean  @default(false) @map("email_verified")
+  
+  // Preferences
+  preferredLanguage String? @map("preferred_language") @db.VarChar(5)
+  newsletter  Boolean    @default(true)
+  
+  status      UserStatus @default(ACTIVE)
+  lastLoginAt DateTime?  @map("last_login_at")
+  
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
 
-  reports Report[] @relation("AdminReports") // Inverse relation for admin_id in tbl_report
+  // Relations
+  orders      Order[]
+  enquiries   Enquiry[]
+  reviews     ReportReview[]
+
+  @@index([email, status])
+  @@map("users")
 }
 
-model Country {
-  id        String  @id @default(cuid())
-  region    String?
-  name      String
-  shortname String  @unique
-  phonecode Int
+model Admin {
+  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email        String     @unique @db.VarChar(255)
+  username     String     @unique @db.VarChar(100)
+  firstName    String?    @map("first_name") @db.VarChar(100)
+  lastName     String?    @map("last_name") @db.VarChar(100)
+  
+  password     String     @db.VarChar(255)
+  role         AdminRole
+  
+  status       ContentStatus @default(ACTIVE)
+  lastLoginAt  DateTime?  @map("last_login_at")
+  
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  @@index([email, status])
+  @@map("admins")
 }
 
-model Lead {
-  id        String   @id @default(cuid())
-  reportId  String? // Added from tbl_enquiry
-  name      String
-  email     String
-  phone     String? // Added from tbl_enquiry
-  jobTitle  String? // Added from tbl_enquiry
-  company   String?
-  message   String
-  status    EnquiryStatus @default(Unseen) // Added from tbl_enquiry
-  locale    Locale // Keep existing locale field
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt // Added from tbl_enquiry
-
-  report Report? @relation(fields: [reportId], references: [id]) // Relation to Report model
-}
-
-model FAQ {
-  id        String   @id @default(cuid())
-  reportId  String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  translations FAQTranslation[] // Relation to FAQTranslation
-  report       Report?          @relation(fields: [reportId], references: [id]) // Relation to Report model
-}
-
-model FAQTranslation {
-  id        String  @id @default(cuid())
-  faqId     String
-  locale    Locale
-  question  String?
-  answer    String? @db.VarChar(256)
-
-  faq FAQ @relation(fields: [faqId], references: [id])
-
-  @@unique([faqId, locale])
-}
-
-model Media {
-  id           String    @id @default(cuid())
-  categoryId   String?
-  title        String
-  link         String
-  description  String    @db.MediumText
-  publishedAt  DateTime? @db.Date
-  seoTitle     String?
-  seoKeywords  String?
-  seoDescription String?
-  status       UserStatus // Using UserStatus enum for Active/Inactive
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  category Category? @relation(fields: [categoryId], references: [id])
-}
+// ================================================================
+// E-COMMERCE
+// ================================================================
 
 model Order {
-  id           String      @id @default(cuid())
-  ipAddress    String
-  subtotal     Float       
-  discount     Float       
-  total        Float       
-  itemCount    Int         @map("items") // Renamed to avoid conflict with Prisma keyword
-  orderDate    DateTime    @db.Date
-  paymentMode  String?
-  transactionId String?    @map("txn_id")
-  payerId      String?    
-  firstName    String?     @map("fname")
-  lastName     String?     @map("lname")
-  email        String?
-  phone        String?
-  country      String?
-  state        String?
-  city         String?
-  zipCode      String?     @map("zipcode")
-  address      String?     @db.VarChar(500)
-  paymentDate  DateTime?   @db.Date
-  errorMessage String?     @map("error")
-  status       OrderStatus @default(Pending)
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String?     @map("user_id") @db.Uuid
+  orderNumber String      @unique @map("order_number") @db.VarChar(50)
+  
+  // Customer Info
+  customerEmail String   @map("customer_email") @db.VarChar(255)
+  customerName  String   @map("customer_name") @db.VarChar(200)
+  customerPhone String?  @map("customer_phone") @db.VarChar(20)
+  
+  // Amounts
+  subtotal    Decimal     @db.Decimal(12, 2)
+  discount    Decimal     @default(0) @db.Decimal(12, 2)
+  total       Decimal     @db.Decimal(12, 2)
+  currency    String      @default("USD") @db.VarChar(3)
+  
+  // Payment
+  paymentMethod String?   @map("payment_method") @db.VarChar(50)
+  paymentStatus String?   @map("payment_status") @db.VarChar(50)
+  transactionId String?   @map("transaction_id") @db.VarChar(100)
+  
+  status      OrderStatus @default(PENDING)
+  
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
 
-  orderItems OrderItem[] // Inverse relation for order_id in tbl_order_item
+  // Relations
+  user       User?       @relation(fields: [userId], references: [id])
+  items      OrderItem[]
+
+  @@index([customerEmail, status])
+  @@index([createdAt])
+  @@map("orders")
 }
 
 model OrderItem {
-  id        String      @id @default(cuid())
-  orderId   String?
-  reportId  String?
-  license   LicenseType?
-  price     Float       
-  quantity  Int         @default(1)
+  id       String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId  String      @map("order_id") @db.Uuid
+  reportId String      @map("report_id") @db.Uuid
+  
+  licenseType LicenseType @map("license_type")
+  price       Decimal     @db.Decimal(10, 2)
+  quantity    Int         @default(1)
 
-  order  Order?  @relation(fields: [orderId], references: [id])
-  report Report? @relation(fields: [reportId], references: [id])
+  order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  report Report @relation(fields: [reportId], references: [id])
+
+  @@index([orderId])
+  @@index([reportId])
+  @@map("order_items")
 }
 
-model Press {
-  id           String    @id @default(cuid())
-  categoryId   String?
-  title        String
-  slug         String    @unique
-  description  String    @db.MediumText
-  publishedAt  DateTime? @db.Date
-  seoTitle     String?
-  seoKeywords  String?
-  seoDescription String? @db.VarChar(256)
-  status       UserStatus // Using UserStatus enum for Active/Inactive
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+// ================================================================
+// CUSTOMER ENGAGEMENT
+// ================================================================
 
-  category Category? @relation(fields: [categoryId], references: [id])
-}
-
-model Request {
-  id           String   @id @default(cuid())
-  reportId     String?
-  fullName     String
-  email        String
-  phone        String?
-  designation  String?
-  company      String?
-  comment      String?  @db.Text
-  publisher    String?
-  type         String?
-  country      String?
-  region       String?
-  phoneCode    String?
-  shortName    String?
-  status       EnquiryStatus @default(Unseen)
-  isProcessed  Boolean?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+model Enquiry {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reportId  String?       @map("report_id") @db.Uuid
+  userId    String?       @map("user_id") @db.Uuid
+  
+  firstName String        @map("first_name") @db.VarChar(100)
+  lastName  String?       @map("last_name") @db.VarChar(100)
+  email     String        @db.VarChar(255)
+  phone     String?       @db.VarChar(20)
+  company   String?       @db.VarChar(200)
+  country   String?       @db.VarChar(100)
+  
+  message   String?       @db.Text
+  enquiryType String?     @map("enquiry_type") @db.VarChar(50)
+  
+  status      EnquiryStatus @default(NEW)
+  
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
 
   report Report? @relation(fields: [reportId], references: [id])
+  user   User?         @relation(fields: [userId], references: [id])
+
+  @@index([reportId, status])
+  @@index([email])
+  @@map("enquiries")
 }
 
-model Testimonial {
-  id        String   @id @default(cuid()) @map("testimonial_id")
-  content   String   @db.MediumText
-  name      String   @db.VarChar(128)
-  logo      String?  @db.VarChar(128)
-  place     String   @db.VarChar(128)
-  status    UserStatus // Reusing UserStatus enum for Active/Inactive
+model ReportReview {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reportId  String   @map("report_id") @db.Uuid
+  userId    String?  @map("user_id") @db.Uuid
+  
+  rating    Int      @db.SmallInt
+  title     String?  @db.VarChar(200)
+  content   String?  @db.Text
+  
+  // Anonymous reviewer info
+  reviewerName    String? @map("reviewer_name") @db.VarChar(100)
+  reviewerCompany String? @map("reviewer_company") @db.VarChar(200)
+  
+  status    ContentStatus @default(PUBLISHED)
+  verified  Boolean  @default(false)
+  
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("tbl_testimonial")
+  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  user   User?  @relation(fields: [userId], references: [id])
+
+  @@index([reportId, status])
+  @@index([rating, verified])
+  @@map("report_reviews")
 }
 
-model AIGenerationQueue {
-  id          String   @id @default(cuid())
-  sourceDocId String?
-  reportId    String?
-  locale      Locale
-  prompt      String
-  outputJson  String?
-  status      String // PENDING_REVIEW, APPROVED, REJECTED, ERROR
-  tokenCount  Int?
-  costCents   Float?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+// ================================================================
+// CONTENT MODELS
+// ================================================================
+
+model Blog {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId    String?   @map("category_id") @db.Uuid
+  
+  title         String    @db.VarChar(300)
+  slug          String    @unique @db.VarChar(150)
+  excerpt       String?   @db.VarChar(500)
+  content       String    @db.Text
+  
+  tags          String[]
+  
+  metaTitle       String? @map("meta_title") @db.VarChar(300)
+  metaDescription String? @map("meta_description") @db.VarChar(500)
+  
+  status        ContentStatus @default(DRAFT)
+  featured      Boolean   @default(false)
+  
+  viewCount     BigInt    @default(0) @map("view_count")
+  
+  publishedAt   DateTime? @map("published_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  category     Category? @relation(fields: [categoryId], references: [id])
+  translations BlogTranslation[]
+
+  @@index([categoryId, status])
+  @@index([publishedAt])
+  @@index([tags], type: Gin)
+  @@map("blogs")
 }
 
-model AILog {
-  id           String   @id @default(cuid())
-  queueId      String?
-  model        String
-  promptHash   String
-  inputTokens  Int
-  outputTokens Int
-  costCents    Float
-  status       String
-  createdAt    DateTime @default(now())
+model BlogTranslation {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  blogId      String @map("blog_id") @db.Uuid
+  locale      String @db.VarChar(5)
+  
+  title       String @db.VarChar(300)
+  slug        String @db.VarChar(150)
+  excerpt     String? @db.VarChar(500)
+  content     String @db.Text
+  
+  tags        String[]
+  
+  metaTitle       String? @map("meta_title") @db.VarChar(300)
+  metaDescription String? @map("meta_description") @db.VarChar(500)
+  
+  status      TranslationStatus @default(DRAFT)
+  
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
+
+  @@unique([blogId, locale])
+  @@index([locale, status])
+  @@map("blog_translations")
+}
+
+// ================================================================
+// ENUMS
+// ================================================================
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+  ACTIVE
+
+  @@map("content_status")
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+
+  @@map("user_status")
+}
+
+enum AdminRole {
+  SUPERADMIN
+  MANAGER
+  EDITOR
+
+  @@map("admin_role")
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+
+  @@map("order_status")
+}
+
+enum LicenseType {
+  SINGLE
+  MULTIPLE
+  CORPORATE
+
+  @@map("license_type")
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  CONVERTED
+  CLOSED
+
+  @@map("enquiry_status")
+}
+
+enum TranslationStatus {
+  DRAFT
+  REVIEW
+  APPROVED
+  PUBLISHED
+
+  @@map("translation_status")
 }

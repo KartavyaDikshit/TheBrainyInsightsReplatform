@@ -16,10 +16,10 @@ function main() {
     return __awaiter(this, void 0, void 0, function* () {
         console.log('Starting data migration...');
         const oldDbConnection = yield mysql.createConnection({
-            host: 'localhost',
-            user: 'tbi_user',
-            password: 'karta123',
-            database: 'tbi_db',
+            host: process.env.OLD_DB_HOST || 'localhost',
+            user: process.env.OLD_DB_USER || 'tbi_user',
+            password: process.env.OLD_DB_PASSWORD || 'karta123',
+            database: process.env.OLD_DB_DATABASE || 'tbi_db',
         });
         console.log('Connected to old MySQL database.');
         const idMap = {};
