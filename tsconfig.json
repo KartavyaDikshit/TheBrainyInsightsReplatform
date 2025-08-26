@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "es6"
-    ],
+    "target": "ES2022",
+    "lib": ["dom", "dom.iterable", "ES2022"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -16,47 +13,37 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
+    "plugins": [{"name": "next"}],
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./src/*"
-      ],
-      "@/db/*": [
-        "./src/lib/db/*"
-      ],
-      "@/components/*": [
-        "./src/components/*"
-      ],
-      "@/lib/*": [
-        "./src/lib/*"
-      ],
-      "@tbi/database": [
-        "./packages/database/src"
-      ],
-      "@tbi/database/*": [
-        "./packages/database/src/*"
-      ],
-      "@/packages/ui/src/*": [
-        "./packages/ui/src/*"
-      ]
+      "@/*": ["./src/*"],
+      "@/components/*": ["./src/components/*"],
+      "@/lib/*": ["./src/lib/*"],
+      "@/types/*": ["./src/types/*"],
+      "@/config/*": ["./src/config/*"],
+      "@tbi/database": ["./packages/database/src"],
+      "@tbi/database/*": ["./packages/database/src/*"],
+      "@tbi/ui": ["./packages/ui/src"],
+      "@tbi/ui/*": ["./packages/ui/src/*"]
     },
-    "target": "ES2017"
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "skipDefaultLibCheck": true
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "packages/**/*.ts"
+    "packages/database/src/**/*"
   ],
   "exclude": [
     "node_modules",
     ".next",
-    "dist"
+    "dist",
+    "packages/database/prisma/migrations"
   ]
 }

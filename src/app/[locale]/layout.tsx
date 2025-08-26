@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import getServerSession from "next-auth";
 import Link from "next/link";
 // import { getMessages } from "next-intl/server";
-import { auth } from "@/lib/auth";
+// import { auth } from "@/lib/auth";
  
 // import { Providers } from "../providers"; 
 // import { LocaleSwitcher } from "@/components";

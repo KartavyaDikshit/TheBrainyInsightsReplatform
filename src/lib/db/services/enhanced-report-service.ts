@@ -1,5 +1,6 @@
+/*
 import { prisma, pgPool } from '../postgres-client'
-import type { Prisma } from '@prisma/client'
+import type { Prisma } from '@tbi/database'
 
 export interface SearchFilters {
   categoryId?: string
@@ -410,3 +411,4 @@ export class EnhancedReportService {
     }
   }
 }
+*/

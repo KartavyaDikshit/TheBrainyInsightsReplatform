@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { redisManager } from '@/packages/lib/src/redis-client';
+import { redisManager } from 'C:/Users/User/TheBrainyInsightsReplatform/packages/lib/src/redis-client'; // Changed import path
 
 export async function GET() {
   const redisConnected = await redisManager.connect();
@@ -13,6 +13,13 @@ export async function GET() {
 
   try {
     const client = redisManager.getClient();
+    if (!client) {
+      return NextResponse.json({
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        error: 'Redis client not available'
+      }, { status: 500 });
+    }
     
     // Basic connectivity test
     const ping = await client.ping();
@@ -56,7 +63,7 @@ export async function GET() {
 
     return NextResponse.json(health);
 
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({
       status: 'unhealthy',
       timestamp: new Date().toISOString(),

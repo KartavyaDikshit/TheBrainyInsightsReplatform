@@ -1,11 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { withCache } from '@/packages/lib/src/api-cache-middleware';
+// import { NextRequest, NextResponse } from 'next/server'; // Commented out
+// import { withCache } from 'C:/Users/User/TheBrainyInsightsReplatform/packages/lib/src/api-cache-middleware'; // Commented out
 
+/* Commented out the entire class
 export class ExampleAPI {
-  @withCache({ 
+  @withCache({
     ttl: 600, // 10 minutes
     tags: ['examples', 'api-data'],
-    keyGenerator: (req) => `api:example:${req.nextUrl.searchParams.get('id') || 'default'}`
+    keyGenerator: (req: NextRequest) => `api:example:${req.nextUrl.searchParams.get('id') || 'default'}` // Added type for req
   })
   static async GET(request: NextRequest): Promise<NextResponse> {
     // Simulate expensive operation
@@ -26,7 +27,7 @@ export class ExampleAPI {
     const body = await request.json();
     
     // Invalidate related cache
-    const { invalidateCache } = await import('@/packages/lib/src/api-cache-middleware');
+    const { invalidateCache } = await import('C:/Users/User/TheBrainyInsightsReplatform/packages/lib/src/api-cache-middleware'); // Changed import path
     await invalidateCache('api:example:*');
     
     return NextResponse.json({ success: true, body });
@@ -35,3 +36,4 @@ export class ExampleAPI {
 
 export const GET = ExampleAPI.GET;
 export const POST = ExampleAPI.POST;
+*/

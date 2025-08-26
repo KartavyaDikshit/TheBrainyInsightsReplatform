@@ -1,7 +1,6 @@
 import { getCategoryBySlug, listReports } from '@/lib/data/adapter';
-import { Container, ReportCard, Section } from '@/components';
-import { JsonLd } from '@/components';
-import { CollectionPage, WithContext } from 'schema-dts';
+import { Container, ReportCard, Section } from '@tbi/ui'; // Removed JsonLd
+// import { CollectionPage, WithContext } from 'schema-dts'; // Commented out
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next'; // Import Metadata
 
@@ -22,8 +21,8 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
   }
 
   return {
-    title: category.seoTitle || category.name,
-    description: category.seoDesc || category.description,
+    title: category.metaTitle || category.title,
+    description: category.metaDescription || category.description,
     // Add other meta tags as needed
   };
 }
@@ -39,24 +38,24 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
 
   const reports = await listReports({ locale: locale as string, categorySlug: slug as string }); // Cast to string
 
-  const categoryJsonLd: WithContext<CollectionPage> = {
-    '@context': 'https://schema.org',
-    '@type': 'CollectionPage',
-    name: category.name,
-    description: category.description,
-    url: `https://www.thebrainyinsights.com/${locale}/categories/${slug}`,
-    mainEntity: reports.map(report => ({
-      '@type': 'Article', // Assuming reports are articles
-      headline: report.title,
-      url: `https://www.thebrainyinsights.com/${locale}/reports/${report.slug}`,
-    })),
-  };
+  // const categoryJsonLd: WithContext<CollectionPage> = { // Commented out
+  //   '@context': 'https://schema.org', // Commented out
+  //   '@type': 'CollectionPage', // Commented out
+  //   name: category.title, // Commented out
+  //   description: category.description, // Commented out
+  //   url: `https://www.thebrainyinsights.com/${locale}/categories/${slug}`, // Commented out
+  //   mainEntity: reports.map(report => ({ // Commented out
+  //     '@type': 'Article', // Assuming reports are articles // Commented out
+  //     headline: report.title, // Commented out
+  //     url: `https://www.thebrainyinsights.com/${locale}/reports/${report.slug}`, // Commented out
+  //   })), // Commented out
+  // }; // Commented out
 
   return (
     <Section>
-      <JsonLd data={categoryJsonLd} />
+      {/* <JsonLd data={categoryJsonLd} /> */} {/* Commented out */}
       <Container>
-        <h1 className="text-3xl font-bold mb-2">{category.name}</h1>
+        <h1 className="text-3xl font-bold mb-2">{category.title}</h1>
         <p className="text-lg text-gray-600 mb-8">{category.description}</p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

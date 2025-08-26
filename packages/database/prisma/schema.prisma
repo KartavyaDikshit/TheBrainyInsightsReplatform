@@ -1,88 +1,101 @@
 generator client {
   provider = "prisma-client-js"
   output   = "../src/generated"
-  envFiles = ["./.env"]
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url      = "postgresql://tbi_user:password@localhost:5432/tbi_db"
 }
 
-// ================================================================
-// CORE CONTENT MODELS
-// ================================================================
+// ============================================================================
+// CORE CONTENT MODELS (FINAL VERSION)
+// ============================================================================
 
 model Category {
   id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   shortcode   String   @unique @db.VarChar(20)
-  slug        String   @unique @db.VarChar(100)
-  title       String   @db.VarChar(200)
+  slug        String   @unique @db.VarChar(150)
+  title       String   @db.VarChar(300)
   description String?  @db.Text
   icon        String?  @db.VarChar(100)
   featured    Boolean  @default(false)
   sortOrder   Int      @default(0) @map("sort_order")
   
-  // SEO
-  metaTitle       String? @map("meta_title") @db.VarChar(200)
-  metaDescription String? @map("meta_description") @db.VarChar(300)
+  // Advanced SEO for Regional Keywords
   
-  // Status
+  regionalKeywords Json?     @map("regional_keywords") @db.JsonB
+  searchVolume     Json?     @map("search_volume") @db.JsonB
+  
+  // Meta & SEO
+  metaTitle       String? @map("meta_title") @db.VarChar(300)
+  metaDescription String? @map("meta_description") @db.VarChar(500)
+  canonicalUrl    String? @map("canonical_url") @db.VarChar(500)
+  
+  // Status & Analytics
   status      ContentStatus @default(PUBLISHED)
+  viewCount   BigInt        @default(0) @map("view_count")
+  clickCount  BigInt        @default(0) @map("click_count")
   
-  // Analytics
-  viewCount   BigInt   @default(0) @map("view_count")
-  
-  // Timestamps
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
   translations CategoryTranslation[]
   reports      Report[]
-  blogs        Blog[]
 
   @@index([status, featured, sortOrder])
   @@index([shortcode])
+  
   @@map("categories")
 }
 
 model CategoryTranslation {
-  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  categoryId  String @map("category_id") @db.Uuid
-  locale      String @db.VarChar(5)
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId String @map("category_id") @db.Uuid
+  locale   String @db.VarChar(5)
   
-  title       String @db.VarChar(200)
+  title       String  @db.VarChar(300)
   description String? @db.Text
-  slug        String @db.VarChar(100)
+  slug        String  @db.VarChar(150)
   
-  metaTitle       String? @map("meta_title") @db.VarChar(200)
-  metaDescription String? @map("meta_description") @db.VarChar(300)
+  // Localized SEO
+  seoKeywords         String[] @map("seo_keywords")
+  localizedKeywords   String[] @map("localized_keywords")
+  culturalKeywords    String[] @map("cultural_keywords")
   
-  status      TranslationStatus @default(PUBLISHED)
+  metaTitle       String? @map("meta_title") @db.VarChar(300)
+  metaDescription String? @map("meta_description") @db.VarChar(500)
   
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  // AI Translation Tracking
+  aiGenerated         Boolean  @default(false) @map("ai_generated")
+  humanReviewed       Boolean  @default(false) @map("human_reviewed")
+  translationQuality  Decimal? @map("translation_quality") @db.Decimal(3,2)
+  translationJobId    String?  @map("translation_job_id") @db.Uuid
+  
+  status TranslationStatus @default(DRAFT)
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
   
   category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
   @@unique([categoryId, locale])
   @@index([locale, status])
+  @@index([aiGenerated, humanReviewed])
   @@map("category_translations")
 }
 
 model Report {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  categoryId      String?   @map("category_id") @db.Uuid
+  id         String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId String? @map("category_id") @db.Uuid
   
-  // Identifiers
-  sku             String?   @unique @db.VarChar(50)
-  slug            String    @unique @db.VarChar(150)
-  
-  // Basic Info
-  title           String    @db.VarChar(500)
-  description     String    @db.Text
-  summary         String?   @db.Text
+  // Core Identifiers
+  sku         String? @unique @db.VarChar(50)
+  slug        String  @unique @db.VarChar(200)
+  title       String  @db.VarChar(500)
+  description String  @db.Text
+  summary     String? @db.Text
   
   // Report Details
   pages           Int       @default(0)
@@ -90,194 +103,314 @@ model Report {
   baseYear        Int?      @map("base_year")
   forecastPeriod  String?   @map("forecast_period") @db.VarChar(50)
   
-  // Content
-  tableOfContents String?   @map("table_of_contents") @db.Text
-  methodology     String?   @db.Text
-  keyFindings     String[]  @map("key_findings")
+  // Content Structure
+  tableOfContents  String?   @map("table_of_contents") @db.Text
+  methodology      String?   @db.Text
+  keyFindings      String[]  @map("key_findings")
+  executiveSummary String?   @map("executive_summary") @db.Text
   
-  // Market Data (JSON)
-  marketData      Json?     @map("market_data") @db.JsonB
+  // Market Data (JSON for flexibility)
+  marketData         Json? @map("market_data") @db.JsonB
+  competitiveLandscape Json? @map("competitive_landscape") @db.JsonB
+  marketSegmentation Json? @map("market_segmentation") @db.JsonB
+  regionalAnalysis   Json? @map("regional_analysis") @db.JsonB
+  
+  // Classification
   keyPlayers      String[]  @map("key_players")
   regions         String[]
-  
-  // Categorization
   industryTags    String[]  @map("industry_tags")
   reportType      String?   @map("report_type") @db.VarChar(50)
   
-  // SEO
-  keywords        String[]
-  metaTitle       String    @map("meta_title") @db.VarChar(500)
-  metaDescription String    @map("meta_description") @db.VarChar(500)
+  // Advanced SEO & Keywords (CRITICAL FOR SEO)
+  keywords            String[]
+  semanticKeywords    String[] @map("semantic_keywords")
+  regionalKeywords    Json?    @map("regional_keywords") @db.JsonB
+  competitorKeywords  String[] @map("competitor_keywords")
+  trendingKeywords    String[] @map("trending_keywords")
   
-  // Pricing (USD)
-  singlePrice     Decimal?  @map("single_price") @db.Decimal(10,2)
-  multiPrice      Decimal?  @map("multi_price") @db.Decimal(10,2)
-  corporatePrice  Decimal?  @map("corporate_price") @db.Decimal(10,2)
+  // Complete SEO Meta Data
+  metaTitle       String @map("meta_title") @db.VarChar(500)
+  metaDescription String @map("meta_description") @db.VarChar(500)
+  canonicalUrl    String? @map("canonical_url") @db.VarChar(500)
+  
+  // Open Graph & Social
+  ogTitle         String? @map("og_title") @db.VarChar(500)
+  ogDescription   String? @map("og_description") @db.VarChar(500)
+  ogImage         String? @map("og_image") @db.VarChar(500)
+  
+  // Structured Data for Rich Snippets
+  schemaMarkup    Json? @map("schema_markup") @db.JsonB
+  breadcrumbData  Json? @map("breadcrumb_data") @db.JsonB
+  faqData         Json? @map("faq_data") @db.JsonB
+  
+  // Pricing
+  singlePrice    Decimal? @map("single_price") @db.Decimal(10,2)
+  multiPrice     Decimal? @map("multi_price") @db.Decimal(10,2)
+  corporatePrice Decimal? @map("corporate_price") @db.Decimal(10,2)
+  currency       String   @default("USD") @db.VarChar(3)
+  
+  // AI Content Generation
+  aiGenerated         Boolean  @default(false) @map("ai_generated")
+  humanApproved       Boolean  @default(false) @map("human_approved")
+  contentQualityScore Decimal? @map("content_quality_score") @db.Decimal(3,2)
   
   // Status & Features
-  status          ContentStatus @default(DRAFT)
-  featured        Boolean   @default(false)
-  priority        Int       @default(0)
+  status     ContentStatus @default(DRAFT)
+  featured   Boolean       @default(false)
+  priority   Int           @default(0)
   
-  // Analytics
-  viewCount       BigInt    @default(0) @map("view_count")
-  downloadCount   BigInt    @default(0) @map("download_count")
+  // Analytics & Performance
+  viewCount      BigInt @default(0) @map("view_count")
+  downloadCount  BigInt @default(0) @map("download_count")
+  shareCount     BigInt @default(0) @map("share_count")
+  enquiryCount   BigInt @default(0) @map("enquiry_count")
   
-  // Ratings
-  avgRating       Decimal?  @map("avg_rating") @db.Decimal(3,2)
-  reviewCount     Int       @default(0) @map("review_count")
+  // SEO Performance Tracking (CRITICAL)
+  searchRankings     Json?    @map("search_rankings") @db.JsonB
+  clickThroughRate   Decimal? @map("click_through_rate") @db.Decimal(5,4)
+  averagePosition    Decimal? @map("average_position") @db.Decimal(5,2)
+  impressions        BigInt   @default(0)
+  clicks             BigInt   @default(0)
   
-  // Timestamps
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  // Review System
+  avgRating   Decimal? @map("avg_rating") @db.Decimal(3,2)
+  reviewCount Int      @default(0) @map("review_count")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  category      Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  translations  ReportTranslation[]
-  reviews       ReportReview[]
-  enquiries     Enquiry[]
-  orderItems    OrderItem[]
+  category     Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  translations ReportTranslation[]
+  enquiries    Enquiry[]
+  orderItems   OrderItem[]
 
   @@index([categoryId, status, featured])
   @@index([publishedDate, status])
   @@index([avgRating, reviewCount])
   @@index([industryTags], type: Gin)
   @@index([keywords], type: Gin)
+  @@index([semanticKeywords], type: Gin)
+  @@index([aiGenerated, humanApproved])
   @@map("reports")
 }
 
 model ReportTranslation {
-  id              String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  reportId        String @map("report_id") @db.Uuid
-  locale          String @db.VarChar(5)
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reportId String @map("report_id") @db.Uuid
+  locale   String @db.VarChar(5)
   
-  title           String @db.VarChar(500)
-  description     String @db.Text
-  summary         String? @db.Text
-  slug            String @db.VarChar(150)
+  // Core Content
+  title         String  @db.VarChar(500)
+  description   String  @db.Text
+  summary       String? @db.Text
+  slug          String  @db.VarChar(200)
   
-  tableOfContents String? @map("table_of_contents") @db.Text
-  methodology     String? @db.Text
-  keyFindings     String[] @map("key_findings")
+  // Extended Content
+  tableOfContents  String?   @map("table_of_contents") @db.Text
+  methodology      String?   @db.Text
+  keyFindings      String[]  @map("key_findings")
+  executiveSummary String?   @map("executive_summary") @db.Text
+  
+  // Localized SEO (CRITICAL FOR MULTILINGUAL SEO)
+  keywords            String[]
+  semanticKeywords    String[] @map("semantic_keywords")
+  localizedKeywords   String[] @map("localized_keywords")
+  culturalKeywords    String[] @map("cultural_keywords")
   
   metaTitle       String @map("meta_title") @db.VarChar(500)
   metaDescription String @map("meta_description") @db.VarChar(500)
-  keywords        String[]
   
-  status          TranslationStatus @default(DRAFT)
+  // Localized Schema & Social
+  ogTitle         String? @map("og_title") @db.VarChar(500)
+  ogDescription   String? @map("og_description") @db.VarChar(500)
+  schemaMarkup    Json?   @map("schema_markup") @db.JsonB
+  breadcrumbData  Json?   @map("breadcrumb_data") @db.JsonB
+  faqData         Json?   @map("faq_data") @db.JsonB
   
-  createdAt       DateTime @default(now()) @map("created_at")
-  updatedAt       DateTime @updatedAt @map("updated_at")
+  // AI Translation Metadata
+  aiGenerated         Boolean  @default(false) @map("ai_generated")
+  humanReviewed       Boolean  @default(false) @map("human_reviewed")
+  translationQuality  Decimal? @map("translation_quality") @db.Decimal(3,2)
+  culturalAdaptation  String?  @map("cultural_adaptation") @db.Text
+  translationJobId    String?  @map("translation_job_id") @db.Uuid
+  
+  // SEO Performance per locale
+  searchPerformance Json? @map("search_performance") @db.JsonB
+  
+  status TranslationStatus @default(DRAFT)
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
 
   @@unique([reportId, locale])
   @@index([locale, status])
+  @@index([aiGenerated, humanReviewed])
   @@map("report_translations")
 }
 
-// ================================================================
-// USER MANAGEMENT
-// ================================================================
+// ============================================================================
+// AI TRANSLATION SYSTEM (SIMPLIFIED BUT COMPLETE)
+// ============================================================================
+
+model TranslationJob {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  contentType String @map("content_type") @db.VarChar(50)
+  contentId   String @map("content_id") @db.Uuid
+  
+  sourceLocale String @map("source_locale") @db.VarChar(5)
+  targetLocale String @map("target_locale") @db.VarChar(5)
+  
+  // Translation Details
+  fieldName      String @map("field_name") @db.VarChar(50)
+  originalText   String @map("original_text") @db.Text
+  translatedText String? @map("translated_text") @db.Text
+  
+  // Processing Configuration
+  aiModel       String  @default("gpt-4") @map("ai_model") @db.VarChar(50)
+  temperature   Decimal @default(0.3) @db.Decimal(3,2)
+  maxTokens     Int     @default(2000) @map("max_tokens")
+  
+  // Quality Metrics
+  qualityScore      Decimal? @map("quality_score") @db.Decimal(3,2)
+  fluencyScore      Decimal? @map("fluency_score") @db.Decimal(3,2)
+  accuracyScore     Decimal? @map("accuracy_score") @db.Decimal(3,2)
+  culturalScore     Decimal? @map("cultural_score") @db.Decimal(3,2)
+  
+  // Status & Processing
+  status        TranslationJobStatus @default(PENDING)
+  priority      Int                  @default(0)
+  retryCount    Int                  @default(0) @map("retry_count")
+  
+  // Token Usage & Cost
+  inputTokens   Int?     @map("input_tokens")
+  outputTokens  Int?     @map("output_tokens")
+  totalTokens   Int?     @map("total_tokens")
+  estimatedCost Decimal? @map("estimated_cost") @db.Decimal(8,4)
+  actualCost    Decimal? @map("actual_cost") @db.Decimal(8,4)
+  
+  // Error Handling
+  errorMessage String? @map("error_message") @db.Text
+  errorCode    String? @map("error_code") @db.VarChar(50)
+  
+  // Timing
+  processingStarted DateTime? @map("processing_started")
+  processingEnded   DateTime? @map("processing_ended")
+  processingTime    Int?      @map("processing_time")
+  
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  createdBy String?  @map("created_by") @db.Uuid
+
+  @@index([status, priority, createdAt])
+  @@index([contentType, contentId])
+  @@index([sourceLocale, targetLocale])
+  @@map("translation_jobs")
+}
+
+// ============================================================================
+// USER & ORDER SYSTEM
+// ============================================================================
 
 model User {
-  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email       String     @unique @db.VarChar(255)
-  firstName   String?    @map("first_name") @db.VarChar(100)
-  lastName    String?    @map("last_name") @db.VarChar(100)
-  phone       String?    @db.VarChar(20)
-  company     String?    @db.VarChar(200)
-  country     String?    @db.VarChar(100)
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String @unique @db.VarChar(255)
+  firstName String? @map("first_name") @db.VarChar(100)
+  lastName  String? @map("last_name") @db.VarChar(100)
+  phone     String? @db.VarChar(20)
+  company   String? @db.VarChar(200)
+  country   String? @db.VarChar(100)
   
-  // Auth
-  password    String?    @db.VarChar(255)
-  emailVerified Boolean  @default(false) @map("email_verified")
-  
-  // Preferences
+  // Preferences & Localization
   preferredLanguage String? @map("preferred_language") @db.VarChar(5)
-  newsletter  Boolean    @default(true)
+  timezone          String? @db.VarChar(50)
+  newsletter        Boolean @default(true)
   
   status      UserStatus @default(ACTIVE)
   lastLoginAt DateTime?  @map("last_login_at")
   
-  createdAt   DateTime   @default(now()) @map("created_at")
-  updatedAt   DateTime   @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  orders      Order[]
-  enquiries   Enquiry[]
-  reviews     ReportReview[]
+  orders    Order[]
+  enquiries Enquiry[]
 
   @@index([email, status])
+  @@index([preferredLanguage, status])
   @@map("users")
 }
 
 model Admin {
-  id           String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email        String     @unique @db.VarChar(255)
-  username     String     @unique @db.VarChar(100)
-  firstName    String?    @map("first_name") @db.VarChar(100)
-  lastName     String?    @map("last_name") @db.VarChar(100)
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email     String @unique @db.VarChar(255)
+  username  String @unique @db.VarChar(100)
+  firstName String? @map("first_name") @db.VarChar(100)
+  lastName  String? @map("last_name") @db.VarChar(100)
   
-  password     String     @db.VarChar(255)
-  role         AdminRole
+  password String @db.VarChar(255)
+  role     AdminRole
   
-  status       ContentStatus @default(ACTIVE)
-  lastLoginAt  DateTime?  @map("last_login_at")
+  status      ContentStatus @default(ACTIVE)
+  lastLoginAt DateTime?     @map("last_login_at")
   
-  createdAt    DateTime   @default(now()) @map("created_at")
-  updatedAt    DateTime   @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@index([email, status])
+  @@index([role, status])
   @@map("admins")
 }
 
-// ================================================================
-// E-COMMERCE
-// ================================================================
-
 model Order {
-  id          String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId      String?     @map("user_id") @db.Uuid
-  orderNumber String      @unique @map("order_number") @db.VarChar(50)
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String? @map("user_id") @db.Uuid
+  orderNumber String @unique @map("order_number") @db.VarChar(50)
   
-  // Customer Info
-  customerEmail String   @map("customer_email") @db.VarChar(255)
-  customerName  String   @map("customer_name") @db.VarChar(200)
-  customerPhone String?  @map("customer_phone") @db.VarChar(20)
+  // Customer Information
+  customerEmail String @map("customer_email") @db.VarChar(255)
+  customerName  String @map("customer_name") @db.VarChar(200)
+  customerPhone String? @map("customer_phone") @db.VarChar(20)
+  company       String? @db.VarChar(200)
+  country       String? @db.VarChar(100)
   
   // Amounts
-  subtotal    Decimal     @db.Decimal(12, 2)
-  discount    Decimal     @default(0) @db.Decimal(12, 2)
-  total       Decimal     @db.Decimal(12, 2)
-  currency    String      @default("USD") @db.VarChar(3)
+  subtotal Decimal @db.Decimal(12,2)
+  discount Decimal @default(0) @db.Decimal(12,2)
+  tax      Decimal @default(0) @db.Decimal(12,2)
+  total    Decimal @db.Decimal(12,2)
+  currency String  @default("USD") @db.VarChar(3)
   
   // Payment
-  paymentMethod String?   @map("payment_method") @db.VarChar(50)
-  paymentStatus String?   @map("payment_status") @db.VarChar(50)
-  transactionId String?   @map("transaction_id") @db.VarChar(100)
+  paymentMethod   String?       @map("payment_method") @db.VarChar(50)
+  paymentStatus   PaymentStatus @default(PENDING) @map("payment_status")
+  transactionId   String?       @map("transaction_id") @db.VarChar(100)
+  paymentDate     DateTime?     @map("payment_date")
   
-  status      OrderStatus @default(PENDING)
+  status OrderStatus @default(PENDING)
   
-  createdAt   DateTime    @default(now()) @map("created_at")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   // Relations
-  user       User?       @relation(fields: [userId], references: [id])
-  items      OrderItem[]
+  user  User? @relation(fields: [userId], references: [id])
+  items OrderItem[]
 
   @@index([customerEmail, status])
+  @@index([paymentStatus, status])
   @@index([createdAt])
   @@map("orders")
 }
 
 model OrderItem {
-  id       String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  orderId  String      @map("order_id") @db.Uuid
-  reportId String      @map("report_id") @db.Uuid
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId  String @map("order_id") @db.Uuid
+  reportId String @map("report_id") @db.Uuid
   
   licenseType LicenseType @map("license_type")
-  price       Decimal     @db.Decimal(10, 2)
+  price       Decimal     @db.Decimal(10,2)
   quantity    Int         @default(1)
 
   order  Order  @relation(fields: [orderId], references: [id], onDelete: Cascade)
@@ -288,131 +421,43 @@ model OrderItem {
   @@map("order_items")
 }
 
-// ================================================================
-// CUSTOMER ENGAGEMENT
-// ================================================================
-
 model Enquiry {
-  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  reportId  String?       @map("report_id") @db.Uuid
-  userId    String?       @map("user_id") @db.Uuid
+  id       String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reportId String? @map("report_id") @db.Uuid
+  userId   String? @map("user_id") @db.Uuid
   
-  firstName String        @map("first_name") @db.VarChar(100)
-  lastName  String?       @map("last_name") @db.VarChar(100)
-  email     String        @db.VarChar(255)
-  phone     String?       @db.VarChar(20)
-  company   String?       @db.VarChar(200)
-  country   String?       @db.VarChar(100)
+  // Contact Information
+  firstName String  @map("first_name") @db.VarChar(100)
+  lastName  String? @map("last_name") @db.VarChar(100)
+  email     String  @db.VarChar(255)
+  phone     String? @db.VarChar(20)
+  company   String? @db.VarChar(200)
+  jobTitle  String? @map("job_title") @db.VarChar(100)
+  country   String? @db.VarChar(100)
   
-  message   String?       @db.Text
-  enquiryType String?     @map("enquiry_type") @db.VarChar(50)
+  // Enquiry Details
+  subject     String? @db.VarChar(300)
+  message     String? @db.Text
+  enquiryType String? @map("enquiry_type") @db.VarChar(50)
   
-  status      EnquiryStatus @default(NEW)
-  
-  createdAt   DateTime    @default(now()) @map("created_at")
-  updatedAt   DateTime    @updatedAt @map("updated_at")
-
-  report Report? @relation(fields: [reportId], references: [id])
-  user   User?         @relation(fields: [userId], references: [id])
-
-  @@index([reportId, status])
-  @@index([email])
-  @@map("enquiries")
-}
-
-model ReportReview {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  reportId  String   @map("report_id") @db.Uuid
-  userId    String?  @map("user_id") @db.Uuid
-  
-  rating    Int      @db.SmallInt
-  title     String?  @db.VarChar(200)
-  content   String?  @db.Text
-  
-  // Anonymous reviewer info
-  reviewerName    String? @map("reviewer_name") @db.VarChar(100)
-  reviewerCompany String? @map("reviewer_company") @db.VarChar(200)
-  
-  status    ContentStatus @default(PUBLISHED)
-  verified  Boolean  @default(false)
+  status     EnquiryStatus @default(NEW)
+  assignedTo String?       @map("assigned_to") @db.Uuid
   
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  report Report @relation(fields: [reportId], references: [id], onDelete: Cascade)
-  user   User?  @relation(fields: [userId], references: [id])
+  report Report? @relation(fields: [reportId], references: [id])
+  user   User?   @relation(fields: [userId], references: [id])
 
   @@index([reportId, status])
-  @@index([rating, verified])
-  @@map("report_reviews")
+  @@index([email, status])
+  @@index([createdAt])
+  @@map("enquiries")
 }
 
-// ================================================================
-// CONTENT MODELS
-// ================================================================
-
-model Blog {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  categoryId    String?   @map("category_id") @db.Uuid
-  
-  title         String    @db.VarChar(300)
-  slug          String    @unique @db.VarChar(150)
-  excerpt       String?   @db.VarChar(500)
-  content       String    @db.Text
-  
-  tags          String[]
-  
-  metaTitle       String? @map("meta_title") @db.VarChar(300)
-  metaDescription String? @map("meta_description") @db.VarChar(500)
-  
-  status        ContentStatus @default(DRAFT)
-  featured      Boolean   @default(false)
-  
-  viewCount     BigInt    @default(0) @map("view_count")
-  
-  publishedAt   DateTime? @map("published_at")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
-
-  category     Category? @relation(fields: [categoryId], references: [id])
-  translations BlogTranslation[]
-
-  @@index([categoryId, status])
-  @@index([publishedAt])
-  @@index([tags], type: Gin)
-  @@map("blogs")
-}
-
-model BlogTranslation {
-  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  blogId      String @map("blog_id") @db.Uuid
-  locale      String @db.VarChar(5)
-  
-  title       String @db.VarChar(300)
-  slug        String @db.VarChar(150)
-  excerpt     String? @db.VarChar(500)
-  content     String @db.Text
-  
-  tags        String[]
-  
-  metaTitle       String? @map("meta_title") @db.VarChar(300)
-  metaDescription String? @map("meta_description") @db.VarChar(500)
-  
-  status      TranslationStatus @default(DRAFT)
-  
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
-
-  blog Blog @relation(fields: [blogId], references: [id], onDelete: Cascade)
-
-  @@unique([blogId, locale])
-  @@index([locale, status])
-  @@map("blog_translations")
-}
-
-// ================================================================
-// ENUMS
-// ================================================================
+// ============================================================================
+// ENUMS (FINAL LOCKED VERSION)
+// ============================================================================
 
 enum ContentStatus {
   DRAFT
@@ -423,11 +468,34 @@ enum ContentStatus {
   @@map("content_status")
 }
 
+enum TranslationStatus {
+  DRAFT
+  PENDING_REVIEW
+  IN_REVIEW
+  APPROVED
+  PUBLISHED
+  REJECTED
+
+  @@map("translation_status")
+}
+
+enum TranslationJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  CANCELLED
+  RETRY
+
+  @@map("translation_job_status")
+}
+
 enum UserStatus {
   PENDING
   ACTIVE
   INACTIVE
   SUSPENDED
+  DELETED
 
   @@map("user_status")
 }
@@ -436,6 +504,8 @@ enum AdminRole {
   SUPERADMIN
   MANAGER
   EDITOR
+  TRANSLATOR
+  MODERATOR
 
   @@map("admin_role")
 }
@@ -445,14 +515,27 @@ enum OrderStatus {
   PROCESSING
   COMPLETED
   CANCELLED
+  REFUNDED
 
   @@map("order_status")
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+
+  @@map("payment_status")
 }
 
 enum LicenseType {
   SINGLE
   MULTIPLE
   CORPORATE
+  ENTERPRISE
 
   @@map("license_type")
 }
@@ -461,17 +544,9 @@ enum EnquiryStatus {
   NEW
   CONTACTED
   QUALIFIED
+  PROPOSAL_SENT
   CONVERTED
   CLOSED
 
   @@map("enquiry_status")
-}
-
-enum TranslationStatus {
-  DRAFT
-  REVIEW
-  APPROVED
-  PUBLISHED
-
-  @@map("translation_status")
 }

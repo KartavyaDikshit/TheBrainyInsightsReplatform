@@ -1,5 +1,7 @@
 import { search } from '@/lib/data/adapter';
-import { Container, ReportCard, Section, Pagination, SearchBar } from '@/components';
+import { ReportCard, Pagination, SearchBar } from '@tbi/ui';
+import Section from '@tbi/ui/Section';
+import Container from '@tbi/ui/Container';
 
 
 

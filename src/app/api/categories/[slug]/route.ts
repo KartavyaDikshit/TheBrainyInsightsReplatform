@@ -1,13 +1,43 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCategoryBySlug } from '@/lib/data/adapter';
+import { CategoryService } from '@/lib/db/categories';
+import type { ApiResponse } from '@/types/global';
 
-export async function GET(req: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const lang = req.nextUrl.searchParams.get('lang') || 'en';
-  const category = await getCategoryBySlug(slug, lang);
-  if (category) {
-    return NextResponse.json(category);
-  } else {
-    return new NextResponse('Category not found', { status: 404 });
+interface RouteParams {
+  params: Promise<{ slug: string }>;
+}
+
+export async function GET(request: NextRequest, { params }: RouteParams) {
+  try {
+    const { slug } = await params;
+    const { searchParams } = new URL(request.url);
+    const locale = searchParams.get('locale') || 'en';
+
+    const category = await CategoryService.getBySlug(slug, locale);
+
+    if (!category) {
+      const notFoundResponse: ApiResponse<null> = {
+        success: false,
+        error: 'Category not found',
+        message: `No category found with slug: ${slug}`
+      };
+      return NextResponse.json(notFoundResponse, { status: 404 });
+    }
+
+    const response: ApiResponse<typeof category> = {
+      success: true,
+      data: category
+    };
+
+    return NextResponse.json(response);
+  } catch (error) {
+    console.error('Category API error:', error);
+    
+    const errorResponse: ApiResponse<null> = {
+      success: false,
+      error: 'Failed to fetch category',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    };
+
+    return NextResponse.json(errorResponse, { status: 500 });
   }
 }

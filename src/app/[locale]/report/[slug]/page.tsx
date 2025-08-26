@@ -1,21 +1,32 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
-import { getReportBySlug } from "@/lib/reports"; // Import the utility function
+import { ReportService } from "@/lib/db/reports"; // Import the utility function
 import { locales } from "../../../../config/i18n"; // Import locales from shared config
 import Image from "next/image"; // Import Image component
-import { Prisma } from "@prisma/client"; // Import Prisma for types
+import { Report } from "@tbi/database"; // Import Report interface
 
 // Define a type for Report with included translations and category with its translations
-type ReportWithTranslationsAndCategory = Prisma.ReportGetPayload<{
-  include: {
-    translations: true;
-    category: {
-      include: {
-        translations: true;
-      };
-    };
+type ReportWithTranslationsAndCategory = Report & {
+  translations: {
+    title: string;
+    description: string;
+    summary?: string;
+    slug: string;
+    tableOfContents?: string;
+    methodology?: string;
+    keyFindings?: string[];
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+  }[];
+  category?: {
+    title: string;
+    slug: string;
+    translations: {
+      title: string;
+    }[];
   };
-}>;
+};
 
 interface ReportPageProps {
   params: Promise<{
@@ -27,7 +38,7 @@ interface ReportPageProps {
 export async function generateMetadata({ params }: ReportPageProps): Promise<Metadata> {
   const { slug, locale } = await params;
 
-  const report = (await getReportBySlug(slug, locale)) as ReportWithTranslationsAndCategory; // Explicitly cast
+  const report = (await ReportService.getBySlug(slug, locale)) as ReportWithTranslationsAndCategory; // Explicitly cast
 
   if (!report || report.translations.length === 0) {
     return {};
@@ -41,16 +52,16 @@ export async function generateMetadata({ params }: ReportPageProps): Promise<Met
   });
 
   return {
-    title: translation.seoTitle || translation.title,
-    description: translation.seoDesc || translation.summary,
-    keywords: translation.keywordsJson ? JSON.parse(translation.keywordsJson).keywords.join(', ') : '',
+    title: translation.metaTitle || translation.title,
+    description: translation.metaDescription || translation.summary,
+    keywords: translation.keywords?.join(', ') || '', // Corrected
     openGraph: {
-      title: translation.seoTitle || translation.title,
-      description: translation.seoDesc || translation.summary,
+      title: translation.metaTitle || translation.title,
+      description: translation.metaDescription ?? translation.summary ?? undefined,
       url: `https://www.thebrainyinsights.com/${locale}/report/${slug}`,
       images: [
         {
-          url: report.heroImage || "https://www.thebrainyinsights.com/og-image.jpg", // Use report image or placeholder
+          url: "/og-image.jpg", // Removed heroImage, using placeholder
           width: 1200,
           height: 630,
           alt: translation.title,
@@ -61,9 +72,9 @@ export async function generateMetadata({ params }: ReportPageProps): Promise<Met
     },
     twitter: {
       card: "summary_large_image",
-      title: translation.seoTitle || translation.title,
-      description: translation.seoDesc || translation.summary,
-      images: [report.heroImage || "https://www.thebrainyinsights.com/twitter-image.jpg"], // Use report image or placeholder
+      title: translation.metaTitle || translation.title,
+      description: translation.metaDescription ?? translation.summary ?? undefined,
+      images: ["/twitter-image.jpg"], // Removed heroImage, using placeholder
     },
     alternates: {
       canonical: `https://www.thebrainyinsights.com/${locale}/report/${slug}`,
@@ -75,7 +86,7 @@ export async function generateMetadata({ params }: ReportPageProps): Promise<Met
 export default async function ReportPage({ params }: ReportPageProps) {
   const { slug, locale } = await params;
 
-  const report = (await getReportBySlug(slug, locale)) as ReportWithTranslationsAndCategory; // Explicitly cast
+  const report = (await ReportService.getBySlug(slug, locale)) as ReportWithTranslationsAndCategory; // Explicitly cast
 
   if (!report || report.translations.length === 0) {
     notFound();
@@ -88,63 +99,32 @@ export default async function ReportPage({ params }: ReportPageProps) {
     <div className="report-detail-page">
       <h1 className="text-3xl font-bold mb-4">{translation.title}</h1>
       {categoryTranslation && (
-        <p className="text-gray-600 mb-2">Category: {categoryTranslation.name}</p>
+        <p className="text-gray-600 mb-2">Category: {categoryTranslation.title}</p>
       )}
-      {report.publishedAt && (
-        <p className="text-gray-600 mb-2">Published: {report.publishedAt.toDateString()}</p>
+      {report.published_date && ( // Added null check
+        <p className="text-gray-600 mb-2">Published: {report.published_date.toDateString()}</p>
       )}
-      {report.heroImage && ( // Conditionally render Image if heroImage exists
-        <div className="report-hero-image mb-4">
-          <Image
-            src={report.heroImage}
-            alt={translation.title}
-            width={500} // Placeholder width
-            height={300} // Placeholder height
-            layout="responsive" // Makes image responsive
-            objectFit="contain" // Ensures image fits within bounds
-          />
-        </div>
-      )}
+      {/* Removed heroImage as it's not in the current schema */}
       <div className="report-summary mb-4">
         <h2 className="text-xl font-semibold">Summary</h2>
         <p>{translation.summary}</p>
       </div>
-      {report.tocHtml && (
+      {translation.tableOfContents && (
         <div className="report-toc mb-4">
           <h2 className="text-xl font-semibold">Table of Contents</h2>
-          <div dangerouslySetInnerHTML={{ __html: report.tocHtml }} />
+          <div dangerouslySetInnerHTML={{ __html: translation.tableOfContents }} />
         </div>
       )}
-      {report.tofHtml && (
+      {translation.methodology && (
         <div className="report-tof mb-4">
-          <h2 className="text-xl font-semibold">Table of Figures</h2>
-          <div dangerouslySetInnerHTML={{ __html: report.tofHtml }} />
+          <h2 className="text-xl font-semibold">Methodology</h2>
+          <div dangerouslySetInnerHTML={{ __html: translation.methodology }} />
         </div>
       )}
-      {report.segmentation && (
-        <div className="report-segmentation mb-4">
-          <h2 className="text-xl font-semibold">Segmentation</h2>
-          <p>{report.segmentation}</p>
-        </div>
-      )}
-      {report.companies && (
-        <div className="report-companies mb-4">
-          <h2 className="text-xl font-semibold">Companies Mentioned</h2>
-          <p>{report.companies}</p>
-        </div>
-      )}
-      {report.types && (
-        <div className="report-types mb-4">
-          <h2 className="text-xl font-semibold">Types</h2>
-          <p>{report.types}</p>
-        </div>
-      )}
-      {report.applications && (
-        <div className="report-applications mb-4">
-          <h2 className="text-xl font-semibold">Applications</h2>
-          <p>{report.applications}</p>
-        </div>
-      )}
+      {/* Removed segmentation as it's not in the current schema */}
+      {/* Removed companies as it's not in the current schema */}
+      {/* Removed types as it's not in the current schema */}
+      {/* Removed applications as it's not in the current schema */}
       {/* Add more fields as needed */}
     </div>
   );

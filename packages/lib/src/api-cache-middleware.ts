@@ -28,6 +28,10 @@ export function withCache(options: CacheOptions = {}) {
       try {
         // Try to get from Redis
         const client = redisManager.getClient();
+        if (!client) {
+          // If Redis client is not available, bypass cache and execute original method
+          return await method.apply(this, args);
+        }
         const cached = await client.get(cacheKey);
         
         if (cached) {
@@ -102,6 +106,10 @@ export function withCache(options: CacheOptions = {}) {
 export async function invalidateCache(pattern: string) {
   try {
     const client = redisManager.getClient();
+    if (!client) { // Added null check
+      console.warn('Redis client not available for cache invalidation.');
+      return 0;
+    }
     const keys = await client.keys(pattern);
     
     if (keys.length > 0) {

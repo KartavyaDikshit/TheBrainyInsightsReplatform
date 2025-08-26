@@ -1,45 +1,318 @@
-export { PrismaClient } from './generated'
-export type * from './generated'
+import { Pool } from 'pg';
 
-// Re-export commonly used types
-export type {
-  Category,
-  CategoryTranslation,
-  Report,
-  ReportTranslation,
-  User,
-  Admin,
-  Order,
-  OrderItem,
-  Enquiry,
-  ReportReview,
-  Blog,
-  BlogTranslation,
-  ContentStatus,
-  UserStatus,
-  AdminRole,
-  OrderStatus,
-  LicenseType,
-  EnquiryStatus,
-  TranslationStatus
-} from './generated'
+// Enhanced PostgreSQL client wrapper with full schema support
+export class DatabaseClient {
+  private pool: Pool;
 
-import { PrismaClient } from './generated'
+  constructor() {
+    this.pool = new Pool({
+      connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:password@localhost:5432/tbi_db'
+    });
+  }
 
-// Create singleton instance
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
+  async query(text: string, params?: any[]): Promise<any> {
+    const client = await this.pool.connect();
+    try {
+      const result = await client.query(text, params);
+      return result;
+    } finally {
+      client.release(); // Release client back to the pool
+    }
+  }
+
+  // Enhanced category methods
+  async getCategories(locale: string = 'en', featured?: boolean): Promise<any[]> {
+    let query = `
+      SELECT c.id, c.shortcode, c.slug, c.title, c.description, c.icon, 
+             c.featured, c.status, c.view_count, c.created_at,
+             ct.title as localized_title, ct.description as localized_description,
+             ct.slug as localized_slug, ct.meta_title, ct.meta_description
+      FROM categories c
+      LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.locale = $1 AND ct.status = 'PUBLISHED'
+      WHERE c.status = 'PUBLISHED'
+    `;
+    
+    const params = [locale];
+    
+    if (featured !== undefined) {
+      query += ` AND c.featured = ${params.length + 1}`;
+      params.push(featured.toString());
+    }
+    
+    query += ` ORDER BY c.sort_order ASC, c.title ASC`;
+    
+    const result = await this.query(query, params);
+    
+    return result.rows.map((row: Category) => ({
+      ...row,
+      title: row.localized_title || row.title,
+      description: row.localized_description || row.description,
+      slug: row.localized_slug || row.slug,
+    }));
+  }
+
+  // Enhanced report methods
+  async getReports(locale: string = 'en', options: {
+    categoryId?: string;
+    featured?: boolean;
+    limit?: number;
+    offset?: number;
+  } = {}): Promise<any[]> {
+    let query = `
+      SELECT r.id, r.slug, r.title, r.description, r.summary, r.pages, 
+             r.published_date, r.single_price, r.multi_price, r.corporate_price,
+             r.featured, r.status, r.view_count, r.avg_rating, r.review_count,
+             r.created_at, r.keywords, r.semantic_keywords,
+             c.title as category_title, c.slug as category_slug,
+             rt.title as localized_title, rt.description as localized_description,
+             rt.summary as localized_summary, rt.slug as localized_slug,
+             rt.meta_title, rt.meta_description
+      FROM reports r
+      LEFT JOIN categories c ON r.category_id = c.id
+      LEFT JOIN report_translations rt ON r.id = rt.report_id AND rt.locale = $1 AND rt.status = 'PUBLISHED'
+      WHERE r.status = 'PUBLISHED'
+    `;
+    
+    const params = [locale];
+    
+    if (options.categoryId) {
+      query += ` AND r.category_id = $${params.length + 1}`;
+      params.push(options.categoryId);
+    }
+    
+    if (options.featured !== undefined) {
+      query += ` AND r.featured = ${params.length + 1}`;
+      params.push(options.featured.toString());
+    }
+    
+    query += ` ORDER BY r.featured DESC, r.published_date DESC`;
+    
+    if (options.limit) {
+      query += ` LIMIT ${params.length + 1}`;
+      params.push(options.limit.toString());
+    }
+    
+    if (options.offset) {
+      query += ` OFFSET ${params.length + 1}`;
+      params.push(options.offset.toString());
+    }
+    
+    const result = await this.query(query, params);
+    
+    return result.rows.map((row: Report) => ({
+      ...row,
+      title: row.localized_title || row.title,
+      description: row.localized_description || row.description,
+      summary: row.localized_summary || row.summary,
+      slug: row.localized_slug || row.slug,
+    }));
+  }
+
+  // AI workflow methods
+  async createContentGenerationWorkflow(data: any): Promise<string> {
+    const result = await this.query(`
+      INSERT INTO content_generation_workflows 
+      (industry, market_size, geographic_scope, timeframe, report_type, created_by)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING id
+    `, [data.industry, data.marketSize, data.geographicScope, data.timeframe, data.reportType, data.createdBy]);
+    
+    return result.rows[0].id;
+  }
+
+  // Translation methods
+  async createTranslationJob(data: any): Promise<string> {
+    const result = await this.query(`
+      INSERT INTO translation_jobs 
+      (content_type, content_id, source_locale, target_locale, field_name, original_text, created_by)
+      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      RETURNING id
+    `, [data.contentType, data.contentId, data.sourceLocale, data.targetLocale, data.fieldName, data.originalText, data.createdBy]);
+    
+    return result.rows[0].id;
+  }
+
+  // Analytics methods
+  async getCategoryCount(): Promise<number> {
+    const result = await this.query(`SELECT COUNT(*) as count FROM categories WHERE status = 'PUBLISHED'`);
+    return parseInt(result.rows[0].count);
+  }
+
+  async getReportCount(): Promise<number> {
+    const result = await this.query(`SELECT COUNT(*) as count FROM reports WHERE status = 'PUBLISHED'`);
+    return parseInt(result.rows[0].count);
+  }
+
+  async getWorkflowCount(): Promise<number> {
+    const result = await this.query(`SELECT COUNT(*) as count FROM content_generation_workflows`);
+    return parseInt(result.rows[0].count);
+  }
+
+  async getTranslationJobCount(): Promise<number> {
+    const result = await this.query(`SELECT COUNT(*) as count FROM translation_jobs`);
+    return parseInt(result.rows[0].count);
+  }
+
+  // SEO analytics
+  async getTopKeywords(limit: number = 10): Promise<any[]> {
+    const result = await this.query(`
+      SELECT keyword, SUM(impressions) as total_impressions, 
+             SUM(clicks) as total_clicks, AVG(ctr) as avg_ctr
+      FROM seo_analytics 
+      WHERE date >= CURRENT_DATE - INTERVAL '30 days'
+      GROUP BY keyword
+      ORDER BY total_impressions DESC
+      LIMIT $1
+    `, [limit]);
+    
+    return result.rows;
+  }
+
+  async close(): Promise<void> {
+    await this.pool.end();
+  }
 }
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-})
+// Export singleton instance
+export const db = new DatabaseClient();
 
-console.log('DEBUG: process.env.DATABASE_URL =', process.env.DATABASE_URL);
+// Enhanced TypeScript interfaces
+export interface Category {
+  id: string;
+  shortcode: string;
+  slug: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  featured: boolean;
+  sort_order: number;
+  seo_keywords?: string[];
+  regional_keywords?: any;
+  search_volume?: any;
+  canonical_url?: string;
+  status: string;
+  view_count: number;
+  click_count?: number;
+  created_at: Date;
+  updated_at: Date; // Add this line
+  meta_title?: string;
+  meta_description?: string;
+  localized_title?: string;
+  localized_description?: string;
+  localized_slug?: string;
+}
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+export interface Report {
+  id: string;
+  slug: string;
+  title: string;
+  description: string;
+  summary?: string;
+  pages: number;
+  published_date: Date;
+  single_price?: number;
+  multi_price?: number;
+  corporate_price?: number;
+  featured: boolean;
+  status: string;
+  view_count: number;
+  avg_rating?: number;
+  review_count: number;
+  created_at: Date;
+  category_title?: string;
+  category_slug?: string;
+  keywords?: string[];
+  semantic_keywords?: string[];
+  meta_title?: string;
+  meta_description?: string;
+  localized_title?: string;
+  localized_description?: string;
+  localized_summary?: string;
+  localized_slug?: string;
+  click_through_rate?: number;
+  average_position?: number;
+  impressions?: number;
+  clicks?: number;
+}
+
+export interface ReportTranslation {
+  id: string;
+  report_id: string;
+  locale: string;
+  title: string;
+  description: string;
+  summary?: string;
+  slug: string;
+  table_of_contents?: string;
+  list_of_figures?: string;
+  methodology?: string;
+  key_findings?: string[];
+  executive_summary?: string;
+  keywords?: string[];
+  semantic_keywords?: string[];
+  localized_keywords?: string[];
+  cultural_keywords?: string[];
+  long_tail_keywords?: string[];
+  local_competitor_keywords?: string[];
+  meta_title?: string;
+  meta_description?: string;
+  canonical_url?: string;
+  og_title?: string;
+  og_description?: string;
+  og_image?: string;
+  twitter_title?: string;
+  twitter_description?: string;
+  schema_markup?: any;
+  breadcrumb_data?: any;
+  faq_data?: any;
+  local_business_schema?: any;
+  translation_job_id?: string;
+  ai_generated?: boolean;
+  human_reviewed?: boolean;
+  translation_quality?: number;
+  cultural_adaptation_score?: number;
+  cultural_adaptation_notes?: string;
+  localization_notes?: string;
+  search_performance?: any;
+  local_rankings?: any;
+  regional_ctr?: number;
+  regional_impressions?: number;
+  regional_clicks?: number;
+  status?: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface ContentGenerationWorkflow {
+  id: string;
+  industry: string;
+  geographic_scope: string;
+  timeframe: string;
+  workflow_status: string;
+  created_at: Date;
+}
+
+export interface TranslationJob {
+  id: string;
+  content_type: string;
+  source_locale: string;
+  target_locale: string;
+  field_name: string;
+  status: string;
+  created_at: Date;
+}
 
 // Graceful shutdown
 process.on('beforeExit', async () => {
-  await prisma.$disconnect()
-})
+  await db.close();
+});
+
+process.on('SIGINT', async () => {
+  await db.close();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  await db.close();
+  process.exit(0);
+});

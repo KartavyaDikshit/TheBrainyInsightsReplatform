@@ -1,4 +1,4 @@
-import { Table } from '@/components';
+import { Table } from '@tbi/ui';
 
 export default function AdminReportsPage() {
   return (

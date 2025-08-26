@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { redisManager } from '@/packages/lib/src/redis-client';
+import { redisManager } from 'C:/Users/User/TheBrainyInsightsReplatform/packages/lib/src/redis-client'; // Changed import path
 
 export async function GET() {
   const redisConnected = await redisManager.connect();
@@ -11,6 +11,12 @@ export async function GET() {
   }
 
   const client = redisManager.getClient();
+  if (!client) {
+    return NextResponse.json({
+      error: 'Redis client not available',
+      timestamp: new Date().toISOString()
+    }, { status: 500 });
+  }
   
   try {
     // Get comprehensive Redis metrics
@@ -43,7 +49,7 @@ export async function GET() {
       alerts: generateAlerts(metrics)
     });
 
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({
       error: error.message,
       timestamp: new Date().toISOString()

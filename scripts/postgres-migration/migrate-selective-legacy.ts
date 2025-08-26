@@ -1,7 +1,8 @@
-import { Client } from 'pg'
-import mysql from 'mysql2/promise'
-import { v4 as uuidv4 } from 'uuid'
+// import { Client } from 'pg' // Commented out
+// import mysql from 'mysql2/promise' // Commented out
+// import { v4 as uuidv4 } from 'uuid' // Commented out
 
+/* Commented out the entire class
 interface MigrationConfig {
   legacyMysql: {
     host: string
@@ -123,7 +124,8 @@ export class PostgresMigrator {
               status, created_at, updated_at
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
             ON CONFLICT (shortcode) DO NOTHING
-          `, [
+          `,
+          [
             categoryId,
             engCat.shortcode,
             slug,
@@ -145,7 +147,8 @@ export class PostgresMigrator {
                 status, created_at, updated_at
               ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
               ON CONFLICT (category_id, locale) DO NOTHING
-            `, [
+            `,
+            [
               uuidv4(),
               categoryId,
               'ja',
@@ -239,7 +242,8 @@ export class PostgresMigrator {
               created_at, updated_at
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
             ON CONFLICT (sku) DO NOTHING
-          `, [
+          `,
+          [
             reportId,
             categoryId,
             engReport.sku || `legacy-${engReport.report_id}`,
@@ -273,7 +277,8 @@ export class PostgresMigrator {
                 slug, keywords, status, created_at, updated_at
               ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
               ON CONFLICT (report_id, locale) DO NOTHING
-            `, [
+            `,
+            [
               uuidv4(),
               reportId,
               'ja',
@@ -328,7 +333,8 @@ export class PostgresMigrator {
               status, created_at, updated_at
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
             ON CONFLICT (email) DO NOTHING
-          `, [
+          `,
+          [
             uuidv4(),
             user.email,
             user.first_name,
@@ -375,7 +381,8 @@ export class PostgresMigrator {
               customer_email, customer_name, customer_phone,
               status, created_at, updated_at
             ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
-          `, [
+          `,
+          [
             orderId,
             `LEGACY-${order.order_id}`,
             order.subtotal,
@@ -433,7 +440,8 @@ export class PostgresMigrator {
             id, email, username, first_name, last_name, password, role, status, created_at, updated_at
           ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
           ON CONFLICT (email) DO NOTHING
-        `, [
+        `,
+        [
           uuidv4(),
           admin.email,
           admin.username,
@@ -508,3 +516,4 @@ export class PostgresMigrator {
     console.log('\n' + '='.repeat(50))
   }
 }
+*/

@@ -1,20 +1,31 @@
 import Link from "next/link";
 import { Metadata } from "next";
-import { getAllReports } from "@/lib/reports"; // Import the utility function
+import { ReportService } from "@/lib/db/reports"; // Import the utility function
 import { locales } from "../../../config/i18n"; // Import locales from shared config
-import { Prisma } from "@prisma/client"; // Import Prisma for types
+import { Report } from "@tbi/database"; // Import Report interface
 
 // Define a type for Report with included translations and category with its translations
-type ReportWithTranslationsAndCategory = Prisma.ReportGetPayload<{
-  include: {
-    translations: true;
-    category: {
-      include: {
-        translations: true;
-      };
-    };
+type ReportWithTranslationsAndCategory = Report & {
+  translations: {
+    title: string;
+    description: string;
+    summary?: string;
+    slug: string;
+    tableOfContents?: string;
+    methodology?: string;
+    keyFindings?: string[];
+    metaTitle?: string;
+    metaDescription?: string;
+    keywords?: string[];
+  }[];
+  category?: {
+    title: string;
+    slug: string;
+    translations: {
+      title: string;
+    }[];
   };
-}>;
+};
 
 export const metadata: Metadata = {
   title: "All Reports - TheBrainyInsights",
@@ -43,7 +54,7 @@ interface ReportsPageProps {
 export default async function ReportsPage({ params }: ReportsPageProps) {
   const { locale } = await params;
 
-  const reports = (await getAllReports(locale)) as ReportWithTranslationsAndCategory[]; // Explicitly cast
+  const { reports } = (await ReportService.getAll(locale)) as { reports: ReportWithTranslationsAndCategory[] }; // Explicitly cast
 
   return (
     <div className="reports-list-page">
@@ -60,8 +71,8 @@ export default async function ReportsPage({ params }: ReportsPageProps) {
                   {translation.title}
                 </Link>
               </h2>
-              {report.publishedAt && (
-                <p className="text-gray-600 text-sm mb-2">Published: {report.publishedAt.toDateString()}</p>
+              {report.published_date && (
+                <p className="text-gray-600 text-sm mb-2">Published: {report.published_date.toDateString()}</p>
               )}
               <p className="text-gray-700 text-sm line-clamp-3">{translation.summary}</p>
             </div>

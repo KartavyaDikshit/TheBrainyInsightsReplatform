@@ -49,9 +49,9 @@ export default async function Dashboard(props: DashboardPageProps) {
         <h3 className="text-xl font-bold mb-4">Activity Timeline</h3>
         <div className="bg-white p-4 rounded-lg shadow">
           <ul className="space-y-2">
-            <li className="text-gray-700">- Accessed "Global Market Report 2024" (2 hours ago)</li>
-            <li className="text-gray-700">- Saved search: "AI in Healthcare" (yesterday)</li>
-            <li className="text-gray-700">- Downloaded "Q3 Financial Analysis" (3 days ago)</li>
+            <li className="text-gray-700">- Accessed &quot;Global Market Report 2024&quot; (2 hours ago)</li>
+            <li className="text-gray-700">- Saved search: &quot;AI in Healthcare&quot; (yesterday)</li>
+            <li className="text-gray-700">- Downloaded &quot;Q3 Financial Analysis&quot; (3 days ago)</li>
           </ul>
         </div>
       </div>

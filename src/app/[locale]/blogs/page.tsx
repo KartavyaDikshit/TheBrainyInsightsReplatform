@@ -47,13 +47,13 @@ export default async function BlogsPage(props: BlogsPageProps) {
                 </Link>
               </h2>
               {categoryTranslation && (
-                <p className="text-gray-600 text-sm mb-1">Category: {categoryTranslation.name}</p>
+                <p className="text-gray-600 text-sm mb-1">Category: {categoryTranslation.title}</p>
               )}
-              {blog.publishedAt && (
-                <p className="text-gray-600 text-sm mb-2">Published: {blog.publishedAt.toDateString()}</p>
+              {blog.published_at && (
+                <p className="text-gray-600 text-sm mb-2">Published: {blog.published_at.toDateString()}</p>
               )}
-              {blog.description && (
-                <p className="text-gray-700 text-sm line-clamp-3">{blog.description}</p>
+              {blog.excerpt && (
+                <p className="text-gray-700 text-sm line-clamp-3">{blog.excerpt}</p>
               )}
             </div>
           );

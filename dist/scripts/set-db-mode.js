@@ -1,0 +1,290 @@
+import * as fs from 'fs';
+import * as path from 'path';
+const schemaPath = path.join(__dirname, '../packages/database/prisma/schema.prisma');
+const mysqlSchema = `
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Locale { EN, DE, FR, ES, IT, JA, KO }
+enum Status { DRAFT, STAGED, PUBLISHED }
+
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  parentId  String?
+  status    Status   @default(DRAFT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations CategoryTranslation[]
+
+  @@index ([slug, parentId])
+}
+
+model CategoryTranslation {
+  id          String   @id @default(cuid())
+  categoryId  String
+  locale      Locale
+  name        String
+  description String?
+  seoTitle    String?
+  seoDesc     String?
+
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@unique ([categoryId, locale])
+  @@index ([locale, name])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  categoryId  String
+  status      Status   @default(DRAFT)
+  publishedAt DateTime?
+  price       Float?
+  pages       Int?
+  featured    Boolean? @default(false)
+  heroImage   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  translations ReportTranslation[]
+
+  @@index ([slug, categoryId, publishedAt])
+}
+
+model ReportTranslation {
+  id         String   @id @default(cuid())
+  reportId   String
+  locale     Locale
+  title      String
+  summary    String
+  bodyHtml   String?
+  seoTitle   String?
+  seoDesc    String?
+  keywordsJson String?
+
+  report Report @relation(fields: [reportId], references: [id])
+
+  @@unique ([reportId, locale])
+  @@index ([locale, title])
+}
+
+model RedirectMap {
+  id        String  @id @default(cuid())
+  oldPath   String
+  newPath   String
+  locale    Locale?
+  httpStatus Int    @default(301)
+
+  @@unique ([oldPath, locale])
+}
+
+model MediaAsset {
+  id           String  @id @default(cuid())
+  originalPath String
+  publicPath   String
+  width        Int?
+  height       Int?
+  mime         String?
+  hash         String?
+}
+
+model User {
+  id           String  @id @default(cuid())
+  email        String  @unique
+  name         String?
+  role         String  // Admin, Editor, Viewer
+  passwordHash String?
+}
+
+model AIGenerationQueue {
+  id          String   @id @default(cuid())
+  sourceDocId String?
+  reportId    String?
+  locale      Locale
+  prompt      String
+  outputJson  String?
+  status      String   // PENDING_REVIEW, APPROVED, REJECTED, ERROR
+  tokenCount  Int?
+  costCents   Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AILog {
+  id           String   @id @default(cuid())
+  queueId      String?
+  model        String
+  promptHash   String
+  inputTokens  Int
+  outputTokens Int
+  costCents    Float
+  status       String
+  createdAt    DateTime @default(now())
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  message   String
+  locale    Locale
+  createdAt DateTime @default(now())
+}
+`;
+const sqliteSchema = `
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Locale { EN, DE, FR, ES, IT, JA, KO }
+enum Status { DRAFT, STAGED, PUBLISHED }
+
+model Category {
+  id        String   @id @default(cuid())
+  slug      String   @unique
+  parentId  String?
+  status    Status   @default(DRAFT)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  translations CategoryTranslation[]
+
+  @@index ([slug, parentId])
+}
+
+model CategoryTranslation {
+  id          String   @id @default(cuid())
+  categoryId  String
+  locale      Locale
+  name        String
+  description String?
+  seoTitle    String?
+  seoDesc     String?
+
+  category Category @relation(fields: [categoryId], references: [id])
+
+  @@unique ([categoryId, locale])
+  @@index ([locale, name])
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  categoryId  String
+  status      Status   @default(DRAFT)
+  publishedAt DateTime?
+  price       Float?
+  pages       Int?
+  featured    Boolean? @default(false)
+  heroImage   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  translations ReportTranslation[]
+
+  @@index ([slug, categoryId, publishedAt])
+}
+
+model ReportTranslation {
+  id         String   @id @default(cuid())
+  reportId   String
+  locale     Locale
+  title      String
+  summary    String
+  bodyHtml   String?
+  seoTitle   String?
+  seoDesc    String?
+  keywordsJson String?
+
+  report Report @relation(fields: [reportId], references: [id])
+
+  @@unique ([reportId, locale])
+  @@index ([locale, title])
+}
+
+model RedirectMap {
+  id        String  @id @default(cuid())
+  oldPath   String
+  newPath   String
+  locale    Locale?
+  httpStatus Int    @default(301)
+
+  @@unique ([oldPath, locale])
+}
+
+model MediaAsset {
+  id           String  @id @default(cuid())
+  originalPath String
+  publicPath   String
+  width        Int?
+  height       Int?
+  mime         String?
+  hash         String?
+}
+
+model User {
+  id           String  @id @default(cuid())
+  email        String  @unique
+  name         String?
+  role         String  // Admin, Editor, Viewer
+  passwordHash String?
+}
+
+model AIGenerationQueue {
+  id          String   @id @default(cuid())
+  sourceDocId String?
+  reportId    String?
+  locale      Locale
+  prompt      String
+  outputJson  String?
+  status      String   // PENDING_REVIEW, APPROVED, REJECTED, ERROR
+  tokenCount  Int?
+  costCents   Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model AILog {
+  id           String   @id @default(cuid())
+  queueId      String?
+  model        String
+  promptHash   String
+  inputTokens  Int
+  outputTokens Int
+  costCents    Float
+  status       String
+  createdAt    DateTime @default(now())
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  company   String?
+  message   String
+  locale    Locale
+  createdAt DateTime @default(now())
+}
+`;
+const dbMode = process.env.DB_MODE || 'mysql';
+let schemaContent = mysqlSchema;
+if (dbMode === 'sqlite_demo') {
+    schemaContent = sqliteSchema;
+}
+fs.writeFileSync(schemaPath, schemaContent);
+console.log(`Prisma schema set to ${dbMode} mode.`);

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { redisManager } from '@/packages/lib/src/redis-client';
+import { redisManager } from 'C:/Users/User/TheBrainyInsightsReplatform/packages/lib/src/redis-client';
+import fs from 'fs';
+import path from 'path';
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,6 +14,11 @@ export async function POST(request: NextRequest) {
     }
 
     const client = redisManager.getClient();
+    if (!client) {
+      return NextResponse.json({
+        error: 'Redis client not available for cache invalidation.'
+      }, { status: 500 });
+    }
     let deletedKeys = 0;
 
     if (pattern) {
@@ -34,8 +41,8 @@ export async function POST(request: NextRequest) {
     }
 
     const logEntry = `
-[${new Date().toISOString()}] MANUAL_INVALIDATION: pattern=${pattern}, tags=${tags}, deleted=${deletedKeys}`;
-    require('fs').appendFileSync(require('path').join(process.cwd(), 'REDISLOG.md'), logEntry);
+[${new Date().toISOString()}] MANUAL_INVALIDATION: pattern=${pattern}, tags=${tags}, deleted=${deletedKeys}`; 
+    fs.appendFileSync(path.join(process.cwd(), 'REDISLOG.md'), logEntry);
 
     return NextResponse.json({
       success: true,
@@ -45,7 +52,7 @@ export async function POST(request: NextRequest) {
       timestamp: new Date().toISOString()
     });
 
-  } catch (error) {
+  } catch (error: any) {
     return NextResponse.json({
       error: error.message
     }, { status: 500 });

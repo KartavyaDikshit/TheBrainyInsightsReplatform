@@ -1,5 +1,5 @@
 import { createClient, RedisClientType } from 'redis';
-import { Redis } from 'ioredis';
+// import { Redis } from 'ioredis'; // Commented out
 
 interface RedisConfig {
   url: string;
@@ -12,7 +12,7 @@ interface RedisConfig {
 class RedisManager {
   private static instance: RedisManager;
   private client: RedisClientType | null = null;
-  private ioredisClient: Redis | null = null;
+  private ioredisClient: any | null = null; // Still using any, but will remove usage
   private isConnected = false;
   private circuitBreakerOpen = false;
   private lastAttemptTimestamp = 0;
@@ -65,20 +65,20 @@ class RedisManager {
 
       this.client = createClient(clientOptions);
 
-      const ioredisOptions: any = {
-        maxRetriesPerRequest: 3,
-        retryDelayOnFailover: 100,
-        lazyConnect: true
-      };
+      // const ioredisOptions: any = { // Commented out
+      //   maxRetriesPerRequest: 3, // Commented out
+      //   retryDelayOnFailover: 100, // Commented out
+      //   lazyConnect: true // Commented out
+      // }; // Commented out
 
-      if (password) {
-        ioredisOptions.password = password;
-      }
+      // if (password) { // Commented out
+      //   ioredisOptions.password = password; // Commented out
+      // } // Commented out
 
-      this.ioredisClient = new Redis(url, ioredisOptions);
+      // this.ioredisClient = new Redis(url, ioredisOptions); // Commented out
 
 
-      this.client.on('error', (error) => {
+      this.client.on('error', (error: Error) => { // Added type for error
         console.error('[Redis Client Error]', {
           error: error.message,
           timestamp: new Date().toISOString(),
@@ -106,7 +106,9 @@ class RedisManager {
       });
 
       await this.client.connect();
-      await this.ioredisClient.connect();
+      // if (this.ioredisClient) { // Commented out
+      //   await this.ioredisClient.connect(); // Commented out
+      // } // Commented out
 
       // Health check
       const pong = await this.client.ping();
@@ -137,20 +139,17 @@ class RedisManager {
     return this.client;
   }
 
-  getIORedisClient(): Redis | null {
-    if (!this.isConnected) {
-      return null;
-    }
-    return this.ioredisClient;
+  getIORedisClient(): any | null { // Still using any, but will return null
+    return null; // Always return null as ioredisClient is not initialized
   }
 
   async disconnect(): Promise<void> {
     if (this.client) {
       await this.client.disconnect();
     }
-    if (this.ioredisClient) {
-      await this.ioredisClient.disconnect();
-    }
+    // if (this.ioredisClient) { // Commented out
+    //   await this.ioredisClient.disconnect(); // Commented out
+    // } // Commented out
     this.isConnected = false;
     this.circuitBreakerOpen = false;
     this.failedAttempts = 0;

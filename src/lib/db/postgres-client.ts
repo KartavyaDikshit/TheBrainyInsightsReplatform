@@ -1,32 +1,11 @@
 import { Client, Pool } from 'pg'
-import { PrismaClient } from '@prisma/client'
 
-declare global {
-  var __pg_pool__: Pool | undefined
-  var __prisma__: PrismaClient | undefined
-}
-
-// PostgreSQL connection pool
-export const pgPool = globalThis.__pg_pool__ ?? new Pool({
+export const pgPool = new Pool({
   connectionString: process.env.DATABASE_URL,
   max: 20,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 2000,
 })
-
-if (process.env.NODE_ENV !== 'production') {
-  globalThis.__pg_pool__ = pgPool
-}
-
-// Prisma client with optimizations
-export const prisma = globalThis.__prisma__ ?? new PrismaClient({
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  errorFormat: 'pretty'
-})
-
-if (process.env.NODE_ENV !== 'production') {
-  globalThis.__prisma__ = prisma
-}
 
 // Database health check
 export async function checkDatabaseHealth() {
@@ -56,7 +35,7 @@ export async function checkDatabaseHealth() {
 // Advanced search function
 export async function searchReports(
   query: string,
-  locale: string = 'en',
+  locale = 'en',
   filters: {
     categoryId?: string
     priceMin?: number
@@ -87,5 +66,4 @@ export async function searchReports(
 // Graceful shutdown
 process.on('beforeExit', async () => {
   await pgPool.end()
-  await prisma.$disconnect()
 })

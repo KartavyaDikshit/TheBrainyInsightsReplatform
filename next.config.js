@@ -1,28 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Disable cache handler temporarily
-  // cacheHandler: undefined,
-  
-  experimental: {
-    // Remove problematic experimental features temporarily
-  },
-  
+  transpilePackages: ['@tbi/database'],
+  serverExternalPackages: ['@prisma/client'],
   typescript: {
-    // Ignore TypeScript errors during build (temporary)
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: false
   },
-  
   eslint: {
-    // Ignore ESLint errors during build (temporary)
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: false
   },
   
-  // Force dynamic rendering for all routes
-  output: undefined,
-  
-  images: {
-    domains: [],
-  },
+  staticPageGenerationTimeout: 120
 };
 
 export default nextConfig;
