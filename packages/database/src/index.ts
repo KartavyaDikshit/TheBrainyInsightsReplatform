@@ -20,93 +20,112 @@ export class DatabaseClient {
     }
   }
 
-  // Enhanced category methods
-  async getCategories(locale: string = 'en', featured?: boolean): Promise<any[]> {
-    let query = `
-      SELECT c.id, c.shortcode, c.slug, c.title, c.description, c.icon, 
-             c.featured, c.status, c.view_count, c.created_at,
-             ct.title as localized_title, ct.description as localized_description,
-             ct.slug as localized_slug, ct.meta_title, ct.meta_description
-      FROM categories c
-      LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.locale = $1 AND ct.status = 'PUBLISHED'
-      WHERE c.status = 'PUBLISHED'
-    `;
-    
-    const params = [locale];
-    
-    if (featured !== undefined) {
-      query += ` AND c.featured = ${params.length + 1}`;
-      params.push(featured.toString());
-    }
-    
-    query += ` ORDER BY c.sort_order ASC, c.title ASC`;
-    
-    const result = await this.query(query, params);
-    
-    return result.rows.map((row: Category) => ({
-      ...row,
-      title: row.localized_title || row.title,
-      description: row.localized_description || row.description,
-      slug: row.localized_slug || row.slug,
-    }));
+// --- FIXED getCategories ---
+async getCategories(locale: string = 'en', featured?: boolean): Promise<any[]> {
+  let query = `
+    SELECT
+      c.id, c.shortcode, c.slug, c.title, c.description, c.icon,
+      c.featured, c.status, c.view_count, c.created_at,
+      ct.title AS localized_title, ct.description AS localized_description,
+      ct.slug  AS localized_slug, ct.meta_title, ct.meta_description
+    FROM categories c
+    LEFT JOIN category_translations ct
+      ON c.id = ct.category_id
+     AND ct.locale = $1
+     AND ct.status = 'PUBLISHED'
+    WHERE c.status = 'PUBLISHED'
+  `;
+
+  const params: any[] = [locale];
+  let i = 2;
+
+  if (featured !== undefined) {
+    query += ` AND c.featured = $${i}::boolean`;
+    params.push(Boolean(featured));
+    i++;
   }
 
-  // Enhanced report methods
-  async getReports(locale: string = 'en', options: {
+  query += ` ORDER BY c.sort_order ASC, c.title ASC`;
+
+  const result = await this.query(query, params);
+
+  return result.rows.map((row: Category) => ({
+    ...row,
+    title: row.localized_title || row.title,
+    description: row.localized_description || row.description,
+    slug: row.localized_slug || row.slug,
+  }));
+}
+
+// --- FIXED getReports ---
+async getReports(
+  locale: string = 'en',
+  options: {
     categoryId?: string;
     featured?: boolean;
     limit?: number;
     offset?: number;
-  } = {}): Promise<any[]> {
-    let query = `
-      SELECT r.id, r.slug, r.title, r.description, r.summary, r.pages, 
-             r.published_date, r.single_price, r.multi_price, r.corporate_price,
-             r.featured, r.status, r.view_count, r.avg_rating, r.review_count,
-             r.created_at, r.keywords, r.semantic_keywords,
-             c.title as category_title, c.slug as category_slug,
-             rt.title as localized_title, rt.description as localized_description,
-             rt.summary as localized_summary, rt.slug as localized_slug,
-             rt.meta_title, rt.meta_description
-      FROM reports r
-      LEFT JOIN categories c ON r.category_id = c.id
-      LEFT JOIN report_translations rt ON r.id = rt.report_id AND rt.locale = $1 AND rt.status = 'PUBLISHED'
-      WHERE r.status = 'PUBLISHED'
-    `;
-    
-    const params = [locale];
-    
-    if (options.categoryId) {
-      query += ` AND r.category_id = $${params.length + 1}`;
-      params.push(options.categoryId);
-    }
-    
-    if (options.featured !== undefined) {
-      query += ` AND r.featured = ${params.length + 1}`;
-      params.push(options.featured.toString());
-    }
-    
-    query += ` ORDER BY r.featured DESC, r.published_date DESC`;
-    
-    if (options.limit) {
-      query += ` LIMIT ${params.length + 1}`;
-      params.push(options.limit.toString());
-    }
-    
-    if (options.offset) {
-      query += ` OFFSET ${params.length + 1}`;
-      params.push(options.offset.toString());
-    }
-    
-    const result = await this.query(query, params);
-    
-    return result.rows.map((row: Report) => ({
-      ...row,
-      title: row.localized_title || row.title,
-      description: row.localized_description || row.description,
-      summary: row.localized_summary || row.summary,
-      slug: row.localized_slug || row.slug,
-    }));
+  } = {}
+): Promise<any[]> {
+  let query = `
+    SELECT
+      r.id, r.slug, r.title, r.description, r.summary, r.pages,
+      r.published_date, r.single_price, r.multi_price, r.corporate_price,
+      r.featured, r.status, r.view_count, r.avg_rating, r.review_count,
+      r.created_at, r.keywords, r.semantic_keywords,
+      c.title AS category_title, c.slug AS category_slug,
+      rt.title AS localized_title, rt.description AS localized_description,
+      rt.summary AS localized_summary, rt.slug AS localized_slug,
+      rt.meta_title, rt.meta_description
+    FROM reports r
+    LEFT JOIN categories c ON r.category_id = c.id
+    LEFT JOIN report_translations rt
+      ON r.id = rt.report_id
+     AND rt.locale = $1
+     AND rt.status = 'PUBLISHED'
+    WHERE r.status = 'PUBLISHED'
+  `;
+
+  const params: any[] = [locale];
+  let i = 2;
+
+  if (options.categoryId) {
+    query += ` AND r.category_id = $${i}`;
+    params.push(options.categoryId);
+    i++;
   }
+
+  if (options.featured !== undefined) {
+    query += ` AND r.featured = $${i}::boolean`;
+    params.push(Boolean(options.featured));
+    i++;
+  }
+
+  query += ` ORDER BY r.featured DESC, r.published_date DESC`;
+
+  if (typeof options.limit === 'number') {
+    query += ` LIMIT $${i}`;
+    params.push(options.limit);
+    i++;
+  }
+
+  if (typeof options.offset === 'number') {
+    query += ` OFFSET $${i}`;
+    params.push(options.offset);
+    i++;
+  }
+
+  const result = await this.query(query, params);
+
+  return result.rows.map((row: Report) => ({
+    ...row,
+    title: row.localized_title || row.title,
+    description: row.localized_description || row.description,
+    summary: row.localized_summary || row.summary,
+    slug: row.localized_slug || row.slug,
+  }));
+}
+
 
   // AI workflow methods
   async createContentGenerationWorkflow(data: any): Promise<string> {

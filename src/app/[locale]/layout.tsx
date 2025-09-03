@@ -74,22 +74,7 @@ export default async function RootLayout(
     <html lang={locale} dir={isRtl ? 'rtl' : 'ltr'}>
       <body className={inter.className}>
         {/* <Providers messages={messages} locale={locale}> */}
-          <header className="bg-gray-800 text-white p-4">
-            <nav className="container mx-auto flex justify-between items-center">
-              <Link href={`/${locale}/`} className="text-xl font-bold">
-                TheBrainyInsights
-              </Link>
-              <div className="space-x-4">
-                <Link href={`/${locale}/`}>Home</Link>
-                {/* {session ? (
-                  <Link href={`/${locale}/dashboard`}>Dashboard</Link>
-                ) : ( */}
-                  <Link href={`/${locale}/auth/signin`}>Sign In</Link>
-                {/* )} */}
-              </div>
-            </nav>
-          </header>
-          <main className="container mx-auto p-4">{children}</main>
+          {children}
         {/* </Providers> */}
       </body>
     </html>

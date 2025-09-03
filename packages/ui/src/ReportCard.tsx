@@ -1,20 +1,23 @@
 import React from 'react';
-import { TransformedReport } from '@/lib/data/adapter';
 import Link from 'next/link';
 
-type ReportCardProps = {
-  report: TransformedReport;
-  locale: string;
-};
+interface Report {
+  id: string;
+  slug: string;
+  title: string;
+  summary?: string | null;
+}
 
-const ReportCard: React.FC<ReportCardProps> = ({ report, locale }) => {
+interface ReportCardProps {
+  report: Report;
+  locale: string;
+}
+
+export default function ReportCard({ report, locale }: ReportCardProps) {
   return (
     <Link href={`/${locale}/reports/${report.slug}`} className="block p-4 border rounded-lg shadow-sm hover:shadow-md transition-shadow">
       <h3 className="text-lg font-semibold mb-2">{report.title}</h3>
-      <p className="text-sm text-gray-600">{report.summary}</p>
-      {/* Add more details like category, updated date if available in Report type */}
+      <p className="text-sm text-gray-600">{report.summary || ''}</p>
     </Link>
   );
-};
-
-export default ReportCard;
+}

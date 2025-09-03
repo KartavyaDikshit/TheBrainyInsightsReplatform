@@ -27,6 +27,12 @@ export type CategoryWithTranslations = Category & {
 };
 
 export class CategoryService {
+  /**
+   * List categories with optional locale overlay.
+   * - Uses translation SEO/meta when available.
+   * - Compares enums via ::text for safety.
+   * - Compares booleans as booleans.
+   */
   static async getAll(
     locale = 'en',
     options: {
@@ -38,41 +44,76 @@ export class CategoryService {
     try {
       let query = `
         SELECT
-          c.id, c.shortcode, c.slug, c.title, c.description, c.icon, c.featured, c.sort_order,
-          c.seo_keywords, c.regional_keywords, c.search_volume, c.meta_title, c.meta_description,
-          c.canonical_url, c.status, c.view_count, c.click_count, c.created_at, c.updated_at,
-          ct.id as translation_id, ct.locale as translation_locale, ct.title as translated_title,
-          ct.description as translated_description, ct.slug as translated_slug,
-          ct.seo_keywords as translated_seo_keywords, ct.localized_keywords as translated_localized_keywords,
-          ct.cultural_keywords as translated_cultural_keywords, ct.meta_title as translated_meta_title,
-          ct.meta_description as translated_meta_description, ct.ai_generated as translation_ai_generated,
-          ct.human_reviewed as translation_human_reviewed, ct.translation_quality as translation_quality,
-          ct.translation_job_id as translation_job_id, ct.status as translation_status,
-          (SELECT COUNT(*) FROM reports WHERE category_id = c.id) as reports_count
+          c.id,
+          c.shortcode,
+          c.slug,
+          c.title,
+          c.description,
+          c.icon,
+          c.featured,
+          c.sort_order,
+          c.regional_keywords,
+          c.search_volume,
+          c.meta_title,
+          c.meta_description,
+          c.canonical_url,
+          c.status,
+          c.view_count,
+          c.click_count,
+          c.created_at,
+          c.updated_at,
+
+          ct.id                  AS translation_id,
+          ct.locale              AS translation_locale,
+          ct.title               AS translated_title,
+          ct.description         AS translated_description,
+          ct.slug                AS translated_slug,
+          ct.seo_keywords        AS translated_seo_keywords,
+          ct.localized_keywords  AS translated_localized_keywords,
+          ct.cultural_keywords   AS translated_cultural_keywords,
+          ct.meta_title          AS translated_meta_title,
+          ct.meta_description    AS translated_meta_description,
+          ct.ai_generated        AS translation_ai_generated,
+          ct.human_reviewed      AS translation_human_reviewed,
+          ct.translation_quality AS translation_quality,
+          ct.translation_job_id  AS translation_job_id,
+          ct.status              AS translation_status,
+
+          (
+            SELECT COUNT(*)
+            FROM reports r
+            WHERE r.category_id = c.id
+              AND r.status::text = 'PUBLISHED'
+          ) AS reports_count
         FROM categories c
-        LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.locale = $1 AND ct.status = 'PUBLISHED'
-        WHERE c.status = 'PUBLISHED'
+        LEFT JOIN category_translations ct
+          ON ct.category_id = c.id
+         AND ct.locale = $1
+         AND ct.status::text = 'PUBLISHED'
+        WHERE c.status::text = 'PUBLISHED'
       `;
+
       const params: (string | boolean | number)[] = [locale];
-      let paramIndex = 2;
+      let i = 2;
 
       if (options.featured !== undefined) {
-        query += ` AND c.featured = ${paramIndex}`;
-        params.push(options.featured);
-        paramIndex++;
+        // bind strictly as boolean
+        query += ` AND c.featured = $${i}::boolean`;
+        params.push(Boolean(options.featured));
+        i++;
       }
 
-      query += ` ORDER BY c.sort_order ASC, c.created_at DESC`;
+      query += ` ORDER BY c.sort_order ASC NULLS LAST, c.created_at DESC`;
 
-      if (options.limit) {
-        query += ` LIMIT ${paramIndex}`;
+      if (typeof options.limit === 'number') {
+        query += ` LIMIT $${i}`;
         params.push(options.limit);
-        paramIndex++;
+        i++;
       }
-      if (options.offset) {
-        query += ` OFFSET ${paramIndex}`;
+      if (typeof options.offset === 'number') {
+        query += ` OFFSET $${i}`;
         params.push(options.offset);
-        paramIndex++;
+        i++;
       }
 
       const result = await db.query(query, params);
@@ -82,47 +123,52 @@ export class CategoryService {
           id: row.id,
           shortcode: row.shortcode,
           slug: row.slug,
-          title: row.translated_title || row.title,
-          description: row.translated_description || row.description,
+          title: row.translated_title ?? row.title,
+          description: row.translated_description ?? row.description,
           icon: row.icon,
           featured: row.featured,
           sort_order: row.sort_order,
-          seo_keywords: row.seo_keywords,
-          regional_keywords: row.regional_keywords,
-          search_volume: row.search_volume,
-          meta_title: row.translated_meta_title || row.meta_title,
-          meta_description: row.translated_meta_description || row.meta_description,
-          canonical_url: row.canonical_url,
+          // Prefer translated SEO/meta if present
+          seo_keywords: row.translated_seo_keywords ?? null,
+          regional_keywords: row.regional_keywords ?? row.translated_localized_keywords ?? null,
+          search_volume: row.search_volume ?? null,
+          meta_title: row.translated_meta_title ?? row.meta_title ?? null,
+          meta_description: row.translated_meta_description ?? row.meta_description ?? null,
+          canonical_url: row.canonical_url ?? null,
           status: row.status,
           view_count: row.view_count,
           click_count: row.click_count,
           created_at: row.created_at,
           updated_at: row.updated_at,
-          _count: { reports: parseInt(row.reports_count) },
+          _count: { reports: parseInt(String(row.reports_count ?? 0), 10) },
         };
 
         if (row.translation_id) {
-          category.translations = [{
-            id: row.translation_id,
-            category_id: row.id,
-            locale: row.translation_locale,
-            title: row.translated_title,
-            description: row.translated_description,
-            slug: row.translated_slug,
-            seo_keywords: row.translated_seo_keywords,
-            localized_keywords: row.translated_localized_keywords,
-            cultural_keywords: row.translated_cultural_keywords,
-            meta_title: row.translated_meta_title,
-            meta_description: row.translated_meta_description,
-            ai_generated: row.translation_ai_generated,
-            human_reviewed: row.translation_human_reviewed,
-            translation_quality: row.translation_quality,
-            translation_job_id: row.translation_job_id,
-            status: row.translation_status,
-            created_at: row.created_at, // Assuming translation created_at is same as category for simplicity
-            updated_at: row.updated_at, // Assuming translation updated_at is same as category for simplicity
-          }];
+          category.translations = [
+            {
+              id: row.translation_id,
+              category_id: row.id,
+              locale: row.translation_locale,
+              title: row.translated_title,
+              description: row.translated_description,
+              slug: row.translated_slug,
+              seo_keywords: row.translated_seo_keywords,
+              localized_keywords: row.translated_localized_keywords,
+              cultural_keywords: row.translated_cultural_keywords,
+              meta_title: row.translated_meta_title,
+              meta_description: row.translated_meta_description,
+              ai_generated: row.translation_ai_generated,
+              human_reviewed: row.translation_human_reviewed,
+              translation_quality: row.translation_quality,
+              translation_job_id: row.translation_job_id,
+              status: row.translation_status,
+              // If translations table has its own timestamps, select/alias them explicitly.
+              created_at: row.created_at,
+              updated_at: row.updated_at,
+            },
+          ];
         }
+
         return category;
       });
     } catch (error) {
@@ -131,146 +177,176 @@ export class CategoryService {
     }
   }
 
+  /**
+   * Fetch a single category by slug, with locale overlay and fallback by translated slug.
+   */
   static async getBySlug(
-    slug: string, 
+    slug: string,
     locale = 'en'
   ): Promise<CategoryWithTranslations | null> {
     try {
       const query = `
         SELECT
-          c.id, c.shortcode, c.slug, c.title, c.description, c.icon, c.featured, c.sort_order,
-          c.seo_keywords, c.regional_keywords, c.search_volume, c.meta_title, c.meta_description,
-          c.canonical_url, c.status, c.view_count, c.click_count, c.created_at, c.updated_at,
-          ct.id as translation_id, ct.locale as translation_locale, ct.title as translated_title,
-          ct.description as translated_description, ct.slug as translated_slug,
-          ct.seo_keywords as translated_seo_keywords, ct.localized_keywords as translated_localized_keywords,
-          ct.cultural_keywords as translated_cultural_keywords, ct.meta_title as translated_meta_title,
-          ct.meta_description as translated_meta_description, ct.ai_generated as translation_ai_generated,
-          ct.human_reviewed as translation_human_reviewed, ct.translation_quality as translation_quality,
-          ct.translation_job_id as translation_job_id, ct.status as translation_status,
-          (SELECT COUNT(*) FROM reports WHERE category_id = c.id) as reports_count
+          c.id,
+          c.shortcode,
+          c.slug,
+          c.title,
+          c.description,
+          c.icon,
+          c.featured,
+          c.sort_order,
+          c.regional_keywords,
+          c.search_volume,
+          c.meta_title,
+          c.meta_description,
+          c.canonical_url,
+          c.status,
+          c.view_count,
+          c.click_count,
+          c.created_at,
+          c.updated_at,
+
+          ct.id                  AS translation_id,
+          ct.locale              AS translation_locale,
+          ct.title               AS translated_title,
+          ct.description         AS translated_description,
+          ct.slug                AS translated_slug,
+          ct.seo_keywords        AS translated_seo_keywords,
+          ct.localized_keywords  AS translated_localized_keywords,
+          ct.cultural_keywords   AS translated_cultural_keywords,
+          ct.meta_title          AS translated_meta_title,
+          ct.meta_description    AS translated_meta_description,
+          ct.ai_generated        AS translation_ai_generated,
+          ct.human_reviewed      AS translation_human_reviewed,
+          ct.translation_quality AS translation_quality,
+          ct.translation_job_id  AS translation_job_id,
+          ct.status              AS translation_status,
+
+          (
+            SELECT COUNT(*)
+            FROM reports r
+            WHERE r.category_id = c.id
+              AND r.status::text = 'PUBLISHED'
+          ) AS reports_count
         FROM categories c
-        LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.locale = $2 AND ct.status = 'PUBLISHED'
+        LEFT JOIN category_translations ct
+          ON ct.category_id = c.id
+         AND ct.locale = $2
+         AND ct.status::text = 'PUBLISHED'
         WHERE c.slug = $1
         LIMIT 1
       `;
       const params: (string | boolean | number)[] = [slug, locale];
 
       const result = await db.query(query, params);
-      const row = result.rows[0];
+      let row = result.rows[0];
 
       if (!row) {
-        // If not found by main slug, try finding by translated slug
+        // Fallback: find by translated slug
         const translatedQuery = `
           SELECT
-            c.id, c.shortcode, c.slug, c.title, c.description, c.icon, c.featured, c.sort_order,
-            c.seo_keywords, c.regional_keywords, c.search_volume, c.meta_title, c.meta_description,
-            c.canonical_url, c.status, c.view_count, c.click_count, c.created_at, c.updated_at,
-            ct.id as translation_id, ct.locale as translation_locale, ct.title as translated_title,
-            ct.description as translated_description, ct.slug as translated_slug,
-            ct.seo_keywords as translated_seo_keywords, ct.localized_keywords as translated_localized_keywords,
-            ct.cultural_keywords as translated_cultural_keywords, ct.meta_title as translated_meta_title,
-            ct.meta_description as translated_meta_description, ct.ai_generated as translation_ai_generated,
-            ct.human_reviewed as translation_human_reviewed, ct.translation_quality as translation_quality,
-            ct.translation_job_id as translation_job_id, ct.status as translation_status,
-            (SELECT COUNT(*) FROM reports WHERE category_id = c.id) as reports_count
+            c.id,
+            c.shortcode,
+            c.slug,
+            c.title,
+            c.description,
+            c.icon,
+            c.featured,
+            c.sort_order,
+            c.regional_keywords,
+            c.search_volume,
+            c.meta_title,
+            c.meta_description,
+            c.canonical_url,
+            c.status,
+            c.view_count,
+            c.click_count,
+            c.created_at,
+            c.updated_at,
+
+            ct.id                  AS translation_id,
+            ct.locale              AS translation_locale,
+            ct.title               AS translated_title,
+            ct.description         AS translated_description,
+            ct.slug                AS translated_slug,
+            ct.seo_keywords        AS translated_seo_keywords,
+            ct.localized_keywords  AS translated_localized_keywords,
+            ct.cultural_keywords   AS translated_cultural_keywords,
+            ct.meta_title          AS translated_meta_title,
+            ct.meta_description    AS translated_meta_description,
+            ct.ai_generated        AS translation_ai_generated,
+            ct.human_reviewed      AS translation_human_reviewed,
+            ct.translation_quality AS translation_quality,
+            ct.translation_job_id  AS translation_job_id,
+            ct.status              AS translation_status,
+
+            (
+              SELECT COUNT(*)
+              FROM reports r
+              WHERE r.category_id = c.id
+                AND r.status::text = 'PUBLISHED'
+            ) AS reports_count
           FROM categories c
-          JOIN category_translations ct ON c.id = ct.category_id
-          WHERE ct.slug = $1 AND ct.locale = $2 AND ct.status = 'PUBLISHED'
+          JOIN category_translations ct
+            ON ct.category_id = c.id
+          WHERE ct.slug = $1
+            AND ct.locale = $2
+            AND ct.status::text = 'PUBLISHED'
           LIMIT 1
         `;
         const translatedResult = await db.query(translatedQuery, [slug, locale]);
-        const translatedRow = translatedResult.rows[0];
-
-        if (!translatedRow) {
-          return null; // Not found by main slug or translated slug
-        }
-        return {
-          id: translatedRow.id,
-          shortcode: translatedRow.shortcode,
-          slug: translatedRow.slug,
-          title: translatedRow.translated_title || translatedRow.title,
-          description: translatedRow.translated_description || translatedRow.description,
-          icon: translatedRow.icon,
-          featured: translatedRow.featured,
-          sort_order: translatedRow.sort_order,
-          seo_keywords: translatedRow.seo_keywords,
-          regional_keywords: translatedRow.regional_keywords,
-          search_volume: translatedRow.search_volume,
-          meta_title: translatedRow.translated_meta_title || translatedRow.meta_title,
-          meta_description: translatedRow.translated_meta_description || translatedRow.meta_description,
-          canonical_url: translatedRow.canonical_url,
-          status: translatedRow.status,
-          view_count: translatedRow.view_count,
-          click_count: translatedRow.click_count,
-          created_at: translatedRow.created_at,
-          updated_at: translatedRow.updated_at,
-          _count: { reports: parseInt(translatedRow.reports_count) },
-          translations: translatedRow.translation_id ? [{
-            id: translatedRow.translation_id,
-            category_id: translatedRow.id,
-            locale: translatedRow.translation_locale,
-            title: translatedRow.translated_title,
-            description: translatedRow.translated_description,
-            slug: translatedRow.translated_slug,
-            seo_keywords: translatedRow.translated_seo_keywords,
-            localized_keywords: translatedRow.translated_localized_keywords,
-            cultural_keywords: translatedRow.cultural_keywords,
-            meta_title: translatedRow.translated_meta_title,
-            meta_description: translatedRow.translated_meta_description,
-            ai_generated: translatedRow.translation_ai_generated,
-            human_reviewed: translatedRow.translation_human_reviewed,
-            translation_quality: translatedRow.translation_quality,
-            translation_job_id: translatedRow.translation_job_id,
-            status: translatedRow.translation_status,
-            created_at: translatedRow.created_at,
-            updated_at: translatedRow.updated_at,
-          }] : [],
-        };
+        row = translatedResult.rows[0];
+        if (!row) return null;
       }
 
-      return {
+      const category: CategoryWithTranslations = {
         id: row.id,
         shortcode: row.shortcode,
         slug: row.slug,
-        title: row.translated_title || row.title,
-        description: row.translated_description || row.description,
+        title: row.translated_title ?? row.title,
+        description: row.translated_description ?? row.description,
         icon: row.icon,
         featured: row.featured,
         sort_order: row.sort_order,
-        seo_keywords: row.seo_keywords,
-        regional_keywords: row.regional_keywords,
-        search_volume: row.search_volume,
-        meta_title: row.translated_meta_title || row.meta_title,
-        meta_description: row.translated_meta_description || row.meta_description,
-        canonical_url: row.canonical_url,
+        seo_keywords: row.translated_seo_keywords ?? null,
+        regional_keywords: row.regional_keywords ?? row.translated_localized_keywords ?? null,
+        search_volume: row.search_volume ?? null,
+        meta_title: row.translated_meta_title ?? row.meta_title ?? null,
+        meta_description: row.translated_meta_description ?? row.meta_description ?? null,
+        canonical_url: row.canonical_url ?? null,
         status: row.status,
         view_count: row.view_count,
         click_count: row.click_count,
         created_at: row.created_at,
         updated_at: row.updated_at,
-        _count: { reports: parseInt(row.reports_count) },
-        translations: row.translation_id ? [{
-          id: row.translation_id,
-          category_id: row.id,
-          locale: row.translation_locale,
-          title: row.translated_title,
-          description: row.translated_description,
-          slug: row.translated_slug,
-          seo_keywords: row.translated_seo_keywords,
-          localized_keywords: row.translated_localized_keywords,
-          cultural_keywords: row.cultural_keywords,
-          meta_title: row.translated_meta_title,
-          meta_description: row.translated_meta_description,
-          ai_generated: row.translation_ai_generated,
-          human_reviewed: row.translation_human_reviewed,
-          translation_quality: row.translation_quality,
-          translation_job_id: row.translation_job_id,
-          status: row.translation_status,
-          created_at: row.created_at,
-          updated_at: row.updated_at,
-        }] : [],
+        _count: { reports: parseInt(String(row.reports_count ?? 0), 10) },
+        translations: row.translation_id
+          ? [
+              {
+                id: row.translation_id,
+                category_id: row.id,
+                locale: row.translation_locale,
+                title: row.translated_title,
+                description: row.translated_description,
+                slug: row.translated_slug,
+                seo_keywords: row.translated_seo_keywords,
+                localized_keywords: row.translated_localized_keywords,
+                cultural_keywords: row.translated_cultural_keywords,
+                meta_title: row.translated_meta_title,
+                meta_description: row.translated_meta_description,
+                ai_generated: row.translation_ai_generated,
+                human_reviewed: row.translation_human_reviewed,
+                translation_quality: row.translation_quality,
+                translation_job_id: row.translation_job_id,
+                status: row.translation_status,
+                created_at: row.created_at,
+                updated_at: row.updated_at,
+              },
+            ]
+          : [],
       };
+
+      return category;
     } catch (error) {
       console.error('Error fetching category by slug:', error);
       return null;

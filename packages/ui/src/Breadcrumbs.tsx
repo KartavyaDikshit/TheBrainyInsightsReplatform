@@ -1,34 +1,32 @@
 import React from 'react';
-import Link from 'next/link';
 
-type BreadcrumbItem = {
-  name: string;
-  href: string;
-};
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
 
-type BreadcrumbsProps = {
+interface BreadcrumbsProps {
   items: BreadcrumbItem[];
-};
+  className?: string;
+}
 
-const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
+export default function Breadcrumbs({ items, className = '' }: BreadcrumbsProps) {
   return (
-    <nav className="text-sm text-gray-500 mb-4">
-      <ol className="list-none p-0 inline-flex">
+    <nav className={`text-sm ${className}`}>
+      <ol className="flex items-center space-x-2">
         {items.map((item, index) => (
-          <li key={item.href} className="flex items-center">
-            {index > 0 && <span className="mx-2">/</span>}
-            {index === items.length - 1 ? (
-              <span className="text-gray-700">{item.name}</span>
+          <li key={index} className="flex items-center">
+            {index > 0 && <span className="mx-2 text-gray-500">/</span>}
+            {item.href ? (
+              <a href={item.href} className="text-blue-600 hover:text-blue-800">
+                {item.label}
+              </a>
             ) : (
-              <Link href={item.href} className="hover:underline">
-                {item.name}
-              </Link>
+              <span className="text-gray-500">{item.label}</span>
             )}
           </li>
         ))}
       </ol>
     </nav>
   );
-};
-
-export default Breadcrumbs;
+}

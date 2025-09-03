@@ -18,86 +18,113 @@ export class ReportService {
       sortBy?: 'createdAt' | 'publishedDate' | 'title';
       sortOrder?: 'asc' | 'desc';
     } = {}
-  ): Promise<{
-    reports: ReportWithTranslations[];
-    total: number;
-  }> {
+  ): Promise<{ reports: ReportWithTranslations[]; total: number }> {
     try {
+      // Base SELECT
       let query = `
         SELECT
           r.id, r.slug, r.title, r.description, r.summary, r.pages, r.published_date,
           r.single_price, r.multi_price, r.corporate_price, r.featured, r.status,
           r.view_count, r.avg_rating, r.review_count, r.created_at, r.keywords, r.semantic_keywords,
           r.regional_keywords, r.click_through_rate, r.average_position, r.impressions, r.clicks,
-          c.id as category_id, c.slug as category_slug, c.title as category_title,
-          rt.id as translation_id, rt.locale as translation_locale, rt.title as translated_title,
-          rt.description as translated_description, rt.summary as translated_summary, rt.slug as translated_slug,
-          rt.table_of_contents as translated_table_of_contents, rt.methodology as translated_methodology,
-          rt.key_findings as translated_key_findings, rt.executive_summary as translated_executive_summary,
-          rt.keywords as translated_keywords, rt.semantic_keywords as translated_semantic_keywords,
-          rt.localized_keywords as translated_localized_keywords, rt.cultural_keywords as translated_cultural_keywords,
-          rt.meta_title as translated_meta_title, rt.meta_description as translated_meta_description,
-          rt.og_title as translated_og_title, rt.og_description as translated_og_description,
-          rt.schema_markup as translated_schema_markup, rt.breadcrumb_data as translated_breadcrumb_data,
-          rt.faq_data as translated_faq_data, rt.ai_generated as translation_ai_generated,
-          rt.human_reviewed as translation_human_reviewed, rt.translation_quality as translation_quality,
-          rt.cultural_adaptation_score as translated_cultural_adaptation_score, rt.translation_job_id as translation_job_id,
-          rt.search_performance as translated_search_performance, rt.status as translation_status,
-          (SELECT COUNT(*) FROM report_reviews WHERE report_id = r.id) as reviews_count,
-          (SELECT COUNT(*) FROM enquiries WHERE report_id = r.id) as enquiries_count
+
+          c.id AS category_id, c.slug AS category_slug, c.title AS category_title,
+
+          rt.id AS translation_id, rt.locale AS translation_locale, rt.title AS translated_title,
+          rt.description AS translated_description, rt.summary AS translated_summary, rt.slug AS translated_slug,
+          rt.table_of_contents AS translated_table_of_contents, rt.methodology AS translated_methodology,
+          rt.key_findings AS translated_key_findings, rt.executive_summary AS translated_executive_summary,
+          rt.keywords AS translated_keywords, rt.semantic_keywords AS translated_semantic_keywords,
+          rt.localized_keywords AS translated_localized_keywords, rt.cultural_keywords AS translated_cultural_keywords,
+          rt.meta_title AS translated_meta_title, rt.meta_description AS translated_meta_description,
+          rt.og_title AS translated_og_title, rt.og_description AS translated_og_description,
+          rt.schema_markup AS translated_schema_markup, rt.breadcrumb_data AS translated_breadcrumb_data,
+          rt.faq_data AS translated_faq_data, rt.ai_generated AS translation_ai_generated,
+          rt.human_reviewed AS translation_human_reviewed, rt.translation_quality AS translation_quality,
+          rt.cultural_adaptation_score AS translated_cultural_adaptation_score, rt.translation_job_id AS translation_job_id,
+          rt.search_performance AS translated_search_performance, rt.status AS translation_status,
+
+          (SELECT COUNT(*) FROM report_reviews WHERE report_id = r.id) AS reviews_count,
+          (SELECT COUNT(*) FROM enquiries     WHERE report_id = r.id) AS enquiries_count
         FROM reports r
         LEFT JOIN categories c ON r.category_id = c.id
-        LEFT JOIN report_translations rt ON r.id = rt.report_id AND rt.locale = $1 AND rt.status = 'PUBLISHED'
-        WHERE r.status = 'PUBLISHED'
+        LEFT JOIN report_translations rt
+          ON r.id = rt.report_id
+         AND rt.locale = $1
+         AND rt.status::text = 'PUBLISHED'
       `;
-      let countQuery = `SELECT COUNT(*) FROM reports r WHERE r.status = 'PUBLISHED'`;
-      const params: (string | boolean | number)[] = [locale];
-      const countParams: (string | boolean | number)[] = [];
-      let paramIndex = 2;
+
+      // Filters (use enums via ::text and booleans as booleans)
+      const filters: string[] = [`r.status::text = 'PUBLISHED'`];
+
+      const params: (string | number | boolean)[] = [locale];
+      let i = 2; // next $ index for main query
 
       if (options.categoryId) {
-        query += ` AND r.category_id = ${paramIndex}`;
-        countQuery += ` AND r.category_id = ${paramIndex}`;
+        filters.push(`r.category_id = $${i}`);
         params.push(options.categoryId);
-        countParams.push(options.categoryId);
-        paramIndex++;
+        i++;
       }
-      if (options.featured !== undefined) {
-        query += ` AND r.featured = ${paramIndex}`;
-        countQuery += ` AND r.featured = ${paramIndex}`;
-        params.push(options.featured);
-        countParams.push(options.featured);
-        paramIndex++;
+      if (options.featured === true) {
+        filters.push(`r.featured IS TRUE`);
+      } else if (options.featured === false) {
+        filters.push(`r.featured IS FALSE`);
       }
 
+      if (filters.length) {
+        query += ` WHERE ` + filters.join(' AND ');
+      }
+
+      // Sorting
       let orderByColumn = 'r.published_date';
       if (options.sortBy === 'createdAt') orderByColumn = 'r.created_at';
       if (options.sortBy === 'publishedDate') orderByColumn = 'r.published_date';
       if (options.sortBy === 'title') orderByColumn = 'r.title';
-
       const sortOrder = options.sortOrder === 'asc' ? 'ASC' : 'DESC';
       query += ` ORDER BY ${orderByColumn} ${sortOrder}`;
 
-      if (options.limit) {
-        query += ` LIMIT ${paramIndex}`;
+      // Pagination
+      if (typeof options.limit === 'number') {
+        query += ` LIMIT $${i}`;
         params.push(options.limit);
-        paramIndex++;
+        i++;
       }
-      if (options.offset) {
-        query += ` OFFSET ${paramIndex}`;
+      if (typeof options.offset === 'number') {
+        query += ` OFFSET $${i}`;
         params.push(options.offset);
-        paramIndex++;
+        i++;
+      }
+
+      // Count query (separate params index)
+      const countFilters: string[] = [`r.status::text = 'PUBLISHED'`];
+      const countParams: (string | number | boolean)[] = [];
+      let j = 1;
+
+      if (options.categoryId) {
+        countFilters.push(`r.category_id = $${j}`);
+        countParams.push(options.categoryId);
+        j++;
+      }
+      if (options.featured === true) {
+        countFilters.push(`r.featured IS TRUE`);
+      } else if (options.featured === false) {
+        countFilters.push(`r.featured IS FALSE`);
+      }
+
+      let countQuery = `SELECT COUNT(*) FROM reports r`;
+      if (countFilters.length) {
+        countQuery += ` WHERE ` + countFilters.join(' AND ');
       }
 
       const [reportsResult, totalResult] = await Promise.all([
         db.query(query, params),
-        db.query(countQuery, countParams)
+        db.query(countQuery, countParams),
       ]);
 
       const reports = reportsResult.rows.map((row: any) => {
         const report: ReportWithTranslations = {
           id: row.id,
-          slug: row.slug,
+          slug: row.translated_slug || row.slug,
           title: row.translated_title || row.title,
           description: row.translated_description || row.description,
           summary: row.translated_summary || row.summary,
@@ -119,55 +146,59 @@ export class ReportService {
           average_position: row.average_position,
           impressions: row.impressions,
           clicks: row.clicks,
+          // category display
           category_title: row.category_title,
           category_slug: row.category_slug,
           _count: {
-            reviews: parseInt(row.reviews_count),
-            enquiries: parseInt(row.enquiries_count)
-          }
+            reviews: parseInt(String(row.reviews_count ?? 0), 10),
+            enquiries: parseInt(String(row.enquiries_count ?? 0), 10),
+          },
         };
 
         if (row.translation_id) {
-          report.translations = [{
-            id: row.translation_id,
-            report_id: row.id,
-            locale: row.translation_locale,
-            title: row.translated_title,
-            description: row.translated_description,
-            summary: row.translated_summary,
-            slug: row.translated_slug,
-            table_of_contents: row.translated_table_of_contents,
-            methodology: row.translated_methodology,
-            key_findings: row.translated_key_findings,
-            executive_summary: row.translated_executive_summary,
-            keywords: row.translated_keywords,
-            semantic_keywords: row.translated_semantic_keywords,
-            localized_keywords: row.localized_keywords,
-            cultural_keywords: row.cultural_keywords,
-            meta_title: row.translated_meta_title,
-            meta_description: row.translated_meta_description,
-            og_title: row.translated_og_title,
-            og_description: row.translated_og_description,
-            schema_markup: row.translated_schema_markup,
-            breadcrumb_data: row.translated_breadcrumb_data,
-            faq_data: row.translated_faq_data,
-            ai_generated: row.translation_ai_generated,
-            human_reviewed: row.human_reviewed,
-            translation_quality: row.translation_quality,
-            cultural_adaptation_score: row.translated_cultural_adaptation_score,
-            translation_job_id: row.translation_job_id,
-            search_performance: row.translated_search_performance,
-            status: row.translation_status,
-            created_at: row.created_at,
-            updated_at: row.updated_at,
-          }];
+          report.translations = [
+            {
+              id: row.translation_id,
+              report_id: row.id,
+              locale: row.translation_locale,
+              title: row.translated_title,
+              description: row.translated_description,
+              summary: row.translated_summary,
+              slug: row.translated_slug,
+              table_of_contents: row.translated_table_of_contents,
+              methodology: row.translated_methodology,
+              key_findings: row.translated_key_findings,
+              executive_summary: row.translated_executive_summary,
+              keywords: row.translated_keywords,
+              semantic_keywords: row.translated_semantic_keywords,
+              localized_keywords: row.translated_localized_keywords,
+              cultural_keywords: row.translated_cultural_keywords,
+              meta_title: row.translated_meta_title,
+              meta_description: row.translated_meta_description,
+              og_title: row.translated_og_title,
+              og_description: row.translated_og_description,
+              schema_markup: row.translated_schema_markup,
+              breadcrumb_data: row.translated_breadcrumb_data,
+              faq_data: row.translated_faq_data,
+              ai_generated: row.translation_ai_generated,
+              human_reviewed: row.translation_human_reviewed,
+              translation_quality: row.translation_quality,
+              cultural_adaptation_score: row.translated_cultural_adaptation_score,
+              translation_job_id: row.translation_job_id,
+              search_performance: row.translated_search_performance,
+              status: row.translation_status,
+              // if you want translation timestamps, select/alias them explicitly
+              created_at: row.created_at,
+              updated_at: row.updated_at,
+            },
+          ];
         }
         return report;
       });
 
       return {
         reports,
-        total: parseInt(totalResult.rows[0].count)
+        total: parseInt(String(totalResult.rows[0]?.count ?? 0), 10),
       };
     } catch (error) {
       console.error('Error fetching reports:', error);
@@ -176,58 +207,91 @@ export class ReportService {
   }
 
   static async getBySlug(
-    slug: string, 
+    slug: string,
     locale = 'en'
   ): Promise<ReportWithTranslations | null> {
     try {
-      let query = ``;
-      let params: (string | boolean)[] = [];
+      // 1) Try finding by the main report slug (with overlay translation for locale)
+      const query = `
+        SELECT
+          r.id, r.slug, r.title, r.description, r.summary, r.pages, r.published_date,
+          r.single_price, r.multi_price, r.corporate_price, r.featured, r.status,
+          r.view_count, r.avg_rating, r.review_count, r.created_at, r.keywords, r.semantic_keywords,
+          r.regional_keywords, r.click_through_rate, r.average_position, r.impressions, r.clicks,
 
-      if (locale === 'en') {
-        query = `
+          c.id AS category_id, c.slug AS category_slug, c.title AS category_title,
+
+          rt.id AS translation_id, rt.locale AS translation_locale, rt.title AS translated_title,
+          rt.description AS translated_description, rt.summary AS translated_summary, rt.slug AS translated_slug,
+          rt.table_of_contents AS translated_table_of_contents, rt.methodology AS translated_methodology,
+          rt.key_findings AS translated_key_findings, rt.executive_summary AS translated_executive_summary,
+          rt.keywords AS translated_keywords, rt.semantic_keywords AS translated_semantic_keywords,
+          rt.localized_keywords AS translated_localized_keywords, rt.cultural_keywords AS translated_cultural_keywords,
+          rt.meta_title AS translated_meta_title, rt.meta_description AS translated_meta_description,
+          rt.og_title AS translated_og_title, rt.og_description AS translated_og_description,
+          rt.schema_markup AS translated_schema_markup, rt.breadcrumb_data AS translated_breadcrumb_data,
+          rt.faq_data AS translated_faq_data, rt.ai_generated AS translation_ai_generated,
+          rt.human_reviewed AS translation_human_reviewed, rt.translation_quality AS translation_quality,
+          rt.cultural_adaptation_score AS translated_cultural_adaptation_score, rt.translation_job_id AS translation_job_id,
+          rt.search_performance AS translated_search_performance, rt.status AS translation_status,
+
+          (SELECT COUNT(*) FROM report_reviews WHERE report_id = r.id) AS reviews_count,
+          (SELECT COUNT(*) FROM enquiries     WHERE report_id = r.id) AS enquiries_count
+        FROM reports r
+        LEFT JOIN categories c ON r.category_id = c.id
+        LEFT JOIN report_translations rt
+          ON r.id = rt.report_id
+         AND rt.locale = $2
+         AND rt.status::text = 'PUBLISHED'
+        WHERE r.slug = $1
+          AND r.status::text = 'PUBLISHED'
+        LIMIT 1
+      `;
+      const params: (string | number | boolean)[] = [slug, locale];
+
+      let result = await db.query(query, params);
+      let row = result.rows[0];
+
+      // 2) Fallback: find by translated slug for the locale
+      if (!row) {
+        const translatedQuery = `
           SELECT
             r.id, r.slug, r.title, r.description, r.summary, r.pages, r.published_date,
             r.single_price, r.multi_price, r.corporate_price, r.featured, r.status,
             r.view_count, r.avg_rating, r.review_count, r.created_at, r.keywords, r.semantic_keywords,
             r.regional_keywords, r.click_through_rate, r.average_position, r.impressions, r.clicks,
-            c.id as category_id, c.slug as category_slug, c.title as category_title,
-            rt.id as translation_id, rt.locale as translation_locale, rt.title as translated_title,
-            rt.description as translated_description, rt.summary as translated_summary, rt.slug as translated_slug,
-            rt.table_of_contents as translated_table_of_contents, rt.methodology as translated_methodology,
-            rt.key_findings as translated_key_findings, rt.executive_summary as translated_executive_summary,
-            rt.keywords as translated_keywords,
-            rt.semantic_keywords as translated_semantic_keywords,
-            rt.localized_keywords as translated_localized_keywords,
-            rt.cultural_keywords as translated_cultural_keywords,
-            rt.meta_title as translated_meta_title,
-            rt.meta_description as translated_meta_description,
-            rt.og_title as translated_og_title,
-            rt.og_description as translated_og_description,
-            rt.schema_markup as translated_schema_markup,
-            rt.breadcrumb_data as translated_breadcrumb_data,
-            rt.faq_data as translated_faq_data,
-            rt.ai_generated as translation_ai_generated,
-            rt.human_reviewed as translation_human_reviewed,
-            rt.translation_quality as translation_quality,
-            rt.cultural_adaptation_score as translated_cultural_adaptation_score,
-            rt.translation_job_id as translation_job_id,
-            rt.search_performance as translated_search_performance,
-            rt.status as translation_status,
-            (SELECT COUNT(*) FROM report_reviews WHERE report_id = r.id) as reviews_count,
-            (SELECT COUNT(*) FROM enquiries WHERE report_id = r.id) as enquiries_count
+
+            c.id AS category_id, c.slug AS category_slug, c.title AS category_title,
+
+            rt.id AS translation_id, rt.locale AS translation_locale, rt.title AS translated_title,
+            rt.description AS translated_description, rt.summary AS translated_summary, rt.slug AS translated_slug,
+            rt.table_of_contents AS translated_table_of_contents, rt.methodology AS translated_methodology,
+            rt.key_findings AS translated_key_findings, rt.executive_summary AS translated_executive_summary,
+            rt.keywords AS translated_keywords, rt.semantic_keywords AS translated_semantic_keywords,
+            rt.localized_keywords AS translated_localized_keywords, rt.cultural_keywords AS translated_cultural_keywords,
+            rt.meta_title AS translated_meta_title, rt.meta_description AS translated_meta_description,
+            rt.og_title AS translated_og_title, rt.og_description AS translated_og_description,
+            rt.schema_markup AS translated_schema_markup, rt.breadcrumb_data AS translated_breadcrumb_data,
+            rt.faq_data AS translated_faq_data, rt.ai_generated AS translation_ai_generated,
+            rt.human_reviewed AS translation_human_reviewed, rt.translation_quality AS translation_quality,
+            rt.cultural_adaptation_score AS translated_cultural_adaptation_score, rt.translation_job_id AS translation_job_id,
+            rt.search_performance AS translated_search_performance, rt.status AS translation_status,
+
+            (SELECT COUNT(*) FROM report_reviews WHERE report_id = r.id) AS reviews_count,
+            (SELECT COUNT(*) FROM enquiries     WHERE report_id = r.id) AS enquiries_count
           FROM reports r
+          JOIN report_translations rt
+            ON r.id = rt.report_id
           LEFT JOIN categories c ON r.category_id = c.id
-          JOIN report_translations rt ON r.id = rt.report_id
-          WHERE rt.slug = $1 AND rt.locale = $2 AND rt.status = 'PUBLISHED'
+          WHERE rt.slug = $1
+            AND rt.locale = $2
+            AND rt.status::text = 'PUBLISHED'
+            AND r.status::text = 'PUBLISHED'
+          LIMIT 1
         `;
-        params = [slug, locale];
-      }
-
-      const result = await db.query(query, params);
-      const row = result.rows[0];
-
-      if (!row) {
-        return null;
+        result = await db.query(translatedQuery, [slug, locale]);
+        row = result.rows[0];
+        if (!row) return null;
       }
 
       const report: ReportWithTranslations = {
@@ -257,46 +321,49 @@ export class ReportService {
         category_title: row.category_title,
         category_slug: row.category_slug,
         _count: {
-          reviews: parseInt(row.reviews_count),
-          enquiries: parseInt(row.enquiries_count)
-        }
+          reviews: parseInt(String(row.reviews_count ?? 0), 10),
+          enquiries: parseInt(String(row.enquiries_count ?? 0), 10),
+        },
       };
 
       if (row.translation_id) {
-        report.translations = [{
-          id: row.translation_id,
-          report_id: row.id,
-          locale: row.translation_locale,
-          title: row.translated_title,
-          description: row.translated_description,
-          summary: row.translated_summary,
-          slug: row.translated_slug,
-          table_of_contents: row.translated_table_of_contents,
-          methodology: row.translated_methodology,
-          key_findings: row.translated_key_findings,
-          executive_summary: row.translated_executive_summary,
-          keywords: row.translated_keywords,
-          semantic_keywords: row.translated_semantic_keywords,
-          localized_keywords: row.localized_keywords,
-          cultural_keywords: row.cultural_keywords,
-          meta_title: row.translated_meta_title,
-          meta_description: row.translated_meta_description,
-          og_title: row.translated_og_title,
-          og_description: row.translated_og_description,
-          schema_markup: row.translated_schema_markup,
-          breadcrumb_data: row.translated_breadcrumb_data,
-          faq_data: row.translated_faq_data,
-          ai_generated: row.translation_ai_generated,
-          human_reviewed: row.human_reviewed,
-          translation_quality: row.translation_quality,
-          cultural_adaptation_score: row.translated_cultural_adaptation_score,
-          translation_job_id: row.translation_job_id,
-          search_performance: row.translated_search_performance,
-          status: row.translation_status,
-          created_at: row.created_at,
-          updated_at: row.updated_at,
-        }];
+        report.translations = [
+          {
+            id: row.translation_id,
+            report_id: row.id,
+            locale: row.translation_locale,
+            title: row.translated_title,
+            description: row.translated_description,
+            summary: row.translated_summary,
+            slug: row.translated_slug,
+            table_of_contents: row.translated_table_of_contents,
+            methodology: row.translated_methodology,
+            key_findings: row.translated_key_findings,
+            executive_summary: row.translated_executive_summary,
+            keywords: row.translated_keywords,
+            semantic_keywords: row.translated_semantic_keywords,
+            localized_keywords: row.translated_localized_keywords,
+            cultural_keywords: row.translated_cultural_keywords,
+            meta_title: row.translated_meta_title,
+            meta_description: row.translated_meta_description,
+            og_title: row.translated_og_title,
+            og_description: row.translated_og_description,
+            schema_markup: row.translated_schema_markup,
+            breadcrumb_data: row.translated_breadcrumb_data,
+            faq_data: row.translated_faq_data,
+            ai_generated: row.translation_ai_generated,
+            human_reviewed: row.translation_human_reviewed,
+            translation_quality: row.translation_quality,
+            cultural_adaptation_score: row.translated_cultural_adaptation_score,
+            translation_job_id: row.translation_job_id,
+            search_performance: row.translated_search_performance,
+            status: row.translation_status,
+            created_at: row.created_at,
+            updated_at: row.updated_at,
+          },
+        ];
       }
+
       return report;
     } catch (error) {
       console.error('Error fetching report by slug:', error);

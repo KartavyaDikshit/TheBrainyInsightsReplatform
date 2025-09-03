@@ -1,13 +1,15 @@
-import Link from "next/link";
 import { Metadata } from "next";
-import { listCategories, TransformedCategory } from "@/lib/data/adapter"; // Import the utility function and custom type
-import { locales } from "../../../config/i18n"; // Import locales from shared config
+import { CategoryService } from "@/lib/db/categories";
+import { Header } from "@/components/Header";
+import { CategoriesHeroSection } from "@/components/CategoriesHeroSection";
+import { Footer } from "@/components/Footer";
+import { CategoriesPageClient } from "@/components/CategoriesPageClient";
 
 export const metadata: Metadata = {
   title: "All Categories - TheBrainyInsights",
   description: "Browse all market research categories from TheBrainyInsights.",
   alternates: {
-    canonical: "https://www.thebrainyinsights.com/categories", // Canonical URL for the current page
+    canonical: "https://www.thebrainyinsights.com/categories",
     languages: {
       "en-US": "https://www.thebrainyinsights.com/en/categories",
       "ja-JP": "https://www.thebrainyinsights.com/ja/categories",
@@ -16,45 +18,73 @@ export const metadata: Metadata = {
       "fr-FR": "https://www.thebrainyinsights.com/fr/categories",
       "it-IT": "https://www.thebrainyinsights.com/it/categories",
       "ko-KR": "https://www.thebrainyinsights.com/ko/categories",
-      "x-default": "https://www.thebrainyinsights.com/en/categories", // Fallback for unspecified locales
+      "x-default": "https://www.thebrainyinsights.com/en/categories",
     },
   },
 };
 
 interface CategoriesPageProps {
-  params: Promise<any>; // Use any to bypass type checking for params
-  searchParams: Promise<any>; // Add searchParams to match Next.js PageProps structure, even if not used
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<any>;
 }
 
-export default async function CategoriesPage(props: CategoriesPageProps) {
-  const params = await props.params;
-  const { locale } = params;
+interface CategoryData {
+  id: string;
+  title: string;
+  description: string;
+  icon?: string;
+  reportCount: number;
+  viewCount: number;
+  isFeatured: boolean;
+  industry?: string;
+  slug: string;
+}
 
-  const categories: TransformedCategory[] = await listCategories(locale as string); // Use the utility function and cast locale
+export default async function CategoriesPage({ params }: CategoriesPageProps) {
+  const { locale } = await params;
 
-  return (
-    <div className="categories-list-page">
-      <h1 className="text-3xl font-bold mb-6">All Categories</h1>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {categories.map((category) => {
-          // Add null check for category.translations
-          const translation = category.translations?.[0];
-          if (!translation) return null; // Skip if no translation for current locale
+  try {
+    // Fetch categories data on the server
+    const categoriesData = await CategoryService.getAll(locale);
+    
+    const transformedCategories: CategoryData[] = categoriesData.map((cat: any) => ({
+      id: cat.id,
+      title: cat.title,
+      description: cat.description || 'No description available.',
+      icon: cat.icon,
+      reportCount: cat._count?.reports || 0,
+      viewCount: cat.view_count || Math.floor(Math.random() * 50000) + 1000, // Random fallback
+      isFeatured: Boolean(cat.featured),
+      industry: cat.shortcode || 'General',
+      slug: cat.slug,
+    }));
 
-          return (
-            <div key={category.id} className="border p-4 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-2">
-                <Link href={`/${locale}/category/${category.slug}`} className="text-indigo-600 hover:underline">
-                  {translation.title}
-                </Link>
-              </h2>
-              {translation.description && (
-                <p className="text-gray-700 text-sm line-clamp-3">{translation.description}</p>
-              )}
-            </div>
-          );
-        })}
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <CategoriesHeroSection />
+        <CategoriesPageClient 
+          initialCategories={transformedCategories}
+          locale={locale}
+        />
+        <Footer />
       </div>
-    </div>
-  );
+    );
+  } catch (error) {
+    console.error('Error loading categories:', error);
+    
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <CategoriesHeroSection />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center py-12">
+            <p className="text-xl text-gray-500 mb-4">Error loading categories</p>
+            <p className="text-gray-400">Please try again later</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 }

@@ -53,9 +53,9 @@ export default async function ReportPage({ params }: { params: Promise<{ locale:
   // }; // Commented out
 
   const breadcrumbItems = [
-    { name: 'Home', href: `/${locale}` },
-    { name: 'Reports', href: `/${locale}/reports` },
-    { name: report.title, href: `/${locale}/reports/${slug}` }, // Use report.title directly
+    { label: 'Home', href: `/${locale}` },
+    { label: 'Reports', href: `/${locale}/reports` },
+    { label: report.title, href: `/${locale}/reports/${slug}` }, // Use report.title directly
   ];
 
   return (

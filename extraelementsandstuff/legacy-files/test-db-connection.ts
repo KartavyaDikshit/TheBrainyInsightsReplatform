@@ -1,4 +1,4 @@
-import { DatabaseClient } from './packages/database/src/index';
+import { DatabaseClient } from '@tbi/database';
 
 async function testConnection() {
   const db = new DatabaseClient(); // Instantiate the class

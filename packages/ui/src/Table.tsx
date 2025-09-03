@@ -1,11 +1,16 @@
 import React from 'react';
 
-const Table = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <table>
-      {children}
-    </table>
-  );
-};
+interface TableProps {
+  children: React.ReactNode;
+  className?: string;
+}
 
-export default Table;
+export default function Table({ children, className = '' }: TableProps) {
+  return (
+    <div className="overflow-x-auto">
+      <table className={`min-w-full divide-y divide-gray-200 ${className}`}>
+        {children}
+      </table>
+    </div>
+  );
+}

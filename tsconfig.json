@@ -44,6 +44,7 @@
     "node_modules",
     ".next",
     "dist",
-    "packages/database/prisma/migrations"
+    "packages/database/prisma/migrations",
+    "figma ui/**/*"
   ]
 }

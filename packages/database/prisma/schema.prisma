@@ -5,7 +5,8 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://tbi_user:password@localhost:5432/tbi_db"
+  url      = env("DATABASE_URL")
+
 }
 
 // ============================================================================

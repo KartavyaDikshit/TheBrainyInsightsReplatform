@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { redisManager } from 'C:/Users/User/TheBrainyInsightsReplatform/packages/lib/src/redis-client'; // Changed import path
+import { redisManager } from '@/../../packages/lib/src/redis-client';
 
 export async function GET() {
   const redisConnected = await redisManager.connect();

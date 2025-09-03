@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { redisManager } from 'C:/Users/User/TheBrainyInsightsReplatform/packages/lib/src/redis-client';
+import { redisManager } from '@/../../packages/lib/src/redis-client';
 import fs from 'fs';
 import path from 'path';
 
