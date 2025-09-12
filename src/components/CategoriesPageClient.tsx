@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { SearchAndFilter } from "@/components/SearchAndFilter";
 import { CategoryCard } from "@/components/CategoryCard";
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "./ui/pagination";
 
 interface CategoryData {
   id: string;

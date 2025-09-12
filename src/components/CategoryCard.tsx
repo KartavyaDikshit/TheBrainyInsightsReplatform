@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, FileText, Star, ArrowRight } from "lucide-react";
+import { Star, ArrowRight } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -78,17 +78,6 @@ export function CategoryCard({
           </p>
         </div>
 
-        {/* Statistics */}
-        <div className="flex items-center justify-between mb-4 text-sm text-gray-500">
-          <div className="flex items-center space-x-1">
-            <FileText className="h-4 w-4" />
-            <span>{reportCount} reports</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <Eye className="h-4 w-4" />
-            <span>{viewCount.toLocaleString()} views</span>
-          </div>
-        </div>
 
         {/* Action Button */}
         <Link href={`/${locale}/category/${slug}`}>

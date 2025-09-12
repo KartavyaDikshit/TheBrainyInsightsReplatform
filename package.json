@@ -4,17 +4,25 @@
   "private": true,
   "type": "module",
   "workspaces": [
+    "apps/*",
     "packages/*"
   ],
   "scripts": {
     "dev": "next dev",
+    "dev:admin": "pnpm --filter @tbi/admin dev",
+    "dev:all": "concurrently \"pnpm dev\" \"pnpm dev:admin\"",
     "build": "next build",
+    "build:admin": "pnpm --filter @tbi/admin build",
+    "build:all": "pnpm build && pnpm build:admin",
     "start": "next start",
+    "start:admin": "pnpm --filter @tbi/admin start",
     "lint": "next lint --fix",
+    "lint:admin": "pnpm --filter @tbi/admin lint",
+    "lint:all": "pnpm lint && pnpm lint:admin",
     "typecheck": "tsc --noEmit",
     "db:generate": "cd packages/database && pnpm db:generate",
     "db:push": "npx pnpm exec dotenv -e .env.local -- cd packages/database && npx pnpm db:push",
-    "clean:all": "rd /s /q node_modules packages\\\\database\\\\node_modules .next 2>nul & del pnpm-lock.yaml 2>nul",
+    "clean:all": "rd /s /q node_modules packages\\\\database\\\\node_modules apps\\\\admin\\\\node_modules .next 2>nul & del pnpm-lock.yaml 2>nul",
     "fresh-install": "pnpm run clean:all && pnpm install --no-frozen-lockfile"
   },
   "dependencies": {
@@ -73,6 +81,7 @@
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "autoprefixer": "10.4.16",
+    "concurrently": "^8.2.2",
     "dotenv": "^17.2.1",
     "eslint": "8.56.0",
     "eslint-config-next": "14.0.0",

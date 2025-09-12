@@ -1,0 +1,185 @@
+## Visual Representations: Routing and Site Flow
+
+This document provides visual overviews (Mermaid diagrams) of the website's routing structure and navigation flows.
+
+Notes
+- The primary site runs under the dynamic locale segment `/[locale]` (e.g., `en`, `de`, `fr`, `es`, `it`, `ja`, `ko`).
+- There are both singular and plural routes present (e.g., `category/[slug]` and `categories/[slug]`; `report/[slug]` and `reports/[slug]`). Consider consolidating to a single convention to avoid duplication.
+
+### Mindmap: Routing Overview
+```mermaid
+mindmap
+  root((TheBrainyInsights))
+    "/" 
+      layout.tsx
+      page.tsx
+      robots.ts
+      sitemap.ts
+    "[locale]/"
+      layout.tsx:::meta
+      not-found.tsx
+      page.tsx:::home
+        Header
+        Hero
+        CategoryGrid
+        ReportGrid
+        Testimonials
+        Footer
+      Public
+        about/page.tsx
+        blogs/page.tsx
+        blog/[slug]/page.tsx
+        services/page.tsx
+        contact/page.tsx
+        data-visualizations/page.tsx
+        collaboration/page.tsx
+        notifications/page.tsx
+      Catalog
+        categories/page.tsx
+        categories/[slug]/page.tsx
+        category/[slug]/page.tsx
+        reports/page.tsx
+        reports/[slug]/page.tsx
+        report/[slug]/page.tsx
+        search/page.tsx
+      Auth
+        auth/signin/page.tsx
+        auth/signup/page.tsx
+        auth/error/page.tsx
+        api/auth/[...nextauth]/route.ts
+      User
+        dashboard/page.tsx
+          LogoutButton.tsx
+      Admin
+        admin/layout.tsx
+        admin/page.tsx
+        admin/reports/page.tsx
+        admin/users/create/page.tsx
+        admin/staging/page.tsx
+        admin/redirects/page.tsx
+      Dev/Tests
+        test-reports/page.tsx
+        test-db/page.tsx
+    "API (app/api/)"
+      health/route.ts
+      health/redis/route.ts
+      metrics/redis/route.ts
+      cache/invalidate/route.ts
+      sitemap-data/route.ts
+      search/route.ts
+      contact/route.ts
+      example/cached/route.ts
+      reports/[slug]/route.ts
+      categories/route.ts
+      categories/[slug]/route.ts
+      admin/users/route.ts
+classDef meta fill:#eef,stroke:#88f,color:#000;
+classDef home fill:#efe,stroke:#4a4,color:#000;
+```
+
+### Visual 1: Main User Navigation Flow
+```mermaid
+flowchart TD
+  A[Landing /[locale]] --> B[Browse Categories /[locale]/categories]
+  B --> B1[Category Details /[locale]/categories/[slug]]
+  A --> C[Browse Reports /[locale]/reports]
+  B1 --> C
+  C --> C1[Report Details /[locale]/reports/[slug]]
+  A --> D[Search /[locale]/search]
+  D --> C1
+  A --> E[Blogs /[locale]/blogs]
+  E --> E1[Blog Post /[locale]/blog/[slug]]
+  A --> F[About /[locale]/about]
+  A --> G[Contact /[locale]/contact]
+  A --> H[Services /[locale]/services]
+  A --> I[Dashboard /[locale]/dashboard]
+  I -->|Logout| A
+  A --> J[Sign In /[locale]/auth/signin]
+  J -->|Success| I
+  J -->|Error| J1[/[locale]/auth/error]
+```
+
+### Visual 2: Site Map Graph (Public + Admin + API)
+```mermaid
+graph TD
+  Root["/"]
+  L["/[locale]"]
+  Root --> L
+  L --> LHome["page.tsx (home)"]
+  L --> Pub["Public"]
+  L --> Cat["Catalog"]
+  L --> Auth["Auth"]
+  L --> User["User"]
+  L --> Adm["Admin"]
+  L --> Dev["Dev/Tests"]
+  Root --> SEO["robots.ts, sitemap.ts"]
+
+  subgraph Public
+    Pub --> P1["about"]
+    Pub --> P2["blogs"]
+    Pub --> P3["blog/[slug]"]
+    Pub --> P4["services"]
+    Pub --> P5["contact"]
+    Pub --> P6["data-visualizations"]
+    Pub --> P7["collaboration"]
+    Pub --> P8["notifications"]
+  end
+
+  subgraph Catalog
+    Cat --> C1["categories"]
+    Cat --> C2["categories/[slug]"]
+    Cat --> C3["category/[slug] (duplicate pattern)"]
+    Cat --> R1["reports"]
+    Cat --> R2["reports/[slug]"]
+    Cat --> R3["report/[slug] (duplicate pattern)"]
+    Cat --> S["search"]
+  end
+
+  subgraph Auth
+    Auth --> A1["auth/signin"]
+    Auth --> A2["auth/signup"]
+    Auth --> A3["auth/error"]
+    Auth --> A4["api/auth/[...nextauth]"]
+  end
+
+  subgraph User
+    User --> U1["dashboard"]
+  end
+
+  subgraph Admin
+    Adm --> Ad1["admin (home)"]
+    Adm --> AdL["admin/layout"]
+    Adm --> Ad2["admin/reports"]
+    Adm --> Ad3["admin/users/create"]
+    Adm --> Ad4["admin/staging"]
+    Adm --> Ad5["admin/redirects"]
+  end
+
+  subgraph DevTests
+    Dev --> T1["test-reports"]
+    Dev --> T2["test-db"]
+  end
+
+  subgraph API
+    API["/api/* (app/api/)"]
+    API --> H["health"]
+    API --> HR["health/redis"]
+    API --> MR["metrics/redis"]
+    API --> CI["cache/invalidate"]
+    API --> SD["sitemap-data"]
+    API --> SR["search"]
+    API --> CT["contact"]
+    API --> EC["example/cached"]
+    API --> RR["reports/[slug]"]
+    API --> CR["categories"]
+    API --> CRS["categories/[slug]"]
+    API --> AU["admin/users"]
+  end
+
+  Root --> API
+```
+
+Rendering
+- GitHub and many IDEs support Mermaid natively. If not, use an extension (e.g., Markdown Preview Mermaid Support) to render the diagrams.
+
+

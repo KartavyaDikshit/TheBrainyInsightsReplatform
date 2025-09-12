@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from 'react';
-import { Eye, Download, Heart, Share2, Calendar, FileText, MapPin, Star } from 'lucide-react';
+import { Heart, Share2, Calendar, FileText, MapPin, Star } from 'lucide-react';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Card, CardContent, CardFooter } from './ui/card';
@@ -124,7 +124,7 @@ export function CategoryReportCard({
         </div>
 
         {/* Title */}
-        <Link href={`/${locale}/report/${slug}`}>
+        <Link href={`/${locale}/reports/${slug}`}>
           <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-indigo-600 transition-colors cursor-pointer">
             {title}
           </h3>
@@ -136,35 +136,19 @@ export function CategoryReportCard({
         </p>
 
         {/* Meta Information */}
-        <div className="flex items-center justify-between text-xs text-gray-500 mb-3">
-          <div className="flex items-center space-x-3">
-            {formattedDate && (
-              <div className="flex items-center">
-                <Calendar className="h-3 w-3 mr-1" />
-                {formattedDate}
-              </div>
-            )}
-            {pageCount && (
-              <div className="flex items-center">
-                <FileText className="h-3 w-3 mr-1" />
-                {pageCount} pages
-              </div>
-            )}
-          </div>
-          <div className="flex items-center space-x-2">
-            {viewCount && (
-              <div className="flex items-center">
-                <Eye className="h-3 w-3 mr-1" />
-                {viewCount.toLocaleString()}
-              </div>
-            )}
-            {downloadCount && (
-              <div className="flex items-center">
-                <Download className="h-3 w-3 mr-1" />
-                {downloadCount.toLocaleString()}
-              </div>
-            )}
-          </div>
+        <div className="flex items-center space-x-3 text-xs text-gray-500 mb-3">
+          {formattedDate && (
+            <div className="flex items-center">
+              <Calendar className="h-3 w-3 mr-1" />
+              {formattedDate}
+            </div>
+          )}
+          {pageCount && (
+            <div className="flex items-center">
+              <FileText className="h-3 w-3 mr-1" />
+              {pageCount} pages
+            </div>
+          )}
         </div>
 
         {/* Tags */}

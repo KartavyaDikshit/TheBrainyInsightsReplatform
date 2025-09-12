@@ -45,14 +45,13 @@ const Button = React.forwardRef<
 
   return (
     <Comp
+      ref={ref as any}
       data-slot="button"
       className={cn(buttonVariants({ variant, size, className }))}
-      ref={ref as any}
       {...props}
     />
   );
 });
-
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
