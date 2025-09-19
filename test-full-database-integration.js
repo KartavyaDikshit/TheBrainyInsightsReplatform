@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 
+
 // Database client (same as your app)
 const db = new Pool({
   connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:tbipassword@localhost:5432/tbi_db'
@@ -76,9 +77,11 @@ class DatabaseIntegrationTester {
         'reports', 'report_translations', 
         'users', 'admins',
         'orders', 'order_items', 'enquiries',
-        'translation_jobs', 'content_generation_workflows',
+        'ai_content_generations', // was content_generation_workflows
         'blogs', 'blog_translations',
-        'seo_analytics'
+        'faqs', 'report_reviews', 'custom_requests',
+        'press_releases', 'media', 'countries', 'url_redirects'
+        // Note: translation_jobs and seo_analytics don't exist in migration
       ];
       
       console.log('🔍 Checking table accessibility...');
@@ -194,14 +197,14 @@ class DatabaseIntegrationTester {
           r.summary,
           r.pages,
           r.published_date,
-          r.single_price,
-          r.multi_price,
+          r.single_user_price,
+          r.multi_user_price,
           r.corporate_price,
           r.featured,
           r.status,
           r.view_count,
           r.avg_rating,
-          r.review_count,
+          r.total_reviews,
           r.created_at,
           c.title as category_title,
           c.slug as category_slug,

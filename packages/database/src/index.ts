@@ -70,8 +70,8 @@ async getReports(
   let query = `
     SELECT
       r.id, r.slug, r.title, r.description, r.summary, r.pages,
-      r.published_date, r.single_price, r.multi_price, r.corporate_price,
-      r.featured, r.status, r.view_count, r.avg_rating, r.review_count,
+      r.published_date, r.single_user_price, r.multi_user_price, r.corporate_price,
+      r.featured, r.status, r.view_count, r.avg_rating, r.total_reviews,
       r.created_at, r.keywords, r.semantic_keywords,
       c.title AS category_title, c.slug AS category_slug,
       rt.title AS localized_title, rt.description AS localized_description,
@@ -130,11 +130,11 @@ async getReports(
   // AI workflow methods
   async createContentGenerationWorkflow(data: any): Promise<string> {
     const result = await this.query(`
-      INSERT INTO content_generation_workflows 
-      (industry, market_size, geographic_scope, timeframe, report_type, created_by)
+      INSERT INTO ai_content_generations 
+      (content_type, content_id, locale, prompt, model, generated_by)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id
-    `, [data.industry, data.marketSize, data.geographicScope, data.timeframe, data.reportType, data.createdBy]);
+    `, [data.contentType, data.contentId, data.locale, data.prompt, data.model, data.generatedBy]);
     
     return result.rows[0].id;
   }
@@ -163,7 +163,7 @@ async getReports(
   }
 
   async getWorkflowCount(): Promise<number> {
-    const result = await this.query(`SELECT COUNT(*) as count FROM content_generation_workflows`);
+    const result = await this.query(`SELECT COUNT(*) as count FROM ai_content_generations`);
     return parseInt(result.rows[0].count);
   }
 
@@ -172,8 +172,11 @@ async getReports(
     return parseInt(result.rows[0].count);
   }
 
-  // SEO analytics
+  // SEO analytics - Note: table doesn't exist in migration, commenting out for now
   async getTopKeywords(limit: number = 10): Promise<any[]> {
+    // Table seo_analytics doesn't exist in migration, return empty array
+    return [];
+    /*
     const result = await this.query(`
       SELECT keyword, SUM(impressions) as total_impressions, 
              SUM(clicks) as total_clicks, AVG(ctr) as avg_ctr
@@ -185,6 +188,7 @@ async getReports(
     `, [limit]);
     
     return result.rows;
+    */
   }
 
   async close(): Promise<void> {
@@ -229,14 +233,14 @@ export interface Report {
   summary?: string;
   pages: number;
   published_date: Date;
-  single_price?: number;
-  multi_price?: number;
+  single_user_price?: number;
+  multi_user_price?: number;
   corporate_price?: number;
   featured: boolean;
   status: string;
   view_count: number;
   avg_rating?: number;
-  review_count: number;
+  total_reviews: number;
   created_at: Date;
   category_title?: string;
   category_slug?: string;
