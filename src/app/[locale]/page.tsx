@@ -60,7 +60,7 @@ export default async function HomePage({ params }: PageProps) {
       slug: report.slug,
       pages: report.pages || Math.floor(Math.random() * 200) + 50,
       published_date: report.published_date,
-      single_price: report.single_price || Math.floor(Math.random() * 3000) + 1000,
+      single_price: (report as any).single_price || Math.floor(Math.random() * 3000) + 1000,
       category_title: report.category?.title,
       avg_rating: Math.floor(Math.random() * 2) + 4, // 4-5 stars
       review_count: Math.floor(Math.random() * 50) + 10

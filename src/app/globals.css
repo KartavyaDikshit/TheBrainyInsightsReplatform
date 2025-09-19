@@ -123,4 +123,17 @@
   .hero {
     @apply bg-gradient-to-r from-blue-600 to-purple-600 text-white py-16 text-center;
   }
+
+  .animate-scroll {
+    animation: scroll 30s linear infinite;
+  }
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }

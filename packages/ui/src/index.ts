@@ -28,6 +28,9 @@ export { Collapsible, CollapsibleTrigger, CollapsibleContent } from './component
 export { Separator } from './components/ui/separator';
 export { Tabs, TabsList, TabsTrigger, TabsContent } from './components/ui/tabs';
 export { Skeleton } from './components/ui/skeleton';
+export { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './components/ui/dialog';
+export { Label } from './components/ui/label';
+export { Textarea } from './components/ui/textarea';
 
 // Report Components
 export { ReportHero } from './components/reports/report-hero';

@@ -24,8 +24,8 @@ export class ReportService {
       let query = `
         SELECT
           r.id, r.slug, r.title, r.description, r.summary, r.pages, r.published_date,
-          r.single_user_price, r.multi_user_price, r.corporate_price, r.featured, r.status,
-          r.view_count, r.avg_rating, r.total_reviews, r.created_at, r.keywords, NULL AS semantic_keywords,
+          r.single_price, r.multi_price, r.corporate_price, r.featured, r.status,
+          r.view_count, r.avg_rating, r.review_count, r.created_at, r.keywords, NULL AS semantic_keywords,
           NULL AS regional_keywords, NULL AS click_through_rate, NULL AS average_position, NULL AS impressions, NULL AS clicks,
 
           c.id AS category_id, c.slug AS category_slug, c.title AS category_title,
@@ -44,7 +44,7 @@ export class ReportService {
           NULL AS translated_cultural_adaptation_score, NULL AS translation_job_id,
           NULL AS translated_search_performance, rt.status AS translation_status,
 
-          (SELECT COUNT(*) FROM report_reviews WHERE report_id = r.id) AS reviews_count,
+          r.review_count AS reviews_count,
           (SELECT COUNT(*) FROM enquiries     WHERE report_id = r.id) AS enquiries_count
         FROM reports r
         LEFT JOIN categories c ON r.category_id = c.id
@@ -130,14 +130,14 @@ export class ReportService {
           summary: row.translated_summary || row.summary,
           pages: row.pages,
           published_date: row.published_date,
-          single_user_price: row.single_user_price,
-          multi_user_price: row.multi_user_price,
+          single_user_price: row.single_price,
+          multi_user_price: row.multi_price,
           corporate_price: row.corporate_price,
           featured: row.featured,
           status: row.status,
           view_count: row.view_count,
           avg_rating: row.avg_rating,
-          total_reviews: row.total_reviews,
+          total_reviews: row.review_count,
           created_at: row.created_at,
           keywords: row.translated_keywords || row.keywords,
           semantic_keywords: row.semantic_keywords,
@@ -215,8 +215,8 @@ export class ReportService {
       const query = `
         SELECT
           r.id, r.slug, r.title, r.description, r.summary, r.pages, r.published_date,
-          r.single_user_price, r.multi_user_price, r.corporate_price, r.featured, r.status,
-          r.view_count, r.avg_rating, r.total_reviews, r.created_at, r.keywords, NULL AS semantic_keywords,
+          r.single_price, r.multi_price, r.corporate_price, r.featured, r.status,
+          r.view_count, r.avg_rating, r.review_count, r.created_at, r.keywords, NULL AS semantic_keywords,
           NULL AS regional_keywords, NULL AS click_through_rate, NULL AS average_position, NULL AS impressions, NULL AS clicks,
 
           c.id AS category_id, c.slug AS category_slug, c.title AS category_title,
@@ -235,7 +235,7 @@ export class ReportService {
           NULL AS translated_cultural_adaptation_score, NULL AS translation_job_id,
           NULL AS translated_search_performance, rt.status AS translation_status,
 
-          (SELECT COUNT(*) FROM report_reviews WHERE report_id = r.id) AS reviews_count,
+          r.review_count AS reviews_count,
           (SELECT COUNT(*) FROM enquiries     WHERE report_id = r.id) AS enquiries_count
         FROM reports r
         LEFT JOIN categories c ON r.category_id = c.id
@@ -257,8 +257,8 @@ export class ReportService {
         const translatedQuery = `
           SELECT
             r.id, r.slug, r.title, r.description, r.summary, r.pages, r.published_date,
-            r.single_user_price, r.multi_user_price, r.corporate_price, r.featured, r.status,
-            r.view_count, r.avg_rating, r.total_reviews, r.created_at, r.keywords, NULL AS semantic_keywords,
+            r.single_price, r.multi_price, r.corporate_price, r.featured, r.status,
+            r.view_count, r.avg_rating, r.review_count, r.created_at, r.keywords, NULL AS semantic_keywords,
             NULL AS regional_keywords, NULL AS click_through_rate, NULL AS average_position, NULL AS impressions, NULL AS clicks,
 
             c.id AS category_id, c.slug AS category_slug, c.title AS category_title,
@@ -277,7 +277,7 @@ export class ReportService {
             NULL AS translated_cultural_adaptation_score, NULL AS translation_job_id,
             NULL AS translated_search_performance, rt.status AS translation_status,
 
-            (SELECT COUNT(*) FROM report_reviews WHERE report_id = r.id) AS reviews_count,
+            r.review_count AS reviews_count,
             (SELECT COUNT(*) FROM enquiries     WHERE report_id = r.id) AS enquiries_count
           FROM reports r
           JOIN report_translations rt
