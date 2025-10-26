@@ -40,5 +40,26 @@ export { ReportContent } from './components/reports/report-content';
 // Common Components
 export { ImageWithFallback } from './components/common/image-with-fallback';
 
+// Icons
+export {
+  TechnologyIcon,
+  HealthcareIcon,
+  FinanceIcon,
+  EnergyIcon,
+  AutomotiveIcon,
+  FoodBeveragesIcon,
+  ConsumerGoodsIcon,
+  ManufacturingIcon,
+  AerospaceDefenseIcon,
+  DefaultCategoryIcon
+} from './components/icons/CategoryIcons';
+
 // Templates
 export { ListingTemplate } from './templates/ListingTemplate';
+
+// Export component types for TypeScript
+export type { InputProps } from './components/ui/input';
+export type { TextareaProps } from './components/ui/textarea';
+
+// Re-export utility functions
+export { cn } from './components/ui/utils';

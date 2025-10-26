@@ -19,7 +19,7 @@ function main() {
             host: process.env.OLD_DB_HOST || 'localhost',
             user: process.env.OLD_DB_USER || 'tbi_user',
             password: process.env.OLD_DB_PASSWORD || 'karta123',
-            database: process.env.OLD_DB_DATABASE || 'tbi_db',
+            database: process.env.OLD_DB_DATABASE || 'alttbidb',
         });
         console.log('Connected to old MySQL database.');
         const idMap = {};

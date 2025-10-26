@@ -138,7 +138,7 @@ export function ListingTemplate({
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section with consistent background */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 py-20">
+      <section className="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800" style={{ height: '323.75px' }}>
         {/* Professional Background Pattern */}
         <div className="absolute inset-0">
           {/* Geometric overlay */}
@@ -162,8 +162,8 @@ export function ListingTemplate({
           <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 via-transparent to-transparent"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center py-12">
+        <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-center">
+          <div className="text-center">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 tracking-tight leading-tight">
               {title}
             </h1>

@@ -95,14 +95,14 @@ export function Testimonials() {
   const currentTestimonials = testimonials.slice(currentIndex, currentIndex + 3);
 
   return (
-    <section className="py-12 bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className="py-8 bg-gray-50">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header - Made Smaller */}
-        <div className="text-center mb-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">
+        <div className="text-center mb-6">
+          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
             What Our Clients Say
           </h2>
-          <p className="text-base text-gray-600 max-w-2xl mx-auto">
+          <p className="text-sm text-gray-600 max-w-2xl mx-auto">
             Trusted by industry leaders worldwide for data-driven insights.
           </p>
         </div>
@@ -110,22 +110,22 @@ export function Testimonials() {
         {/* Testimonials Carousel */}
         <div className="relative">
           {/* Navigation Buttons */}
-          <div className="flex justify-center items-center mb-6">
+          <div className="flex justify-center items-center mb-4">
             <Button
               variant="ghost"
               size="sm"
               onClick={prevSlide}
-              className="mr-4 hover:bg-indigo-50"
+              className="mr-3 hover:bg-indigo-50"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-3 w-3" />
             </Button>
             
-            <div className="flex space-x-2">
+            <div className="flex space-x-1.5">
               {Array.from({ length: Math.ceil(testimonials.length / 3) }).map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index * 3)}
-                  className={`w-2 h-2 rounded-full transition-colors ${
+                  className={`w-1.5 h-1.5 rounded-full transition-colors ${
                     Math.floor(currentIndex / 3) === index 
                       ? 'bg-indigo-600' 
                       : 'bg-gray-300'
@@ -138,31 +138,31 @@ export function Testimonials() {
               variant="ghost"
               size="sm"
               onClick={nextSlide}
-              className="ml-4 hover:bg-indigo-50"
+              className="ml-3 hover:bg-indigo-50"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-3 w-3" />
             </Button>
           </div>
 
           {/* Testimonials Grid - Always 3 columns */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 min-h-[300px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 min-h-[220px]">
             {currentTestimonials.map((testimonial, index) => (
               <Card 
                 key={testimonial.id} 
                 className="h-full hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1"
               >
-                <CardContent className="p-4 h-full flex flex-col">
+                <CardContent className="p-3 h-full flex flex-col">
                   {/* Quote Icon */}
-                  <div className="mb-3">
-                    <Quote className="h-6 w-6 text-indigo-600 opacity-20" />
+                  <div className="mb-2">
+                    <Quote className="h-4 w-4 text-indigo-600 opacity-20" />
                   </div>
 
                   {/* Rating */}
-                  <div className="flex items-center mb-3">
+                  <div className="flex items-center mb-2">
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`h-3 w-3 ${
+                        className={`h-2.5 w-2.5 ${
                           i < testimonial.rating
                             ? 'text-yellow-400 fill-current'
                             : 'text-gray-300'
@@ -172,25 +172,25 @@ export function Testimonials() {
                   </div>
 
                   {/* Content */}
-                  <blockquote className="text-gray-700 mb-4 flex-grow leading-relaxed text-sm">
+                  <blockquote className="text-gray-700 mb-3 flex-grow leading-relaxed text-xs">
                     &ldquo;{testimonial.content}&rdquo;
                   </blockquote>
 
                   {/* Author */}
                   <div className="flex items-center mt-auto">
                     <div className="flex-shrink-0">
-                      <div className="h-8 w-8 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-xs">
+                      <div className="h-6 w-6 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-semibold text-[10px]">
                         {testimonial.name.split(' ').map(n => n[0]).join('')}
                       </div>
                     </div>
                     <div className="ml-2">
-                      <p className="text-xs font-semibold text-gray-900">
+                      <p className="text-[10px] font-semibold text-gray-900">
                         {testimonial.name}
                       </p>
-                      <p className="text-xs text-gray-600">
+                      <p className="text-[10px] text-gray-600">
                         {testimonial.position}
                       </p>
-                      <p className="text-xs text-indigo-600 font-medium">
+                      <p className="text-[10px] text-indigo-600 font-medium">
                         {testimonial.company}
                       </p>
                     </div>
@@ -198,28 +198,6 @@ export function Testimonials() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-        </div>
-
-        {/* Trust Indicators - Made Smaller */}
-        <div className="text-center mt-8">
-          <div className="grid grid-cols-4 gap-4 max-w-2xl mx-auto">
-            <div className="flex flex-col items-center">
-              <div className="text-lg font-bold text-indigo-600">500+</div>
-              <div className="text-xs text-gray-600">Clients</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-lg font-bold text-indigo-600">98%</div>
-              <div className="text-xs text-gray-600">Satisfaction</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-lg font-bold text-indigo-600">24/7</div>
-              <div className="text-xs text-gray-600">Support</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-lg font-bold text-indigo-600">200+</div>
-              <div className="text-xs text-gray-600">Industries</div>
-            </div>
           </div>
         </div>
       </div>

@@ -79,3 +79,13 @@ Legacy/
 packages/database/src/generated/
 error1.1.txt
 scripts/print-env.cjs 
+
+# Documentation and README files
+packages/ui/MONOREPO_SETUP.md
+packages/ui/QUICK_START.md
+packages/ui/README.md
+packages/ui/USAGE_EXAMPLE.md
+CLICKABLE_REPORTS_UPDATE.md
+REPORT_INTEGRATION_README.md
+reportsummaryexample.txt
+extraelementsandstuff/documentation/

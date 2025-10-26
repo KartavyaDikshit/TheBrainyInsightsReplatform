@@ -1,5 +1,4 @@
 import { Button } from './ui/button';
-import { Input } from './ui/input';
 
 export function Footer() {
   return (
@@ -35,7 +34,7 @@ export function Footer() {
               <li><a href="/en/reports" className="hover:text-white transition-colors">Market Reports</a></li>
               <li><a href="/en/categories" className="hover:text-white transition-colors">Industry Categories</a></li>
               <li><a href="/en/services" className="hover:text-white transition-colors">Custom Research</a></li>
-              <li><a href="/en/data-visualizations" className="hover:text-white transition-colors">Data Insights</a></li>
+              <li><a href="/en/services" className="hover:text-white transition-colors">Services</a></li>
             </ul>
           </div>
 
@@ -45,27 +44,20 @@ export function Footer() {
             <ul className="space-y-2 text-gray-400">
               <li><a href="/en/about" className="hover:text-white transition-colors">About Us</a></li>
               <li><a href="/en/contact" className="hover:text-white transition-colors">Contact</a></li>
-              <li><a href="/en/collaboration" className="hover:text-white transition-colors">Partnerships</a></li>
-              <li><a href="/en/blogs" className="hover:text-white transition-colors">Blog</a></li>
+              <li><a href="/en/clients" className="hover:text-white transition-colors">Our Clients</a></li>
+              <li><a href="/en/reports" className="hover:text-white transition-colors">Featured Reports</a></li>
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Request Callback */}
           <div>
-            <h4 className="font-semibold mb-4">Stay Updated</h4>
+            <h4 className="font-semibold mb-4">Request Callback</h4>
             <p className="text-gray-400 text-sm mb-4">
-              Get the latest market insights delivered to your inbox.
+              Our experts are ready to help you make informed business decisions.
             </p>
-            <div className="flex flex-col space-y-2">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                className="bg-gray-800 border-gray-700 text-white placeholder-gray-400"
-              />
-              <Button className="bg-indigo-600 hover:bg-indigo-700">
-                Subscribe
-              </Button>
-            </div>
+            <Button className="bg-indigo-600 hover:bg-indigo-700 w-full">
+              Request a Callback
+            </Button>
           </div>
         </div>
 

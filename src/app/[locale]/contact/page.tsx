@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { HeroSection } from '../../../components/contact/HeroSection';
 import { ContactForm } from '../../../components/contact/ContactForm';
 import { ContactMethods } from '../../../components/contact/ContactMethods';
@@ -20,7 +20,9 @@ export default async function ContactPage({ params }: Props) {
       <Header />
       <div className="min-h-screen bg-white">
         <HeroSection />
-        <ContactForm />
+        <Suspense fallback={<div className="py-20 text-center">Loading...</div>}>
+          <ContactForm />
+        </Suspense>
         <ContactMethods />
         <AddressSection />
       </div>

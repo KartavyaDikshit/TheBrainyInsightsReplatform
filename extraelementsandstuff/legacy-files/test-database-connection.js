@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 // Test database connection and check data
 async function testDatabaseConnection() {
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:password@localhost:5432/tbi_db'
+    connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:password@localhost:5432/alttbidb'
   });
 
   try {

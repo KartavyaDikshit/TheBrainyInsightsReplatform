@@ -1,14 +1,12 @@
 import { db } from '@tbi/database';
 import { Header } from '@/components/Header';
 import { Hero } from '@/components/Hero';
-import { CategoryGrid } from '@/components/CategoryGrid';
 import { ReportGrid } from '@/components/ReportGrid';
 
 export default async function HomePage() {
   try {
     // Get comprehensive data from the enhanced database
     const [
-      categories, 
       reports, 
       categoryCount, 
       reportCount, 
@@ -16,7 +14,6 @@ export default async function HomePage() {
       translationJobCount,
       topKeywords
     ] = await Promise.all([
-      db.getCategories('en', true), // Featured categories only
       db.getReports('en', { featured: true, limit: 8 }),
       db.getCategoryCount(),
       db.getReportCount(),
@@ -31,9 +28,6 @@ export default async function HomePage() {
         <main className="min-h-screen">
           {/* New Enhanced Hero Section */}
           <Hero categoryCount={categoryCount} reportCount={reportCount} />
-
-          {/* Featured Categories with new design */}
-          <CategoryGrid categories={categories} />
 
           {/* Featured Reports with new design */}
           <ReportGrid reports={reports} />
@@ -145,7 +139,7 @@ export default async function HomePage() {
             {error instanceof Error ? error.message : 'Unknown error'}
           </pre>
           <div className="mt-6 text-sm text-gray-600">
-            <p>Expected database: tbi_db</p>
+            <p>Expected database: alttbidb</p>
             <p>Expected user: tbi_user</p>
             <p>Tables expected: 20+ with full AI integration</p>
           </div>

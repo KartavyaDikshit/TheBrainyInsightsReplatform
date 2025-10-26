@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Download, ExternalLink, Star, Building, TrendingUp, BarChart3, Eye, Maximize2, ZoomIn, ZoomOut, MessageCircle, Settings } from "lucide-react";
+import { ChevronDown, ChevronRight, Download, ExternalLink, Star, Building, TrendingUp, BarChart3, Eye, MessageCircle, Settings, Phone, FileText } from "lucide-react";
 
 // Icon lookup for dynamic rendering
 const iconMap = {
@@ -61,7 +61,453 @@ interface ReportContentProps {
   }>;
   onRequestSample?: () => void;
   onRequestQuote?: () => void;
+  onRequestTableOfContents?: () => void;
+  // NEW: Add optional preview data prop
+  previewData?: ReportPreviewData;
+  // Dynamic text-based preview
+  reportSummaryText?: string;
 }
+
+// ============================================================================
+// DATABASE-READY TYPES - This structure will come from your database later
+// ============================================================================
+
+type SectionType = 
+  | 'summary' 
+  | 'recent_development' 
+  | 'driver' 
+  | 'restraint' 
+  | 'opportunity' 
+  | 'challenge' 
+  | 'regional' 
+  | 'segment' 
+  | 'companies';
+
+interface PreviewSection {
+  id: string;
+  type: SectionType;
+  title: string;
+  content: string;
+  highlight?: string;
+  subsections?: Array<{
+    label: string;
+    value: string;
+    description?: string;
+  }>;
+}
+
+interface ReportPreviewData {
+  reportTitle?: string;
+  marketMetrics?: {
+    marketSize2024?: string;
+    marketSize2034?: string;
+    cagr?: string;
+  };
+  sections?: PreviewSection[];
+  keyPlayers?: string[];
+}
+
+// ============================================================================
+// SAMPLE DATA - Replace this with database query later
+// ============================================================================
+
+const DEFAULT_PREVIEW_DATA: ReportPreviewData = {
+  reportTitle: "Medical Isotopes Market Report",
+  marketMetrics: {
+    marketSize2024: "$5.80B",
+    marketSize2034: "$11.95B",
+    cagr: "7.50%"
+  },
+  sections: [
+    {
+      id: "summary-1",
+      type: "summary",
+      title: "Report Summary",
+      highlight: "CAGR - 7.50% | Market Size - USD 5.80 billion (2024)",
+      content: "The global Medical Isotopes market was valued at <strong class='text-indigo-700'>USD 5.80 billion in 2024</strong> and growing at a CAGR of <strong class='text-green-700'>7.50%</strong> from 2025 to 2034. The market is expected to reach <strong class='text-indigo-700'>USD 11.95 billion by 2034</strong>. Due to the increasing cases of cancer, neurological disorders and cardiovascular diseases, the demand for medical isotopes is increasing, which will also lead to market growth. Apart from this, the increasing population of elderly people is rapidly affected by chronic diseases, making it crucial to diagnose them promptly."
+    },
+    {
+      id: "dev-1",
+      type: "recent_development",
+      title: "Recent Development",
+      content: "<strong class='text-blue-800'>October 22, 2024:</strong> NorthStar Medical Radioisotopes, LLC hosted an opening event at their state-of-the-art <strong>NorthStar Dose Manufacturing Center in Beloit, Wisconsin</strong>. This facility produces important medical radioisotopes, including <span class='font-mono text-blue-700'>Ac-225, Lu-177, Cu-64, Cu-67, and In-111</span>, providing customized solutions for biopharmaceutical and pharmaceutical companies."
+    },
+    {
+      id: "driver-1",
+      type: "driver",
+      title: "Drivers",
+      content: "<strong>Rising Chronic Disease and Ageing Population:</strong> The growing population often requires healthcare services as aging body functions decline. Isotopes enable accurate early-stage diagnosis, allowing treatment to commence at the optimal time. The accuracy of these isotopes is high, enabling precise results for cardiovascular diseases and other conditions."
+    },
+    {
+      id: "restraint-1",
+      type: "restraint",
+      title: "Restraints",
+      content: "<strong>Short Half-Life of Isotopes:</strong> The short lifespan impacts market growth negatively, reducing diagnostic accuracy and causing delays in treatment. Specialized packaging and same-day delivery increase transportation costs. Weather or political events can delay delivery, making isotopes unusable due to decreased potency."
+    },
+    {
+      id: "opportunity-1",
+      type: "opportunity",
+      title: "Opportunities",
+      content: "<strong>Development of Nuclear Medicine Infrastructure:</strong> Local manufacturing is an efficient way to address the short lifespan problem. This can reduce extra diagnostic costs for patients and accelerate the diagnosis process, allowing more patients to benefit from medical isotopes."
+    },
+    {
+      id: "challenge-1",
+      type: "challenge",
+      title: "Challenges",
+      content: "<strong>Competition from Alternative Imaging Modalities:</strong> CT scans, ultrasound, and MRI pose challenges. These technologies are readily available at affordable prices. MRI and ultrasound are non-radioactive, meaning no harm to patients, which is why doctors prefer these diagnostic methods."
+    },
+    {
+      id: "regional-1",
+      type: "regional",
+      title: "Regional Analysis",
+      highlight: "North America - 48% Market Share (2024)",
+      content: "North America emerged as the <strong>largest market</strong> with strong healthcare infrastructure and continuous R&D investment. Large companies continuously develop new medicines and diagnostic methods. The government ensures a strategic roadmap for medical isotopes development, including market growth and supply security."
+    },
+    {
+      id: "segment-1",
+      type: "segment",
+      title: "Segment Analysis",
+      content: "",
+      subsections: [
+        {
+          label: "Type: Radioisotopes",
+          value: "65%",
+          description: "Used in both diagnostic imaging and therapeutic applications with precision in killing cancer cells."
+        },
+        {
+          label: "Production: Nuclear Reactors",
+          value: "58%",
+          description: "Enables large-scale production and maintains consistent supply with hospital compatibility."
+        },
+        {
+          label: "Application: Diagnostic",
+          value: "59%",
+          description: "High accuracy and non-invasive nature enables early disease diagnosis and treatment initiation."
+        },
+        {
+          label: "End-User: Hospitals",
+          value: "45%",
+          description: "Patient volume and infrastructure facilitate consistent revenue generation and overcome short shelf-life concerns."
+        }
+      ]
+    }
+  ],
+  keyPlayers: [
+    "NorthStar Medical Radioisotopes",
+    "TerraPower Isotopes",
+    "Shine Technologies",
+    "GE Healthcare",
+    "Nordion Inc",
+    "Jubilant Radiopharma",
+    "Lantheus",
+    "Eckert & Ziegler",
+    "ASP Isotopes"
+  ]
+};
+
+// ============================================================================
+// TEXT PARSER - Parses raw text into structured sections
+// ============================================================================
+
+interface ParsedSection {
+  id: string;
+  title: string;
+  content: string;
+  type: 'summary' | 'highlight' | 'section' | 'subsection' | 'list' | 'group';
+  highlight?: string;
+  items?: string[];
+  subtitle?: string; // For content with prefix like "Rising Chronic Disease - content"
+}
+
+function parseReportSummaryText(text: string): ParsedSection[] {
+  if (!text) return [];
+  
+  const sections: ParsedSection[] = [];
+  const lines = text.split('\n');
+  
+  let currentSection: ParsedSection | null = null;
+  let sectionCounter = 0;
+  
+  // Lines to skip (CTAs, URLs, standalone numbers)
+  const skipPatterns = [
+    /requesting a free sample/i,
+    /www\./i,
+    /^Check the geographical/i,
+    /^Get an overview/i,
+    /^[\d\s]+$/  // Lines with only numbers and spaces
+  ];
+  
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    
+    // Skip empty lines and promotional content
+    if (!line || skipPatterns.some(pattern => pattern.test(line))) continue;
+    
+    // Detect "Market Dynamics" as a group header (just visual separator, no container)
+    if (line.match(/^Market Dynamics$/i)) {
+      if (currentSection && (currentSection.content || (currentSection.items && currentSection.items.length > 0))) {
+        sections.push(currentSection);
+      }
+      currentSection = null;
+      sections.push({
+        id: `group-${sectionCounter++}`,
+        title: line,
+        content: '',
+        type: 'group'
+      });
+      continue;
+    }
+    
+    // Detect "Segment Analysis" as a group header
+    if (line.match(/^Segment Analysis$/i)) {
+      if (currentSection && (currentSection.content || (currentSection.items && currentSection.items.length > 0))) {
+        sections.push(currentSection);
+      }
+      currentSection = null;
+      sections.push({
+        id: `group-${sectionCounter++}`,
+        title: line,
+        content: '',
+        type: 'group'
+      });
+      continue;
+    }
+    
+    // Detect section headers
+    const isHeader = line.match(/^(Report [Ss]ummary|Recent Development|Drivers?|Restraints?|Opportunities|Challenges?|Regional segmentation analysis|Type Segment Analysis|Production Method Segment Analysis|Application Segment Analysis|End-User Segment Analysis|Some of the Key Market Players)$/i);
+    
+    if (isHeader) {
+      // Save previous section if it has content
+      if (currentSection && (currentSection.content || (currentSection.items && currentSection.items.length > 0))) {
+        sections.push(currentSection);
+      }
+      
+      // Determine section type
+      let type: ParsedSection['type'] = 'section';
+      if (line.match(/^Report [Ss]ummary/i)) {
+        type = 'summary';
+      } else if (line.match(/^(Drivers?|Restraints?|Opportunities|Challenges?)$/i)) {
+        type = 'subsection';
+      } else if (line.match(/Key Market Players/i)) {
+        type = 'list';
+      }
+      
+      currentSection = {
+        id: `section-${sectionCounter++}`,
+        title: line,
+        content: '',
+        type: type
+      };
+    } else if (line.startsWith('*')) {
+      // List item
+      if (currentSection) {
+        if (!currentSection.items) currentSection.items = [];
+        currentSection.items.push(line.replace(/^\*\s*/, ''));
+      } else {
+        // Start a new list section if no current section
+        currentSection = {
+          id: `section-${sectionCounter++}`,
+          title: 'Items',
+          content: '',
+          type: 'list',
+          items: [line.replace(/^\*\s*/, '')]
+        };
+      }
+    } else if (line.match(/CAGR.*market size.*USD/i)) {
+      // Highlight metrics line
+      if (currentSection && currentSection.content) {
+        sections.push(currentSection);
+        currentSection = null;
+      } else {
+        // If current section has no content, discard it
+        currentSection = null;
+      }
+      sections.push({
+        id: `highlight-${sectionCounter++}`,
+        title: '',
+        content: '',
+        type: 'highlight',
+        highlight: line
+      });
+    } else {
+      // Regular content line
+      // Check if it has a subtitle pattern (e.g., "Rising Chronic Disease - content")
+      const subtitleMatch = line.match(/^([^-]+)\s*[-–—]\s*(.+)$/);
+      
+      if (subtitleMatch && currentSection && currentSection.type === 'subsection' && !currentSection.content) {
+        // This is the first content line with a subtitle
+        currentSection.subtitle = subtitleMatch[1].trim();
+        currentSection.content = subtitleMatch[2].trim();
+      } else if (currentSection) {
+        // Append to existing content
+        currentSection.content += (currentSection.content ? ' ' : '') + line;
+      } else {
+        // Orphan content - create a section for it
+        currentSection = {
+          id: `section-${sectionCounter++}`,
+          title: '',
+          content: line,
+          type: 'section'
+        };
+      }
+    }
+  }
+  
+  // Add last section if it has content
+  if (currentSection && (currentSection.content || (currentSection.items && currentSection.items.length > 0))) {
+    sections.push(currentSection);
+  }
+  
+  return sections;
+}
+
+// ============================================================================
+// DYNAMIC SECTION RENDERER - Renders parsed text sections
+// ============================================================================
+
+const DynamicSectionRenderer = ({ section }: { section: ParsedSection }) => {
+  // Group headers - just titles without containers
+  if (section.type === 'group') {
+    return (
+      <div className="mt-6 mb-3">
+        <h3 className="font-bold text-2xl text-gray-900 border-b-2 border-indigo-200 pb-2">
+          {section.title}
+        </h3>
+      </div>
+    );
+  }
+  
+  // Summary section
+  if (section.type === 'summary') {
+    return (
+      <div>
+        <h4 className="font-bold text-xl text-gray-900 mb-3">{section.title}</h4>
+        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-100 shadow-sm">
+          <p className="text-gray-700 leading-relaxed">{section.content}</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Highlight metrics
+  if (section.type === 'highlight') {
+    return (
+      <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
+        <p className="text-green-900 font-semibold text-lg">{section.highlight}</p>
+      </div>
+    );
+  }
+  
+  // List sections (Key Market Players)
+  if (section.type === 'list') {
+    return (
+      <div>
+        {section.title && <h5 className="font-bold text-gray-900 mb-3">{section.title}</h5>}
+        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+          {section.items && section.items.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+              {section.items.map((item, idx) => (
+                <div key={idx} className="bg-white p-2 rounded border border-slate-200 text-sm flex items-start">
+                  <span className="text-indigo-600 mr-2 flex-shrink-0">•</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-700 leading-relaxed">{section.content}</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+  
+  // Subsections (Drivers, Restraints, Opportunities, Challenges)
+  if (section.type === 'subsection') {
+    return (
+      <div>
+        <h6 className="font-semibold text-gray-900 mb-2">{section.title}</h6>
+        <div className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-400">
+          {section.subtitle && (
+            <p className="font-semibold text-amber-900 mb-2">{section.subtitle}</p>
+          )}
+          <p className="text-gray-700 text-sm leading-relaxed">{section.content}</p>
+        </div>
+      </div>
+    );
+  }
+  
+  // Default section style (Recent Development, Regional segmentation, Segment Analysis items)
+  return (
+    <div>
+      {section.title && <h5 className="font-bold text-gray-900 mb-3">{section.title}</h5>}
+      <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
+        <p className="text-gray-700 leading-relaxed">{section.content}</p>
+        {section.items && section.items.length > 0 && (
+          <ul className="mt-3 space-y-2">
+            {section.items.map((item, idx) => (
+              <li key={idx} className="text-gray-700 text-sm flex items-start">
+                <span className="text-indigo-600 mr-2 mt-1 flex-shrink-0">•</span>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    </div>
+  );
+};
+
+// ============================================================================
+// PREVIEW SECTION RENDERER - Simple, clean design with unified styling
+// ============================================================================
+
+const PreviewSectionRenderer = ({ section }: { section: PreviewSection }) => {
+  // Special rendering for segments with subsections
+  if (section.type === 'segment' && section.subsections && section.subsections.length > 0) {
+    return (
+      <div className="bg-slate-50 p-6 rounded-lg border border-slate-200">
+        <h5 className="font-bold text-xl text-gray-900 mb-4">{section.title}</h5>
+        <div className="grid md:grid-cols-2 gap-4">
+          {section.subsections.map((sub, idx) => (
+            <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
+              <p className="font-bold text-indigo-900 mb-1">{sub.label}</p>
+              <p className="font-semibold text-indigo-700 text-lg">{sub.value}</p>
+              {sub.description && (
+                <p className="text-gray-600 text-sm mt-2 leading-relaxed">{sub.description}</p>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Render summary section with gradient highlight
+  if (section.type === 'summary') {
+    return (
+      <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-100">
+        <h4 className="font-bold text-xl text-indigo-900 mb-3">{section.title}</h4>
+        {section.highlight && (
+          <p className="text-indigo-900 font-semibold mb-3 text-lg">{section.highlight}</p>
+        )}
+        <p className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: section.content }} />
+      </div>
+    );
+  }
+
+  // All other sections use clean, simple styling
+  return (
+    <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+      <h5 className="font-bold text-gray-900 mb-3">
+        {section.title}
+      </h5>
+      {section.highlight && (
+        <p className="font-semibold text-indigo-800 text-base mb-2">{section.highlight}</p>
+      )}
+      <p className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: section.content }} />
+    </div>
+  );
+};
 
 export function ReportContent({
   tableOfContents = [],
@@ -72,92 +518,152 @@ export function ReportContent({
   methodology,
   sampleImages = [],
   onRequestSample,
-  onRequestQuote
+  onRequestQuote,
+  onRequestTableOfContents,
+  previewData, // NEW: Accept preview data from props
+  reportSummaryText // Dynamic text-based preview
 }: ReportContentProps) {
   const [samplesOpen, setSamplesOpen] = useState(false);
+  
+  // Parse the report summary text if provided
+  const parsedSections = reportSummaryText ? parseReportSummaryText(reportSummaryText) : [];
+  
+  // Use provided preview data or fall back to default sample data
+  const reportPreview = previewData || DEFAULT_PREVIEW_DATA;
 
   return (
     <div className="flex-1 space-y-8">
-      {/* Expert Analysis & Custom Options Buttons */}
-      <div className="flex gap-4 justify-end">
-        <Button variant="outline" className="bg-blue-50 border-blue-200 hover:bg-blue-100">
-          <MessageCircle className="h-4 w-4 mr-2" />
-          Expert Analysis
-        </Button>
-        <Button variant="outline" className="bg-purple-50 border-purple-200 hover:bg-purple-100">
-          <Settings className="h-4 w-4 mr-2" />
-          Custom Options
-        </Button>
-      </div>
-
       {/* Report Preview Frame */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-xl">Report Preview</CardTitle>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <ZoomIn className="h-4 w-4 mr-2" />
-                Zoom In
-              </Button>
-              <Button variant="outline" size="sm">
-                <ZoomOut className="h-4 w-4 mr-2" />
-                Zoom Out
-              </Button>
-              <Button variant="outline" size="sm">
-                <Maximize2 className="h-4 w-4 mr-2" />
-                Fullscreen
-              </Button>
-            </div>
-          </div>
+          <CardTitle className="text-xl">Report Preview</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="relative bg-gray-50 rounded-lg border-2 border-dashed border-gray-300 min-h-[600px]">
-            {/* Simulated PDF Preview */}
-            <div className="absolute inset-4 bg-white shadow-lg rounded">
-              <div className="p-6 space-y-4">
-                <div className="flex items-center justify-between border-b pb-4">
-                  <div>
-                    <h3 className="font-bold text-lg">Report Preview</h3>
-                    <p className="text-sm text-muted-foreground">Interactive Report Content</p>
-                  </div>
-                  <Badge className="bg-indigo-600">Sample Preview</Badge>
+          <div className="relative bg-white rounded-lg border-2 border-gray-200 shadow-lg">
+            {/* Report Content - Dynamically adjusts to content */}
+            <div className="p-8 space-y-6">
+              {/* Header - Uses dynamic report title */}
+              <div className="flex items-center justify-between border-b border-gray-200 pb-4">
+                <div>
+                  <h3 className="font-bold text-2xl text-indigo-900">
+                    {reportPreview.reportTitle || "Market Report"}
+                  </h3>
+                  <p className="text-sm text-gray-600">Interactive Report Preview</p>
                 </div>
+                <Button 
+                  className="bg-indigo-600 hover:bg-indigo-700 text-white"
+                  onClick={onRequestSample}
+                >
+                  <Download className="h-4 w-4 mr-2" />
+                  Download Summary
+                </Button>
+              </div>
+              
+              {/* Dynamic Report Content - Renders from text or structured data */}
+              <div className="space-y-6">
+                  {/* If reportSummaryText is provided, use dynamic parser */}
+                  {parsedSections.length > 0 ? (
+                    <>
+                      {parsedSections.map((section) => (
+                        <DynamicSectionRenderer key={section.id} section={section} />
+                      ))}
+                    </>
+                  ) : (
+                    <>
+                      {/* Fallback to structured preview data */}
+                      {reportPreview.sections && reportPreview.sections.length > 0 && (
+                        <>
+                          {/* Render sections dynamically */}
+                          {reportPreview.sections.filter(s => !['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type)).map((section) => (
+                            <PreviewSectionRenderer key={section.id} section={section} />
+                          ))}
+                          
+                          {/* Group Market Dynamics sections if they exist */}
+                          {reportPreview.sections.some(s => ['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type)) && (
+                            <div>
+                              <h5 className="font-bold text-xl text-gray-900 mb-4">Market Dynamics</h5>
+                              <div className="space-y-4">
+                                {reportPreview.sections
+                                  .filter(s => ['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type))
+                                  .map((section) => (
+                                    <PreviewSectionRenderer key={section.id} section={section} />
+                                  ))}
+                              </div>
+                            </div>
+                          )}
+                        </>
+                      )}
+
+                      {/* Key Market Players */}
+                      {reportPreview.keyPlayers && reportPreview.keyPlayers.length > 0 && (
+                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                          <h5 className="font-bold text-gray-900 mb-3">Key Market Players</h5>
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
+                            {reportPreview.keyPlayers.map((player, idx) => (
+                              <div key={idx} className="bg-white p-2 rounded border border-slate-200 shadow-sm">
+                                • {player}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
                 
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="font-medium mb-2">Executive Summary</h4>
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      This comprehensive report provides detailed analysis of market trends, competitive landscape, 
-                      and future opportunities. The content is dynamically loaded from the database.
-                    </p>
-                  </div>
-                  
-                  {keyMetrics.length > 0 && (
-                    <div className="grid grid-cols-2 gap-4">
-                      {keyMetrics.slice(0, 2).map((metric, index) => (
-                        <div key={index} className="p-3 bg-indigo-50 rounded">
-                          <p className="text-xs text-muted-foreground">{metric.label}</p>
-                          <p className="text-lg font-bold text-indigo-600">{metric.value}</p>
+                {/* Table of Contents Section */}
+                {tableOfContents && tableOfContents.length > 0 ? (
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+                    <h5 className="font-bold text-xl text-gray-900 mb-4 flex items-center">
+                      <FileText className="h-5 w-5 mr-2 text-indigo-600" />
+                      Table of Contents
+                    </h5>
+                    <div className="space-y-3">
+                      {tableOfContents.map((item, idx) => (
+                        <div key={idx} className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:border-indigo-300 transition-colors">
+                          <div className="flex items-start gap-3">
+                            <span className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                              {item.chapter}
+                            </span>
+                            <div className="flex-1 min-w-0">
+                              <h6 className="font-semibold text-gray-900 mb-1">{item.title}</h6>
+                              <p className="text-sm text-gray-600 mb-2">Pages {item.pages}</p>
+                              {item.subsections && item.subsections.length > 0 && (
+                                <ul className="space-y-1 mt-2">
+                                  {item.subsections.map((sub, subIdx) => (
+                                    <li key={subIdx} className="text-sm text-gray-600 flex items-start">
+                                      <span className="text-indigo-600 mr-2 mt-1">•</span>
+                                      <span>{sub}</span>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>
-                  )}
-                  
-                  <div className="h-32 bg-gradient-to-r from-indigo-100 to-purple-100 rounded flex items-center justify-center">
-                    <p className="text-sm text-muted-foreground">Interactive Chart Preview</p>
                   </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Preview Overlay */}
-            <div className="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-300 rounded-lg">
-              <div className="bg-white/90 backdrop-blur-sm p-4 rounded-lg shadow-lg">
-                <div className="flex items-center gap-3">
-                  <Eye className="h-5 w-5 text-indigo-600" />
-                  <span className="font-medium">Click to view interactive preview</span>
-                </div>
+                ) : (
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-8 rounded-lg border-2 border-dashed border-amber-300 text-center">
+                    <div className="flex flex-col items-center space-y-4">
+                      <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                        <FileText className="h-8 w-8 text-amber-600" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-lg text-gray-900 mb-4">
+                          Get detailed chapter breakdown and page-by-page content structure
+                        </p>
+                      </div>
+                      <Button 
+                        className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold shadow-lg"
+                        onClick={onRequestTableOfContents}
+                      >
+                        <FileText className="h-5 w-5 mr-2" />
+                        Request Table of Contents
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -167,33 +673,35 @@ export function ReportContent({
               className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
               onClick={onRequestSample}
             >
-              <Download className="h-4 w-4 mr-2" />
-              Download Full Report Sample
+              <FileText className="h-4 w-4 mr-2" />
+              Request Sample Report
             </Button>
           </div>
         </CardContent>
       </Card>
 
       {/* Executive Summary with Key Metrics */}
-      {keyMetrics.length > 0 && (
+      {(keyMetrics.length > 0 || keyFindings.length > 0 || methodology) && (
         <Card>
           <CardHeader>
             <CardTitle className="text-xl">Executive Summary</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="grid md:grid-cols-3 gap-6">
-              {keyMetrics.map((metric, index) => {
-                const IconComponent = iconMap[metric.iconName as keyof typeof iconMap];
-                return (
-                  <div key={index} className={`p-4 bg-gradient-to-br rounded-lg ${metric.color}`}>
-                    {IconComponent && <IconComponent className="h-8 w-8 mb-3" />}
-                    <h4 className="font-medium mb-2">{metric.label}</h4>
-                    <p className="text-2xl font-bold">{metric.value}</p>
-                    <p className="text-sm text-muted-foreground">{metric.description}</p>
-                  </div>
-                );
-              })}
-            </div>
+            {keyMetrics.length > 0 && (
+              <div className="grid md:grid-cols-3 gap-6">
+                {keyMetrics.map((metric, index) => {
+                  const IconComponent = iconMap[metric.iconName as keyof typeof iconMap];
+                  return (
+                    <div key={index} className={`p-4 bg-gradient-to-br rounded-lg ${metric.color}`}>
+                      {IconComponent && <IconComponent className="h-8 w-8 mb-3" />}
+                      <h4 className="font-medium mb-2">{metric.label}</h4>
+                      <p className="text-2xl font-bold">{metric.value}</p>
+                      <p className="text-sm text-muted-foreground">{metric.description}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
 
             {keyFindings.length > 0 && (
               <div className="space-y-4">
@@ -222,272 +730,21 @@ export function ReportContent({
         </Card>
       )}
 
-      {/* Report Details & Contents */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">Report Details & Contents</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="features" className="w-full">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="features">Key Features</TabsTrigger>
-              <TabsTrigger value="contents">Table of Contents</TabsTrigger>
-              <TabsTrigger value="sources">Data Sources</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="features" className="mt-6">
-              <div className="space-y-4">
-                <h4 className="font-medium">What's Included</h4>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Comprehensive market sizing and forecasts</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Detailed competitive landscape analysis</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Regional market breakdowns and opportunities</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Technology trend analysis and roadmaps</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Strategic recommendations for market entry</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-green-500 rounded-full"></span>
-                    <span>Executive dashboards and key metrics</span>
-                  </li>
-                </ul>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="contents" className="mt-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-medium">Complete Chapter Breakdown</h4>
-                  <Button variant="outline" size="sm">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download Full TOC
-                  </Button>
-                </div>
-                <div className="space-y-4">
-                  {tableOfContents.map((chapter) => (
-                    <div key={chapter.chapter} className="border-l-2 border-indigo-100 pl-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <h5 className="font-medium">
-                          Chapter {chapter.chapter}: {chapter.title}
-                        </h5>
-                        <Badge variant="outline">Pages {chapter.pages}</Badge>
-                      </div>
-                      <ul className="space-y-1">
-                        {chapter.subsections.map((subsection, index) => (
-                          <li key={index} className="text-muted-foreground text-sm flex items-center">
-                            <span className="w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2"></span>
-                            {subsection}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </TabsContent>
-            
-            <TabsContent value="sources" className="mt-6">
-              <div className="space-y-4">
-                <h4 className="font-medium">Research Methodology & Sources</h4>
-                <ul className="space-y-3">
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Primary research with 500+ industry leaders</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Government and regulatory databases</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Company financial reports and SEC filings</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Industry association publications</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Proprietary market intelligence platform</span>
-                  </li>
-                  <li className="flex items-center gap-3">
-                    <span className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full"></span>
-                    <span>Patent and trademark databases</span>
-                  </li>
-                </ul>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      {/* Sample Content Preview */}
-      {sampleImages.length > 0 && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">Sample Content Preview</CardTitle>
-              <Button variant="outline" size="sm" onClick={() => setSamplesOpen(!samplesOpen)}>
-                {samplesOpen ? "Hide Samples" : "View More Samples"}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-6">
-              {sampleImages.slice(0, 2).map((sample, index) => (
-                <div key={index}>
-                  <h4 className="font-medium mb-3">{sample.title}</h4>
-                  <img
-                    src={sample.image}
-                    alt={sample.alt}
-                    className="w-full h-48 object-cover rounded-lg border"
-                  />
-                </div>
-              ))}
-            </div>
-
-            <Collapsible open={samplesOpen} onOpenChange={setSamplesOpen}>
-              <CollapsibleContent className="mt-6">
-                <div className="grid md:grid-cols-3 gap-4">
-                  {sampleImages.slice(2).map((sample, index) => (
-                    <div key={index}>
-                      <h5 className="font-medium mb-2">{sample.title}</h5>
-                      <img
-                        src={sample.image}
-                        alt={sample.alt}
-                        className="w-full h-32 object-cover rounded-lg border"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </CollapsibleContent>
-            </Collapsible>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Related Reports */}
-      {relatedReports.length > 0 && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">Related Reports</CardTitle>
-              <Button variant="outline" size="sm">
-                <ExternalLink className="h-4 w-4 mr-2" />
-                View All in Category
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-3 gap-6">
-              {relatedReports.map((report, index) => (
-                <Card key={index} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
-                  <div className="relative">
-                    <img
-                      src={report.image}
-                      alt={report.title}
-                      className="w-full h-32 object-cover"
-                    />
-                    <Badge className="absolute top-2 right-2 bg-indigo-600">
-                      {report.pages} pages
-                    </Badge>
-                  </div>
-                  <CardContent className="p-4">
-                    <h4 className="font-medium mb-2 line-clamp-2">{report.title}</h4>
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold text-indigo-600">{report.price}</span>
-                      <Button size="sm" variant="outline">View</Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Customer Reviews */}
-      {reviews.length > 0 && (
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-xl">Customer Reviews</CardTitle>
-              <div className="flex items-center gap-2">
-                <div className="flex">
-                  {[1,2,3,4,5].map(i => (
-                    <Star key={i} className="h-4 w-4 fill-current text-yellow-400" />
-                  ))}
-                </div>
-                <span className="text-sm text-muted-foreground">4.9 ({reviews.length} reviews)</span>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {reviews.map((review, index) => (
-                <div key={index} className="border-l-4 border-indigo-200 pl-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <img
-                      src={review.logo}
-                      alt={review.company}
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-                    <div>
-                      <p className="font-medium">{review.author}</p>
-                      <p className="text-sm text-muted-foreground">{review.company}</p>
-                      <div className="flex mt-1">
-                        {[1,2,3,4,5].map(i => (
-                          <Star key={i} className="h-3 w-3 fill-current text-yellow-400" />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-muted-foreground italic">"{review.text}"</p>
-                </div>
-              ))}
-            </div>
-            
-            <Separator className="my-6" />
-            
-            <div className="text-center">
-              <Button variant="outline">
-                Read All Reviews
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
       {/* CTA Section */}
       <Card className="bg-gradient-to-r from-indigo-50 to-purple-50">
-        <CardContent className="p-8 text-center">
-          <h3 className="text-2xl font-bold mb-4">Ready to Access This Report?</h3>
-          <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-            Get instant access to comprehensive market intelligence and strategic insights 
-            that will drive your business decisions forward.
-          </p>
-          <div className="flex gap-4 justify-center">
+        <CardContent className="p-8">
+          <div className="flex flex-col items-center text-center">
+            <h3 className="text-2xl font-bold mb-4">Ready to Access This Report?</h3>
+            <p className="text-muted-foreground mb-6 max-w-2xl">
+              Get instant access to comprehensive market intelligence and strategic insights 
+              that will drive your business decisions forward.
+            </p>
             <Button 
               className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-              onClick={onRequestSample}
+              onClick={onRequestQuote}
             >
-              Download Sample
-            </Button>
-            <Button variant="outline" onClick={onRequestQuote}>
-              Request Custom Quote
+              <Phone className="h-4 w-4 mr-2" />
+              Request Callback
             </Button>
           </div>
         </CardContent>

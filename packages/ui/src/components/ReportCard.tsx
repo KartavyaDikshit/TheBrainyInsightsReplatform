@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
 import { Star, Calendar, FileText, Download, Eye } from "lucide-react";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import Image from "next/image";
 import Link from "next/link";
+import { getCategoryIcon } from "./icons/CategoryIcons";
 
 interface ReportCardProps {
   id: string;
@@ -42,100 +41,48 @@ export function ReportCard({
   slug,
   locale
 }: ReportCardProps) {
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <Link href={`/${locale}/reports/${slug}`} className="block">
-      <Card className="group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 overflow-hidden border border-gray-200 bg-white cursor-pointer">
-        {/* Cover Image with Overlay Badges */}
-        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
-        <Image
-          src={coverImage}
-          alt={title}
-          fill
-          className={`object-cover transition-transform duration-300 group-hover:scale-105 ${
-            imageLoaded ? 'opacity-100' : 'opacity-0'
-          }`}
-          onLoad={() => setImageLoaded(true)}
-        />
-        
-        {/* Overlay Badges */}
-        <div className="absolute top-3 left-3 flex flex-wrap gap-1">
-          <Badge className="bg-indigo-600 text-white text-xs font-medium">
-            {category}
-          </Badge>
-          {badges.map((badge, index) => (
-            <Badge
-              key={index}
-              variant="secondary"
-              className="bg-white/90 text-gray-900 text-xs font-medium"
-            >
-              {badge}
+    <Link href={`/${locale}/reports/${slug}`} className="block h-full">
+      <Card className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1 overflow-hidden border border-gray-200 bg-white cursor-pointer h-full flex flex-col">
+        {/* Category Icon with Gradient Background */}
+        <div className="relative w-[90%] mx-auto mt-2 rounded-md overflow-hidden" style={{ aspectRatio: '4/1.2' }}>
+          <div className="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-105">
+            {getCategoryIcon(category, "w-10 h-10")}
+          </div>
+          
+          {/* Minimalistic Category Badge */}
+          <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+            <Badge className="bg-white/90 backdrop-blur-sm text-indigo-600 text-[9px] font-medium px-2 py-0.5 border border-indigo-100">
+              {category}
             </Badge>
-          ))}
+          </div>
         </div>
 
-        {/* Price Badge */}
-        <div className="absolute top-3 right-3">
-          {isFree ? (
-            <Badge className="bg-green-500 text-white text-xs font-medium">
-              FREE
-            </Badge>
-          ) : (
-            <Badge className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium">
-              From {priceInfo.singleUser}
-            </Badge>
-          )}
-        </div>
-      </div>
-
-      <CardContent className="p-6">
+      <CardContent className="p-4 flex-1 flex flex-col">
         {/* Title */}
-        <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-indigo-600 transition-colors">
+        <h3 className="text-sm font-semibold text-gray-900 mb-1.5 line-clamp-2 group-hover:text-indigo-600 transition-colors min-h-[2.5rem]">
           {title}
         </h3>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 mb-4 line-clamp-3">
+        <p className="text-xs text-gray-600 mb-3 line-clamp-2 min-h-[2rem]">
           {description}
         </p>
 
         {/* Meta Information */}
-        <div className="flex items-center justify-between mb-4 text-xs text-gray-500">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1">
-              <Calendar className="h-3 w-3" />
-              <span>{publishDate}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              <FileText className="h-3 w-3" />
-              <span>{pages} pages</span>
-            </div>
-          </div>
-          
-          {/* Rating */}
+        <div className="flex items-center mb-3 text-[10px] text-gray-500">
           <div className="flex items-center gap-1">
-            <div className="flex">
-              {[...Array(5)].map((_, i) => (
-                <Star
-                  key={i}
-                  className={`h-3 w-3 ${
-                    i < Math.floor(rating)
-                      ? 'text-yellow-400 fill-current'
-                      : 'text-gray-300'
-                  }`}
-                />
-              ))}
-            </div>
-            <span className="text-xs ml-1">({rating})</span>
+            <Calendar className="h-2.5 w-2.5" />
+            <span>{publishDate}</span>
           </div>
         </div>
 
         {/* Pricing Information */}
         {!isFree && (
-          <div className="mb-4 p-3 bg-gray-50 rounded-lg">
-            <div className="text-xs text-gray-500 mb-1">Pricing Options:</div>
-            <div className="space-y-1 text-xs">
+          <div className="mb-3 p-2 bg-gray-50 rounded-md">
+            <div className="text-[10px] text-gray-500 mb-1">Pricing Options:</div>
+            <div className="space-y-0.5 text-[10px]">
               <div className="flex justify-between">
                 <span>Single User:</span>
                 <span className="font-medium text-gray-900">{priceInfo.singleUser}</span>
@@ -153,30 +100,17 @@ export function ReportCard({
         )}
 
         {/* Action Buttons */}
-        <div className="flex gap-2" onClick={(e) => e.preventDefault()}>
+        <div className="flex gap-2 mt-auto" onClick={(e) => e.preventDefault()}>
           <Button 
-            className="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 text-white h-8 text-xs"
             size="sm"
             onClick={(e) => {
               e.stopPropagation();
               window.location.href = `/${locale}/reports/${slug}`;
             }}
           >
-            <Eye className="h-4 w-4 mr-2" />
+            <Eye className="h-3 w-3 mr-1.5" />
             View Report
-          </Button>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="border-indigo-200 text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300"
-            onClick={(e) => {
-              e.stopPropagation();
-              // Handle sample download
-              console.log('Download sample for:', title);
-            }}
-          >
-            <Download className="h-4 w-4 mr-2" />
-            Sample
           </Button>
         </div>
       </CardContent>

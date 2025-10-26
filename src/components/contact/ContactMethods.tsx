@@ -2,13 +2,9 @@
 
 import { Card, CardContent } from '@tbi/ui';
 import { Button } from '@tbi/ui';
-import { Phone, Mail, MessageCircle } from "lucide-react";
+import { Phone, Mail } from "lucide-react";
 
 export function ContactMethods() {
-  const handleLiveChat = () => {
-    // Mock live chat functionality
-    alert("Live chat would open here in a real application");
-  };
 
   return (
     <section className="py-20 bg-gray-50">
@@ -22,7 +18,7 @@ export function ContactMethods() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
           {/* Phone Contact */}
           <Card className="text-center group hover:shadow-lg transition-all duration-300">
             <CardContent className="p-8">
@@ -69,34 +65,6 @@ export function ContactMethods() {
                 onClick={() => window.location.href = 'mailto:hello@thebrainyinsights.com'}
               >
                 Send Email
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Live Chat */}
-          <Card className="text-center group hover:shadow-lg transition-all duration-300">
-            <CardContent className="p-8">
-              <div className="w-16 h-16 bg-indigo-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:bg-indigo-700 transition-colors duration-300">
-                <MessageCircle className="h-8 w-8 text-white" />
-              </div>
-              <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Live Chat
-              </h3>
-              <p className="text-gray-600 mb-6">
-                Get instant answers to your questions through our live chat support during business hours.
-              </p>
-              <div className="space-y-2 mb-6">
-                <div className="flex items-center justify-center">
-                  <div className="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                  <p className="font-semibold text-green-600">Available Now</p>
-                </div>
-                <p className="text-sm text-gray-500">Average response: 2 minutes</p>
-              </div>
-              <Button 
-                className="w-full bg-indigo-600 hover:bg-indigo-700"
-                onClick={handleLiveChat}
-              >
-                Start Chat
               </Button>
             </CardContent>
           </Card>

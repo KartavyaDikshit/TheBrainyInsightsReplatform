@@ -15,10 +15,10 @@ const config = {
         host: process.env.LEGACY_DB_HOST || 'localhost',
         user: process.env.LEGACY_DB_USER || 'root',
         password: process.env.LEGACY_DB_PASSWORD || '',
-        database: process.env.LEGACY_DB_NAME || 'tbi_db'
+        database: process.env.LEGACY_DB_NAME || 'alttbidb'
     },
     postgres: {
-        connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:password@localhost:5432/tbi_db'
+        connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:password@localhost:5432/alttbidb'
     },
     limits: {
         categories: 20, // Only top categories

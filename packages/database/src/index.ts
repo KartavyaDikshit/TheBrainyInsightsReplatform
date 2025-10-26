@@ -6,7 +6,7 @@ export class DatabaseClient {
 
   constructor() {
     this.pool = new Pool({
-      connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:tbipassword@localhost:5432/tbi_db'
+      connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:tbipassword@localhost:5432/alttbidb'
     });
   }
 
@@ -70,8 +70,8 @@ async getReports(
   let query = `
     SELECT
       r.id, r.slug, r.title, r.description, r.summary, r.pages,
-      r.published_date, r.single_user_price, r.multi_user_price, r.corporate_price,
-      r.featured, r.status, r.view_count, r.avg_rating, r.total_reviews,
+      r.published_date, r.single_price, r.multi_price, r.corporate_price,
+      r.featured, r.status, r.view_count, r.avg_rating, r.review_count,
       r.created_at, r.keywords, r.semantic_keywords,
       c.title AS category_title, c.slug AS category_slug,
       rt.title AS localized_title, rt.description AS localized_description,

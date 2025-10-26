@@ -47,17 +47,6 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
   const sampleCategories: CategoryData[] = [
     {
       id: "1",
-      title: "Technology",
-      description: "Latest technology trends, AI, machine learning, digital transformation, and emerging tech insights covering software, hardware, and IT services.",
-      icon: "💻",
-      reportCount: 45,
-      viewCount: 12500,
-      isFeatured: true,
-      industry: "Technology",
-      slug: "technology"
-    },
-    {
-      id: "2", 
       title: "Healthcare",
       description: "Medical devices, pharmaceuticals, biotechnology, healthcare services, digital health, and medical technology market analysis.",
       icon: "🏥",
@@ -68,53 +57,86 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
       slug: "healthcare"
     },
     {
+      id: "2",
+      title: "Information Technology & Semiconductors",
+      description: "Latest technology trends, AI, machine learning, semiconductor manufacturing, chip design, and emerging tech insights.",
+      icon: "💻",
+      reportCount: 45,
+      viewCount: 12500,
+      isFeatured: true,
+      industry: "Technology",
+      slug: "information-technology-semiconductors"
+    },
+    {
       id: "3",
-      title: "Finance",
-      description: "Banking, fintech, insurance, financial services, blockchain, cryptocurrency, and payment systems market research.",
-      icon: "💰",
+      title: "Machinery & Equipment",
+      description: "Industrial machinery, heavy equipment, construction equipment, manufacturing tools, and machinery technology market insights.",
+      icon: "⚙️",
       reportCount: 32,
       viewCount: 8400,
       isFeatured: false,
-      industry: "Finance",
-      slug: "finance"
+      industry: "Machinery",
+      slug: "machinery-equipment"
     },
     {
       id: "4",
-      title: "Energy",
-      description: "Renewable energy, oil & gas, sustainable energy solutions, solar, wind, and energy storage market insights.",
-      icon: "⚡",
+      title: "Aerospace & Defence",
+      description: "Aviation, defense technology, space technology, satellites, drones, and aerospace components market analysis.",
+      icon: "✈️",
       reportCount: 28,
       viewCount: 7200,
       isFeatured: false,
-      industry: "Energy",
-      slug: "energy"
+      industry: "Aerospace",
+      slug: "aerospace-defence"
     },
     {
       id: "5",
-      title: "Automotive",
-      description: "Electric vehicles, autonomous driving, automotive technology, mobility solutions, and transportation industry analysis.",
-      icon: "🚗",
+      title: "Chemicals & Materials",
+      description: "Chemical manufacturing, specialty chemicals, materials science, polymers, composites, and advanced materials market research.",
+      icon: "🧪",
       reportCount: 35,
       viewCount: 9100,
       isFeatured: true,
-      industry: "Automotive",
-      slug: "automotive"
+      industry: "Chemicals",
+      slug: "chemicals-materials"
     },
     {
       id: "6",
       title: "Food & Beverages",
-      description: "Food processing, beverages, agriculture, food technology, packaging, and food safety market trends and analysis.",
+      description: "Food processing, beverages, food technology, packaging, distribution, and food safety market trends and analysis.",
       icon: "🍽️",
-      reportCount: 22,
-      viewCount: 5600,
+      reportCount: 30,
+      viewCount: 7800,
       isFeatured: false,
       industry: "F&B",
       slug: "food-beverages"
     },
     {
       id: "7",
+      title: "Agriculture",
+      description: "Agricultural technology, farming equipment, crop management, precision agriculture, and agribusiness market insights.",
+      icon: "🌾",
+      reportCount: 26,
+      viewCount: 6500,
+      isFeatured: false,
+      industry: "Agriculture",
+      slug: "agriculture"
+    },
+    {
+      id: "8",
+      title: "Energy & Power",
+      description: "Renewable energy, oil & gas, power generation, sustainable energy solutions, solar, wind, and energy storage market insights.",
+      icon: "⚡",
+      reportCount: 42,
+      viewCount: 10800,
+      isFeatured: true,
+      industry: "Energy",
+      slug: "energy-power"
+    },
+    {
+      id: "9",
       title: "Consumer Goods",
-      description: "Retail, e-commerce, consumer products, fashion, cosmetics, and personal care market research and trends.",
+      description: "Retail, e-commerce, consumer products, fashion, cosmetics, personal care, and consumer electronics market research.",
       icon: "🛒",
       reportCount: 40,
       viewCount: 10200,
@@ -123,26 +145,15 @@ export default async function CategoriesPage({ params }: CategoriesPageProps) {
       slug: "consumer-goods"
     },
     {
-      id: "8",
-      title: "Manufacturing",
-      description: "Industrial manufacturing, automation, robotics, Industry 4.0, supply chain, and production technology insights.",
-      icon: "🏭",
-      reportCount: 26,
-      viewCount: 6800,
+      id: "10",
+      title: "Automotive & Transportation",
+      description: "Electric vehicles, autonomous driving, automotive technology, mobility solutions, logistics, and transportation industry analysis.",
+      icon: "🚗",
+      reportCount: 38,
+      viewCount: 9600,
       isFeatured: false,
-      industry: "Manufacturing",
-      slug: "manufacturing"
-    },
-    {
-      id: "9",
-      title: "Aerospace & Defense",
-      description: "Aviation, defense technology, space technology, satellites, drones, and aerospace components market analysis.",
-      icon: "✈️",
-      reportCount: 18,
-      viewCount: 4500,
-      isFeatured: false,
-      industry: "Aerospace",
-      slug: "aerospace-defense"
+      industry: "Automotive",
+      slug: "automotive-transportation"
     }
   ];
 

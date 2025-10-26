@@ -3,7 +3,7 @@ import { Pool } from 'pg';
 
 // Database client (same as your app)
 const db = new Pool({
-  connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:tbipassword@localhost:5432/tbi_db'
+  connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:tbipassword@localhost:5432/alttbidb'
 });
 
 const dbQuery = async (text, params) => {

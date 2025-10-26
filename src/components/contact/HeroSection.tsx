@@ -27,14 +27,7 @@ export function HeroSection() {
                 size="lg"
                 className="bg-white text-indigo-600 hover:bg-gray-100 px-8 py-3"
               >
-                Start Your Project
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-white text-white hover:bg-white hover:text-indigo-600 px-8 py-3"
-              >
-                Schedule Consultation
+                Request Callback
               </Button>
             </div>
           </div>

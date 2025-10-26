@@ -3,7 +3,7 @@ import { randomUUID } from 'crypto';
 
 async function populateSampleData() {
   const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:password@localhost:5432/tbi_db'
+    connectionString: process.env.DATABASE_URL || 'postgresql://tbi_user:password@localhost:5432/alttbidb'
   });
 
   try {
