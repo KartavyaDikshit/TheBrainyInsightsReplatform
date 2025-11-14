@@ -1,7 +1,7 @@
 import "../globals.css";
 import type { Metadata } from "next";
 import { headers } from 'next/headers';
-import { Inter, Poppins } from "next/font/google";
+import { Inter } from "next/font/google";
 import getServerSession from "next-auth";
 import Link from "next/link";
 // import { getMessages } from "next-intl/server";
@@ -12,15 +12,8 @@ import Link from "next/link";
 
 const inter = Inter({ 
   subsets: ["latin"],
-  weight: ['400', '500'],
+  weight: ['400', '500', '800', '900'],
   variable: '--font-inter',
-  display: 'swap',
-});
-
-const poppins = Poppins({ 
-  subsets: ["latin"],
-  weight: ['600', '700'],
-  variable: '--font-poppins',
   display: 'swap',
 });
 
@@ -84,7 +77,7 @@ export default async function RootLayout(
 
   return (
     <html lang={locale} dir={isRtl ? 'rtl' : 'ltr'}>
-      <body className={`${inter.variable} ${poppins.variable} font-sans`}>
+      <body className={`${inter.variable} font-sans`}>
         {/* <Providers messages={messages} locale={locale}> */}
           {children}
         {/* </Providers> */}

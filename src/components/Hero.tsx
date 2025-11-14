@@ -1,9 +1,8 @@
-import { Search, Shield, Download, CreditCard } from 'lucide-react';
-import { Button } from './ui/button';
+import { Search, Download, CreditCard } from 'lucide-react';
 
 interface HeroProps {
-  categoryCount: number;
-  reportCount: number;
+  categoryCount?: number;
+  reportCount?: number;
 }
 
 export function Hero({ categoryCount, reportCount }: HeroProps) {
@@ -33,57 +32,45 @@ export function Hero({ categoryCount, reportCount }: HeroProps) {
         </div>
 
       <div className="relative h-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
-        <div className="text-center w-full">
-          {/* Main Hero Content */}
-          <div className="mb-4">
-            <h1 className="text-2xl md:text-2.5xl lg:text-3xl font-bold text-white mb-3 tracking-tight leading-tight">
-              <span className="block bg-gradient-to-r from-purple-300 to-indigo-200 bg-clip-text text-transparent">
-                Welcome to The Brainy Insights
-              </span>
-            </h1>
-            <p className="text-base md:text-lg text-indigo-100 max-w-4xl mx-auto leading-relaxed mb-4">
-              Access comprehensive market intelligence across industries. 
-              Make informed decisions with premium research reports.
-            </p>
-          </div>
+        <div className="text-center max-w-4xl mx-auto w-full">
+          {/* Main Heading */}
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-white">
+            Buy Customer Insight Reports With Confidence
+          </h1>
+          
+          {/* Description */}
+          <p className="text-base md:text-lg text-indigo-100 mb-6 max-w-2xl mx-auto">
+            Access premium market research from leading analysts to make data-driven decisions that accelerate your business growth.
+          </p>
 
-          {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-4">
-            <Button size="lg" className="text-white px-4 py-2 text-base font-semibold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105" style={{ backgroundColor: '#303F9F' }}>
-              <Search className="mr-2 h-5 w-5" />
-              Explore Reports
-            </Button>
-          </div>
-
-          {/* Key Features - Made Smaller */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-2 max-w-3xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:bg-white/15 transition-all duration-300">
-              <div className="flex items-center justify-center w-5 h-5 rounded-lg mb-1 mx-auto" style={{ backgroundColor: 'rgba(48, 63, 159, 0.2)' }}>
-                <Download className="h-3 w-3 text-indigo-200" />
+          {/* Search Bar */}
+          <div className="max-w-2xl mx-auto mb-6">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                <input
+                  type="text"
+                  placeholder="Search reports by industry, topic, or company..."
+                  className="w-full pl-10 h-12 text-base rounded-md border border-gray-300 px-3 py-2 bg-white text-gray-900 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                />
               </div>
-              <h3 className="text-xs font-semibold text-white mb-0">Instant Access</h3>
-              <p className="text-indigo-200 text-[10px]">Download reports immediately</p>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:bg-white/15 transition-all duration-300">
-              <div className="flex items-center justify-center w-5 h-5 rounded-lg mb-1 mx-auto" style={{ backgroundColor: 'rgba(48, 63, 159, 0.2)' }}>
-                <Shield className="h-3 w-3 text-indigo-200" />
-              </div>
-              <h3 className="text-xs font-semibold text-white mb-0">Premium Quality</h3>
-              <p className="text-indigo-200 text-[10px]">Expert research & verified data</p>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-2 border border-white/20 hover:bg-white/15 transition-all duration-300">
-              <div className="flex items-center justify-center w-5 h-5 rounded-lg mb-1 mx-auto" style={{ backgroundColor: 'rgba(48, 63, 159, 0.2)' }}>
-                <CreditCard className="h-3 w-3 text-indigo-200" />
-              </div>
-              <h3 className="text-xs font-semibold text-white mb-0">Flexible Pricing</h3>
-              <p className="text-indigo-200 text-[10px]">Multiple license options</p>
+              <button className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-all h-12 px-8 bg-indigo-600 hover:bg-indigo-700 text-white">
+                Search reports
+              </button>
             </div>
           </div>
 
-          {/* Professional accent line */}
-          <div className="w-24 h-1 bg-gradient-to-r from-purple-400 to-indigo-300 mx-auto rounded-full mt-4"></div>
+          {/* Trust Badges */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-white">
+            <div className="flex items-center gap-2">
+              <Download className="h-4 w-4 text-indigo-200" />
+              <span>Instant download</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-indigo-200" />
+              <span>Secure checkout</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>

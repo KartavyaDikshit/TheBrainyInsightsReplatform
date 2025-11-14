@@ -43,63 +43,49 @@ export default async function HomePage({ params }: PageProps) {
       ReportService.getAll(locale, { limit: 1000 }) // Get total count
     ]);
 
-    // Sample categories to always display
+    // Sample categories to always display - 6 featured categories
     const sampleCategories = [
       {
-        id: 'sample-energy-power',
-        title: 'Energy and Power',
-        slug: 'energy-and-power',
-        description: 'Comprehensive market research on renewable energy, power generation, energy storage systems, and smart grid technologies across global markets.',
-        reportCount: 145
-      },
-      {
         id: 'sample-healthcare',
-        title: 'Healthcare & Medical Devices',
-        slug: 'healthcare-medical-devices',
-        description: 'In-depth analysis of healthcare technologies, medical equipment, pharmaceuticals, biotechnology, and digital health solutions.',
+        title: 'Healthcare & Life Sciences',
+        slug: 'healthcare-life-sciences',
+        description: 'Medical devices, pharmaceuticals, and biotech insights',
         reportCount: 230
       },
       {
         id: 'sample-technology',
-        title: 'Technology & Electronics',
-        slug: 'technology-electronics',
-        description: 'Market intelligence on semiconductors, consumer electronics, AI hardware, IoT devices, and emerging technologies.',
+        title: 'Technology & Software',
+        slug: 'technology-software',
+        description: 'Tech trends, software markets, and digital transformation',
         reportCount: 312
       },
       {
-        id: 'sample-automotive',
-        title: 'Automotive & Transportation',
-        slug: 'automotive-transportation',
-        description: 'Analysis of electric vehicles, autonomous driving, automotive components, and next-generation transportation solutions.',
+        id: 'sample-manufacturing',
+        title: 'Manufacturing & Industrial',
+        slug: 'manufacturing-industrial',
+        description: 'Industrial equipment, automation, and supply chain analysis',
         reportCount: 198
       },
       {
-        id: 'sample-chemicals',
-        title: 'Chemicals & Materials',
-        slug: 'chemicals-materials',
-        description: 'Research on specialty chemicals, advanced materials, polymers, and sustainable material innovations.',
+        id: 'sample-financial',
+        title: 'Financial Services',
+        slug: 'financial-services',
+        description: 'Banking, fintech, insurance, and investment trends',
         reportCount: 167
       },
       {
-        id: 'sample-food-beverage',
-        title: 'Food & Beverage',
-        slug: 'food-beverage',
-        description: 'Market trends in food processing, beverages, nutraceuticals, and sustainable food technologies.',
+        id: 'sample-retail',
+        title: 'Retail & Consumer Goods',
+        slug: 'retail-consumer-goods',
+        description: 'Consumer behavior, e-commerce, and retail market data',
         reportCount: 142
       },
       {
-        id: 'sample-aerospace',
-        title: 'Aerospace & Defense',
-        slug: 'aerospace-defense',
-        description: 'Strategic analysis of aerospace technologies, defense systems, satellite communications, and aviation markets.',
-        reportCount: 89
-      },
-      {
-        id: 'sample-telecom',
-        title: 'Telecommunications',
-        slug: 'telecommunications',
-        description: 'Insights into 5G networks, fiber optics, satellite communications, and telecom infrastructure developments.',
-        reportCount: 124
+        id: 'sample-energy',
+        title: 'Energy & Sustainability',
+        slug: 'energy-sustainability',
+        description: 'Renewable energy, oil & gas, and environmental solutions',
+        reportCount: 145
       }
     ];
 
@@ -207,9 +193,9 @@ export default async function HomePage({ params }: PageProps) {
       reportCount: category.report_count
     }));
 
-    // Combine sample and DB data, prioritizing samples - show only 4 items (1 row)
-    const reports = [...sampleReports, ...dbReports].slice(0, 4);
-    const featuredCategories = [...sampleCategories, ...dbCategories].slice(0, 4);
+    // Combine sample and DB data, prioritizing samples
+    const reports = [...sampleReports, ...dbReports].slice(0, 6);
+    const featuredCategories = [...sampleCategories, ...dbCategories].slice(0, 6);
 
     return (
       <>

@@ -31,6 +31,7 @@ export { Skeleton } from './components/ui/skeleton';
 export { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter, DialogClose } from './components/ui/dialog';
 export { Label } from './components/ui/label';
 export { Textarea } from './components/ui/textarea';
+export { RadioGroup, RadioGroupItem } from './components/ui/radio-group';
 
 // Report Components
 export { ReportHero } from './components/reports/report-hero';

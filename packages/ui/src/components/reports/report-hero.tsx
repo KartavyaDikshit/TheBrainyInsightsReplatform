@@ -50,20 +50,16 @@ export function ReportHero({
       <div className="absolute bottom-20 left-20 w-16 h-16 bg-purple-300/10 rounded-full" />
       <div className="absolute top-1/2 right-1/4 w-12 h-12 bg-indigo-300/10 rounded-full" />
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col lg:flex-row gap-6 items-start">
+      <div className="relative max-w-7xl mx-auto px-4 py-12 md:py-16">
+        <div className="flex flex-col lg:flex-row gap-8 items-center lg:items-start">
           {/* Report Title and Description */}
-          <div className="flex-1 text-left">
-            <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-3 leading-tight text-left">
+          <div className="flex-1 text-left flex items-center min-h-[200px]">
+            <h1 className="text-2xl md:text-4xl lg:text-5xl font-bold text-white leading-tight text-left">
               {title}
               {subtitle && (
-                <span className="block text-indigo-200 text-base md:text-lg text-left">{subtitle}</span>
+                <span className="block text-indigo-200 text-lg md:text-xl lg:text-2xl mt-4 font-normal text-left">{subtitle}</span>
               )}
             </h1>
-            
-            <p className="text-sm md:text-base text-indigo-100 leading-relaxed max-w-3xl text-left">
-              {description}
-            </p>
           </div>
 
           {/* Report Details Card */}
@@ -80,7 +76,7 @@ export function ReportHero({
                         <FileText className="h-4 w-4 mr-2" />
                         Pages
                       </span>
-                      <span className="font-medium">{reportDetails.pages}</span>
+                      <span className="font-medium">150+</span>
                     </div>
                   )}
                   {reportDetails.published && (

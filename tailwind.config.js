@@ -54,7 +54,7 @@ module.exports = {
       },
       fontFamily: {
         sans: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        heading: ['var(--font-poppins)', 'Poppins', 'system-ui', '-apple-system', 'sans-serif'],
+        heading: ['var(--font-inter)', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
         serif: ['Georgia', 'serif'],
         mono: ['Menlo', 'monospace'],
       },

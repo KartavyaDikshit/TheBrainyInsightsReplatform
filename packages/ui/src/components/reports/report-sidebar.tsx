@@ -1,8 +1,13 @@
-import { MessageCircle, CreditCard, Download, FileText, Calendar, Phone } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { CreditCard, Download, FileText, Calendar, Phone, DollarSign } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
 import { Separator } from "../ui/separator";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
 
 interface ReportSidebarProps {
   reportPreview?: {
@@ -40,6 +45,9 @@ export function ReportSidebar({
   reportTitle,
   reportSlug
 }: ReportSidebarProps) {
+  // State for selected license type
+  const [selectedLicense, setSelectedLicense] = useState<'singleUser' | 'multiUser' | 'corporate'>('multiUser');
+  
   // Helper function to build contact URL with report information
   const buildContactUrl = (requestType: string) => {
     const params = new URLSearchParams({ request: requestType });
@@ -47,75 +55,83 @@ export function ReportSidebar({
     if (reportSlug) params.append('reportSlug', reportSlug);
     return `/${locale}/contact?${params.toString()}`;
   };
+  
+  // Get selected license price
+  const getSelectedPrice = () => {
+    if (!pricing) return 0;
+    switch (selectedLicense) {
+      case 'singleUser':
+        return pricing.singleUser;
+      case 'multiUser':
+        return pricing.multiUser;
+      case 'corporate':
+        return pricing.corporate;
+      default:
+        return pricing.singleUser;
+    }
+  };
   return (
-    <div className="w-80 space-y-6">
+    <div className="w-80 sticky top-[58px] space-y-6">
       {/* Pricing Section */}
       {pricing && (
         <Card>
-          <CardHeader>
+          <CardHeader className="!pt-4 !pb-2">
             <CardTitle className="text-lg">Choose Your License</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              <div className="p-4 border rounded-lg hover:border-indigo-500 transition-colors cursor-pointer">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-medium">Single User</h4>
-                  <span className="text-2xl font-bold text-indigo-600">
+          <CardContent className="!pt-2 !pb-4 space-y-3">
+            <RadioGroup 
+              value={selectedLicense} 
+              onValueChange={(value) => setSelectedLicense(value as 'singleUser' | 'multiUser' | 'corporate')}
+              className="space-y-2"
+            >
+              {/* Single User */}
+              <div className="flex items-center space-x-3 p-2 border rounded-lg hover:border-indigo-500 transition-colors cursor-pointer">
+                <RadioGroupItem value="singleUser" id="singleUser" />
+                <Label htmlFor="singleUser" className="flex-1 flex justify-between items-center cursor-pointer">
+                  <span className="font-medium">Single User</span>
+                  <span className="text-lg font-bold text-indigo-600">
                     {pricing.currency || '$'}{pricing.singleUser.toLocaleString()}
                   </span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Perfect for individual researchers and analysts
-                </p>
-                <Button className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
-                  Buy Now
-                </Button>
+                </Label>
               </div>
 
-              <div className="p-4 border rounded-lg hover:border-indigo-500 transition-colors cursor-pointer bg-indigo-50/50">
-                <div className="flex justify-between items-center mb-2">
-                  <div>
-                    <h4 className="font-medium">Multi-User</h4>
+              {/* Multi-User */}
+              <div className="flex items-center space-x-3 p-2 border rounded-lg hover:border-indigo-500 transition-colors cursor-pointer bg-indigo-50/50">
+                <RadioGroupItem value="multiUser" id="multiUser" />
+                <Label htmlFor="multiUser" className="flex-1 flex justify-between items-center cursor-pointer">
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">Multi-User</span>
                     <Badge variant="secondary" className="text-xs">Most Popular</Badge>
                   </div>
-                  <span className="text-2xl font-bold text-indigo-600">
+                  <span className="text-lg font-bold text-indigo-600">
                     {pricing.currency || '$'}{pricing.multiUser.toLocaleString()}
                   </span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Share with up to 5 team members
-                </p>
-                <Button className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
-                  Buy Now
-                </Button>
+                </Label>
               </div>
 
-              <div className="p-4 border rounded-lg hover:border-indigo-500 transition-colors cursor-pointer">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-medium">Corporate</h4>
-                  <span className="text-2xl font-bold text-indigo-600">
+              {/* Corporate */}
+              <div className="flex items-center space-x-3 p-2 border rounded-lg hover:border-indigo-500 transition-colors cursor-pointer">
+                <RadioGroupItem value="corporate" id="corporate" />
+                <Label htmlFor="corporate" className="flex-1 flex justify-between items-center cursor-pointer">
+                  <span className="font-medium">Corporate</span>
+                  <span className="text-lg font-bold text-indigo-600">
                     {pricing.currency || '$'}{pricing.corporate.toLocaleString()}
                   </span>
-                </div>
-                <p className="text-sm text-muted-foreground mb-3">
-                  Enterprise-wide access with additional benefits
-                </p>
-                <Button className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold shadow-lg hover:shadow-xl transition-all transform hover:scale-105">
-                  Buy Now
-                </Button>
+                </Label>
               </div>
-            </div>
+            </RadioGroup>
 
-            <Separator />
-
-            <Button variant="outline" className="w-full">
-              Request Custom Quote
+            <Button 
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white font-bold shadow-lg hover:shadow-xl transition-all text-lg py-6"
+              onClick={() => window.location.href = buildContactUrl('quote')}
+            >
+              Buy Now - {pricing.currency || '$'}{getSelectedPrice().toLocaleString()}
             </Button>
 
-            <div className="flex justify-center gap-4 pt-2">
-              <CreditCard className="h-6 w-6 text-muted-foreground" />
-              <div className="text-sm text-muted-foreground">
-                Visa, Mastercard, PayPal, Bank Transfer
+            <div className="flex items-center justify-center gap-2 pt-3">
+              <CreditCard className="h-3 w-3 text-gray-400" />
+              <div className="text-xs text-gray-400">
+                Visa, Mastercard, PayPal
               </div>
             </div>
           </CardContent>
@@ -124,65 +140,41 @@ export function ReportSidebar({
 
       {/* Quick Actions */}
       <Card>
-        <CardContent className="pt-6 space-y-3">
+        <CardContent className="!pt-4 !pb-4 space-y-2">
           <Button 
-            className="w-full justify-start bg-indigo-600 hover:bg-indigo-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            className="w-full justify-start bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-sm h-9 transition-all"
             onClick={() => window.location.href = buildContactUrl('sample-pdf')}
           >
-            <Download className="h-5 w-5 mr-2" />
+            <Download className="h-4 w-4 mr-2" />
             Request Sample PDF
           </Button>
           <Button 
-            className="w-full justify-start bg-purple-600 hover:bg-purple-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            className="w-full justify-start bg-purple-600 hover:bg-purple-700 text-white font-medium text-sm h-9 transition-all"
             onClick={() => window.location.href = buildContactUrl('customization')}
           >
-            <FileText className="h-5 w-5 mr-2" />
+            <FileText className="h-4 w-4 mr-2" />
             Request Customization
           </Button>
           <Button 
-            className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            className="w-full justify-start bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm h-9 transition-all"
             onClick={() => window.location.href = buildContactUrl('talk-to-analyst')}
           >
-            <Phone className="h-5 w-5 mr-2" />
+            <Phone className="h-4 w-4 mr-2" />
             Talk to Analyst
           </Button>
           <Button 
-            className="w-full justify-start bg-green-600 hover:bg-green-700 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+            className="w-full justify-start bg-green-600 hover:bg-green-700 text-white font-medium text-sm h-9 transition-all"
             onClick={() => window.location.href = buildContactUrl('consultation')}
           >
-            <Calendar className="h-5 w-5 mr-2" />
+            <Calendar className="h-4 w-4 mr-2" />
             Schedule Consultation
           </Button>
-        </CardContent>
-      </Card>
-
-      {/* Contact Us */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg flex items-center">
-            <MessageCircle className="h-5 w-5 mr-2" />
-            Contact Us
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="space-y-3">
-            <div className="text-center">
-              <p className="text-sm text-muted-foreground mb-2">Send us an email</p>
-              <a 
-                href="mailto:info@thebrainyinsights.com" 
-                className="text-indigo-600 hover:text-indigo-700 font-medium hover:underline"
-              >
-                info@thebrainyinsights.com
-              </a>
-            </div>
-          </div>
-          
           <Button 
-            variant="default" 
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-            onClick={() => window.location.href = buildContactUrl('general')}
+            className="w-full justify-start bg-amber-600 hover:bg-amber-700 text-white font-medium text-sm h-9 transition-all"
+            onClick={() => window.location.href = buildContactUrl('custom-pricing')}
           >
-            Go to Contact Page
+            <DollarSign className="h-4 w-4 mr-2" />
+            Custom Pricing
           </Button>
         </CardContent>
       </Card>

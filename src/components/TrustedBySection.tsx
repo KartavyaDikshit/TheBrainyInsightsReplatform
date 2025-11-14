@@ -17,7 +17,7 @@ const clients = [
 
 export function TrustedBySection() {
   return (
-    <section className="py-8 bg-white overflow-hidden">
+    <section className="py-16 bg-white overflow-hidden">
       <style dangerouslySetInnerHTML={{
         __html: `
           @keyframes scroll-left {
@@ -36,9 +36,9 @@ export function TrustedBySection() {
           }
         `
       }} />
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold text-gray-900 mb-2">
+      <div className="container mx-auto max-w-7xl px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
             Trusted by Industry Leaders
           </h2>
         </div>

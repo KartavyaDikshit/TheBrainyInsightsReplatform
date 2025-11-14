@@ -7,6 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@tbi/ui";
 import { Input } from "@tbi/ui";
 import { Label } from "@tbi/ui";
 import { Textarea } from "@tbi/ui";
+import { Search } from "lucide-react";
 import { getCategoryIcon } from "./icons/CategoryIcons";
 
 interface CategoryData {
@@ -28,11 +29,21 @@ interface SimpleCategoriesGridProps {
 
 export function SimpleCategoriesGrid({ categories, locale }: SimpleCategoriesGridProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     description: ''
+  });
+
+  // Filter categories based on search
+  const filteredCategories = categories.filter(category => {
+    const matchesSearch = searchTerm === "" || 
+      category.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      category.description.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return matchesSearch;
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,75 +71,88 @@ export function SimpleCategoriesGrid({ categories, locale }: SimpleCategoriesGri
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header */}
-      <div className="text-center mb-12">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Browse Categories</h2>
-        <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Explore comprehensive market research across all major industries and sectors
-        </p>
-      </div>
+    <>
+    <section className="py-16 bg-gray-50">
+      <div className="container mx-auto max-w-7xl px-4">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Browse Categories</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Explore comprehensive market research across all major industries and sectors
+          </p>
+        </div>
 
-      {/* Categories Container */}
-      <div className="p-6 mb-12 border border-black/30 rounded-lg" style={{ backgroundColor: '#303F9F' }}>
-        {/* Categories Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((category) => (
-            <Link
-              key={category.id}
-              href={`/${locale}/categories/${category.slug}`}
-              className="group block bg-white rounded-lg overflow-hidden hover:shadow-md transition-all duration-300 border border-black/20"
-            >
-              <div className="h-32 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center group-hover:from-indigo-200 group-hover:to-purple-200 transition-colors duration-300">
-                <div className="text-center text-indigo-600 group-hover:scale-110 transition-transform duration-300">
-                  {getCategoryIcon(category.title, "w-16 h-16")}
+        {/* Gradient Container wrapping the Categories Grid */}
+        <div className="bg-indigo-600/10 backdrop-blur-sm rounded-2xl p-6 border border-indigo-200/30 shadow-lg mb-12">
+          {/* Search Bar */}
+          <div className="flex items-center gap-3 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <Input
+                type="search"
+                placeholder="Search categories..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 h-10 bg-white border-gray-300"
+              />
+            </div>
+          </div>
+
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredCategories.map((category) => (
+              <Link
+                key={category.id}
+                href={`/${locale}/categories/${category.slug}`}
+                className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow cursor-pointer group"
+              >
+                <div className="mb-3 text-indigo-600">
+                  {getCategoryIcon(category.title, "w-12 h-12")}
                 </div>
-              </div>
-              
-              <div className="p-4">
-                <div className="mb-2">
-                  <h3 className="text-lg font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200">
-                    {category.title}
-                  </h3>
-                </div>
-                
-                <p className="text-gray-600 text-sm mb-3 line-clamp-2 leading-relaxed">
+                <h3 className="font-semibold mb-2 group-hover:text-indigo-600 transition-colors">
+                  {category.title}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
                   {category.description}
                 </p>
-                
-                <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-400 uppercase tracking-wide font-medium">
-                    {category.industry}
-                  </span>
-                  <div className="flex items-center text-indigo-600 text-xs font-medium group-hover:text-indigo-700">
-                    Explore
-                    <svg className="w-3 h-3 ml-1 group-hover:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+              </Link>
+            ))}
+          </div>
 
-      {/* Request Custom Report Button Section */}
-      <div className="mt-12 text-center">
-        <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-8">
-          <h3 className="text-2xl font-semibold text-gray-900 mb-4">Need a Custom Report?</h3>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Can't find what you're looking for? Request a customized market research report tailored to your specific needs.
-          </p>
-          <Button 
-            onClick={() => setIsDialogOpen(true)}
-            size="lg"
-            className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-6 text-lg"
-          >
-            Request Customised Report
-          </Button>
+          {/* No Results Message */}
+          {filteredCategories.length === 0 && (
+            <div className="col-span-full text-center py-12">
+              <p className="text-gray-500">No categories found matching your search</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="mt-2"
+                onClick={() => setSearchTerm("")}
+              >
+                Clear search
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Request Custom Report Button Section */}
+        <div className="mt-12 text-center">
+          <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-lg p-8">
+            <h3 className="text-2xl font-semibold text-gray-900 mb-4">Need a Custom Report?</h3>
+            <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
+              Can't find what you're looking for? Request a customized market research report tailored to your specific needs.
+            </p>
+            <Button 
+              onClick={() => setIsDialogOpen(true)}
+              size="lg"
+              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-6 text-lg"
+            >
+              Request Customised Report
+            </Button>
+          </div>
         </div>
       </div>
+    </section>
 
       {/* Custom Report Dialog */}
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -200,6 +224,6 @@ export function SimpleCategoriesGrid({ categories, locale }: SimpleCategoriesGri
           </form>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }

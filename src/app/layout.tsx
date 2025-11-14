@@ -1,20 +1,13 @@
 // src/app/[locale]/layout.tsx
 import './globals.css';
-import { Inter, Poppins } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 
 const inter = Inter({ 
   subsets: ['latin'], 
-  weight: ['400', '500'],
+  weight: ['400', '500', '800', '900'],
   variable: '--font-inter',
   display: 'swap' 
-});
-
-const poppins = Poppins({ 
-  subsets: ['latin'],
-  weight: ['600', '700'],
-  variable: '--font-poppins',
-  display: 'swap',
 });
 
 function getDir(locale: string) {
@@ -31,7 +24,7 @@ export default function RootLayout(props: { children: ReactNode; params: { local
   // - `suppressHydrationWarning` avoids noise if a client provider tweaks <html> later.
   return (
     <html lang={locale || 'en'} dir={getDir(locale || 'en')} suppressHydrationWarning>
-      <body className={`${inter.variable} ${poppins.variable} font-sans`}>
+      <body className={`${inter.variable} font-sans`}>
         {children}
       </body>
     </html>

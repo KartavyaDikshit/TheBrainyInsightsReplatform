@@ -49,9 +49,9 @@ export function CategoryDetailHero({
         <div className="absolute inset-0 bg-gradient-to-t from-indigo-900/20 via-transparent to-transparent"></div>
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 flex flex-col justify-center h-full">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-full flex flex-col">
         {/* Breadcrumb */}
-        <Breadcrumb className="mb-6">
+        <Breadcrumb className="pt-4 mb-8">
           <BreadcrumbList className="text-indigo-100">
             <BreadcrumbItem>
               <BreadcrumbLink href={`/${locale}`} className="text-indigo-100 hover:text-white">
@@ -71,7 +71,7 @@ export function CategoryDetailHero({
           </BreadcrumbList>
         </Breadcrumb>
 
-        <div className="flex items-start space-x-6">
+        <div className="flex items-start space-x-6 flex-1 pb-6">
           <div className="flex-shrink-0">
             <div className="h-24 w-24 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center text-white">
               {getCategoryIcon(categoryName, "w-16 h-16")}

@@ -1,5 +1,5 @@
-import { Button } from './ui/button';
-import { Card } from './ui/card';
+"use client";
+
 import { getCategoryIcon } from './icons/CategoryIcons';
 
 interface Category {
@@ -16,49 +16,36 @@ interface FeaturedCategoriesGridProps {
 
 export function FeaturedCategoriesGrid({ categories }: FeaturedCategoriesGridProps) {
   return (
-    <section className="py-8 bg-white">
-      <div className="container mx-auto max-w-6xl px-4">
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold mb-1.5">Featured Categories</h2>
-          <p className="text-xs text-gray-600">
-            Explore market research across diverse industries
+    <section className="py-16 bg-gray-50">
+      <div className="container mx-auto max-w-7xl px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Featured Categories</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Explore market intelligence across industries that matter to your business
           </p>
         </div>
         
-        {/* Themed Box with High Transparency and Scrollable Content */}
-        <div className="bg-purple-600/10 backdrop-blur-sm rounded-lg p-3 border border-purple-200/30 shadow">
-          <div className="overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-purple-400 scrollbar-track-purple-100">
-            <div className="flex gap-3 min-w-max lg:grid lg:grid-cols-4 lg:min-w-0">
-              {categories.map((category) => {
-                return (
-                  <Card key={category.id} className="bg-white/90 hover:bg-white hover:shadow-md transition-all w-56 lg:w-auto flex-shrink-0 lg:flex-shrink border border-purple-100 overflow-hidden flex flex-col h-[240px]">
-                    {/* Category Image Section */}
-                    <div className="h-16 flex items-center justify-center text-white" style={{ backgroundColor: '#303F9F' }}>
-                      {getCategoryIcon(category.title, "w-8 h-8")}
-                    </div>
-                    
-                    <div className="p-4 flex flex-col h-full">
-                      <h3 className="text-lg font-bold mb-2 leading-snug line-clamp-2" style={{ color: '#303F9F' }}>
-                        <a href={`/en/categories/${category.slug}`} className="hover:opacity-80 transition-colors">
-                          {category.title}
-                        </a>
-                      </h3>
-                      
-                      {/* Description */}
-                      <p className="text-xs text-gray-600 mb-3 line-clamp-3 leading-relaxed">
-                        {category.description || 'Comprehensive market research and industry analysis.'}
-                      </p>
-                      
-                      <div className="mt-auto">
-                        <Button asChild size="sm" className="w-full text-white h-9 text-xs font-medium" style={{ backgroundColor: '#303F9F' }}>
-                          <a href={`/en/categories/${category.slug}`}>Explore Category</a>
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
+        {/* Gradient Container wrapping the Categories Grid */}
+        <div className="bg-indigo-600/10 backdrop-blur-sm rounded-2xl p-6 border border-indigo-200/30 shadow-lg">
+          {/* Categories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categories.map((category) => (
+              <a
+                key={category.id}
+                href={`/en/categories/${category.slug}`}
+                className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow cursor-pointer group"
+              >
+                <div className="mb-3 text-indigo-600">
+                  {getCategoryIcon(category.title, "w-12 h-12")}
+                </div>
+                <h3 className="font-semibold mb-2 group-hover:text-indigo-600 transition-colors">
+                  {category.title}
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  {category.description || 'Comprehensive market research and industry analysis'}
+                </p>
+              </a>
+            ))}
           </div>
         </div>
       </div>

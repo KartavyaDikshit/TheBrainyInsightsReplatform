@@ -88,4 +88,13 @@ packages/ui/USAGE_EXAMPLE.md
 CLICKABLE_REPORTS_UPDATE.md
 REPORT_INTEGRATION_README.md
 reportsummaryexample.txt
-extraelementsandstuff/documentation/
+extraelementsandstuff/
+
+# Temporary setup and ngrok files
+NGROK_SETUP.md
+RUN_NGROK.md
+QUICK_START.txt
+start-everything.bat
+start-ngrok-pipeline.ps1
+start-ngrok.bat
+VISUAL_REPRESENTATIONS.txt

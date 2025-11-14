@@ -1,7 +1,3 @@
-import { Button } from './ui/button';
-import { Card } from './ui/card';
-import { getCategoryIcon } from './icons/CategoryIcons';
-
 interface Report {
   id: string;
   title: string;
@@ -17,52 +13,109 @@ interface ReportGridProps {
   reports: Report[];
 }
 
+// Helper function to format date
+function formatDate(date: string | Date): string {
+  const d = typeof date === 'string' ? new Date(date) : date;
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+// Helper function to format price
+function formatPrice(price?: number): string {
+  if (!price) return 'Contact for pricing';
+  return `$${price.toLocaleString()}`;
+}
+
 export function ReportGrid({ reports }: ReportGridProps) {
   return (
-    <section className="py-8 bg-gray-50">
-      <div className="container mx-auto max-w-6xl px-4">
-        <div className="text-center mb-6">
-          <h2 className="text-xl font-bold mb-1.5">Featured Reports</h2>
-          <p className="text-xs text-gray-600">
-            Latest research from our network of experts
+    <section className="py-16 bg-white">
+      <div className="container mx-auto max-w-7xl px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Featured Reports</h2>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Access comprehensive market research and analysis from industry experts
           </p>
         </div>
         
-        {/* Themed Box with High Transparency and Scrollable Content */}
-        <div className="bg-indigo-600/10 backdrop-blur-sm rounded-lg p-3 border border-indigo-200/30 shadow">
-          <div className="overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-indigo-400 scrollbar-track-indigo-100">
-            <div className="flex gap-3 min-w-max lg:grid lg:grid-cols-4 lg:min-w-0">
-              {reports.map((report) => {
-                return (
-                  <Card key={report.id} className="bg-white/90 hover:bg-white hover:shadow-md transition-all w-56 lg:w-auto flex-shrink-0 lg:flex-shrink border border-indigo-100 overflow-hidden flex flex-col h-[240px]">
-                    {/* Category Image Section */}
-                    <div className="h-16 flex items-center justify-center text-white" style={{ backgroundColor: '#303F9F' }}>
-                      {getCategoryIcon(report.category_title, "w-8 h-8")}
-                    </div>
-                    
-                    <div className="p-4 flex flex-col h-full">
-                      <h3 className="text-lg font-bold mb-2 leading-snug line-clamp-2" style={{ color: '#303F9F' }}>
-                        <a href={`/reports/${report.slug}`} className="hover:opacity-80 transition-colors">
-                          {report.title}
-                        </a>
-                      </h3>
-                      
-                      {/* Description */}
-                      <p className="text-xs text-gray-600 mb-3 line-clamp-3 leading-relaxed">
-                        {report.description || 'Comprehensive market research and industry analysis.'}
-                      </p>
-                      
-                      <div className="mt-auto">
-                        <Button asChild size="sm" className="w-full text-white h-9 text-xs font-medium" style={{ backgroundColor: '#303F9F' }}>
-                          <a href={`/en/reports/${report.slug}`}>View Report</a>
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
+        {/* Gradient Container wrapping the Reports Grid */}
+        <div className="bg-indigo-600/10 backdrop-blur-sm rounded-2xl p-6 border border-indigo-200/30 shadow-lg">
+          {/* Reports Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {reports.map((report) => (
+              <a
+                key={report.id}
+                href={`/en/reports/${report.slug}`}
+                className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow cursor-pointer group"
+              >
+                {/* Category Badge */}
+                {report.category_title && (
+                  <div className="mb-4">
+                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800">
+                      {report.category_title}
+                    </span>
+                  </div>
+                )}
+                
+                {/* Report Title */}
+                <h3 className="text-lg font-semibold mb-3 line-clamp-2 group-hover:text-indigo-600 transition-colors leading-snug">
+                  {report.title}
+                </h3>
+                
+                {/* Description */}
+                <p className="text-sm text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+                  {report.description || 'Comprehensive market research and industry analysis providing insights into trends, competitive landscape, and future projections.'}
+                </p>
+                
+                {/* Report Metadata */}
+                <div className="flex items-center pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-1 text-xs text-gray-500">
+                    <svg 
+                      xmlns="http://www.w3.org/2000/svg" 
+                      width="16" 
+                      height="16" 
+                      viewBox="0 0 24 24" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      strokeLinecap="round" 
+                      strokeLinejoin="round"
+                      className="w-4 h-4"
+                    >
+                      <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
+                      <line x1="16" x2="16" y1="2" y2="6"></line>
+                      <line x1="8" x2="8" y1="2" y2="6"></line>
+                      <line x1="3" x2="21" y1="10" y2="10"></line>
+                    </svg>
+                    <span>{formatDate(report.published_date)}</span>
+                  </div>
+                </div>
+              </a>
+            ))}
           </div>
+        </div>
+        
+        {/* View All Reports Button */}
+        <div className="text-center mt-12">
+          <a
+            href="/en/reports"
+            className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
+          >
+            View All Reports
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              className="ml-2 w-5 h-5"
+            >
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
         </div>
       </div>
     </section>

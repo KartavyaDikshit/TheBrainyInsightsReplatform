@@ -7,14 +7,62 @@ import { Input } from '@tbi/ui';
 import { Label } from '@tbi/ui';
 import { Textarea } from '@tbi/ui';
 import { Card, CardContent, CardHeader, CardTitle } from '@tbi/ui';
-import { Search, X } from 'lucide-react';
 
-interface Report {
-  id: string;
-  title: string;
-  slug: string;
-  category: string;
-}
+// Country data with codes
+const countries = [
+  { name: "United States", code: "+1" },
+  { name: "United Kingdom", code: "+44" },
+  { name: "Canada", code: "+1" },
+  { name: "Australia", code: "+61" },
+  { name: "India", code: "+91" },
+  { name: "Germany", code: "+49" },
+  { name: "France", code: "+33" },
+  { name: "Italy", code: "+39" },
+  { name: "Spain", code: "+34" },
+  { name: "Netherlands", code: "+31" },
+  { name: "Belgium", code: "+32" },
+  { name: "Switzerland", code: "+41" },
+  { name: "Austria", code: "+43" },
+  { name: "Sweden", code: "+46" },
+  { name: "Norway", code: "+47" },
+  { name: "Denmark", code: "+45" },
+  { name: "Finland", code: "+358" },
+  { name: "Poland", code: "+48" },
+  { name: "Ireland", code: "+353" },
+  { name: "Portugal", code: "+351" },
+  { name: "Greece", code: "+30" },
+  { name: "Czech Republic", code: "+420" },
+  { name: "Hungary", code: "+36" },
+  { name: "Romania", code: "+40" },
+  { name: "China", code: "+86" },
+  { name: "Japan", code: "+81" },
+  { name: "South Korea", code: "+82" },
+  { name: "Singapore", code: "+65" },
+  { name: "Malaysia", code: "+60" },
+  { name: "Thailand", code: "+66" },
+  { name: "Indonesia", code: "+62" },
+  { name: "Philippines", code: "+63" },
+  { name: "Vietnam", code: "+84" },
+  { name: "Hong Kong", code: "+852" },
+  { name: "Taiwan", code: "+886" },
+  { name: "New Zealand", code: "+64" },
+  { name: "Brazil", code: "+55" },
+  { name: "Mexico", code: "+52" },
+  { name: "Argentina", code: "+54" },
+  { name: "Chile", code: "+56" },
+  { name: "Colombia", code: "+57" },
+  { name: "Peru", code: "+51" },
+  { name: "South Africa", code: "+27" },
+  { name: "Egypt", code: "+20" },
+  { name: "Nigeria", code: "+234" },
+  { name: "Kenya", code: "+254" },
+  { name: "United Arab Emirates", code: "+971" },
+  { name: "Saudi Arabia", code: "+966" },
+  { name: "Israel", code: "+972" },
+  { name: "Turkey", code: "+90" },
+  { name: "Russia", code: "+7" },
+  { name: "Ukraine", code: "+380" },
+];
 
 export function ContactForm() {
   const searchParams = useSearchParams();
@@ -22,23 +70,19 @@ export function ContactForm() {
   const reportTitle = searchParams.get('reportTitle');
   const reportSlug = searchParams.get('reportSlug');
   const formRef = useRef<HTMLDivElement>(null);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
+    fullName: '',
+    businessEmail: '',
+    country: '',
+    countryCode: '',
+    phoneNumber: '',
+    company: '',
+    designation: '',
     description: '',
     reportTitle: reportTitle || '',
-    reportSlug: reportSlug || '',
-    additionalReportId: ''
+    reportSlug: reportSlug || ''
   });
-
-  const [reports, setReports] = useState<Report[]>([]);
-  const [filteredReports, setFilteredReports] = useState<Report[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [isLoadingReports, setIsLoadingReports] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
 
   // Get the dynamic heading based on request type
   const getFormHeading = () => {
@@ -58,54 +102,6 @@ export function ContactForm() {
     }
   };
 
-  // Fetch reports on component mount
-  useEffect(() => {
-    const fetchReports = async () => {
-      setIsLoadingReports(true);
-      try {
-        const response = await fetch('/api/reports?locale=en&limit=100');
-        const data = await response.json();
-        if (data.success) {
-          setReports(data.reports);
-          setFilteredReports(data.reports);
-        }
-      } catch (error) {
-        console.error('Error fetching reports:', error);
-      } finally {
-        setIsLoadingReports(false);
-      }
-    };
-    
-    fetchReports();
-  }, []);
-
-  // Filter reports based on search term
-  useEffect(() => {
-    if (searchTerm) {
-      const filtered = reports.filter(report =>
-        report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        report.category?.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredReports(filtered);
-    } else {
-      setFilteredReports(reports);
-    }
-  }, [searchTerm, reports]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
   // Auto-scroll to form when arriving from a button click
   useEffect(() => {
     if (requestType && formRef.current) {
@@ -124,22 +120,11 @@ export function ContactForm() {
     
     try {
       // In a real application, you would send this to your contact API
-      // Include report information in the submission
-      const additionalReport = formData.additionalReportId 
-        ? reports.find(r => r.id === formData.additionalReportId)
-        : null;
-
       const submissionData = {
         ...formData,
         requestType,
         reportTitle: formData.reportTitle,
-        reportSlug: formData.reportSlug,
-        additionalReport: additionalReport ? {
-          id: additionalReport.id,
-          title: additionalReport.title,
-          slug: additionalReport.slug,
-          category: additionalReport.category
-        } : null
+        reportSlug: formData.reportSlug
       };
       
       console.log('Form submission data:', submissionData);
@@ -149,15 +134,17 @@ export function ContactForm() {
       
       // Reset form on success
       setFormData({
-        name: '',
-        email: '',
-        phone: '',
+        fullName: '',
+        businessEmail: '',
+        country: '',
+        countryCode: '',
+        phoneNumber: '',
+        company: '',
+        designation: '',
         description: '',
         reportTitle: reportTitle || '',
-        reportSlug: reportSlug || '',
-        additionalReportId: ''
+        reportSlug: reportSlug || ''
       });
-      setSearchTerm('');
       
       // Show success message
       alert("Thank you for your request! We'll call you back within 24 hours.");
@@ -168,6 +155,15 @@ export function ContactForm() {
 
   const handleChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleCountryChange = (countryName: string) => {
+    const selectedCountry = countries.find(c => c.name === countryName);
+    setFormData(prev => ({
+      ...prev,
+      country: countryName,
+      countryCode: selectedCountry?.code || ''
+    }));
   };
 
   return (
@@ -200,12 +196,12 @@ export function ContactForm() {
                 )}
                 
                 <div className="space-y-2">
-                  <Label htmlFor="name">Name *</Label>
+                  <Label htmlFor="fullName">Full Name *</Label>
                   <Input
-                    id="name"
+                    id="fullName"
                     type="text"
-                    value={formData.name}
-                    onChange={(e) => handleChange('name', e.target.value)}
+                    value={formData.fullName}
+                    onChange={(e) => handleChange('fullName', e.target.value)}
                     required
                     className="bg-white"
                     placeholder="Enter your full name"
@@ -213,28 +209,81 @@ export function ContactForm() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email *</Label>
+                  <Label htmlFor="businessEmail">Business Email *</Label>
                   <Input
-                    id="email"
+                    id="businessEmail"
                     type="email"
-                    value={formData.email}
-                    onChange={(e) => handleChange('email', e.target.value)}
+                    value={formData.businessEmail}
+                    onChange={(e) => handleChange('businessEmail', e.target.value)}
                     required
                     className="bg-white"
-                    placeholder="Enter your email address"
+                    placeholder="Enter your business email address"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number *</Label>
+                  <Label htmlFor="country">Country *</Label>
+                  <select
+                    id="country"
+                    value={formData.country}
+                    onChange={(e) => handleCountryChange(e.target.value)}
+                    required
+                    className="flex h-9 w-full rounded-md border border-input bg-white px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                  >
+                    <option value="">Select a country</option>
+                    {countries.map((country) => (
+                      <option key={country.name} value={country.name}>
+                        {country.name} ({country.code})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phoneNumber">Phone Number *</Label>
+                  <div className="flex gap-2">
+                    <Input
+                      type="text"
+                      value={formData.countryCode}
+                      disabled
+                      className="bg-gray-100 w-20 text-center font-semibold"
+                      placeholder="+00"
+                    />
+                    <Input
+                      id="phoneNumber"
+                      type="tel"
+                      value={formData.phoneNumber}
+                      onChange={(e) => handleChange('phoneNumber', e.target.value)}
+                      required
+                      className="bg-white flex-1"
+                      placeholder="Enter your phone number"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="company">Company *</Label>
                   <Input
-                    id="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => handleChange('phone', e.target.value)}
+                    id="company"
+                    type="text"
+                    value={formData.company}
+                    onChange={(e) => handleChange('company', e.target.value)}
                     required
                     className="bg-white"
-                    placeholder="Enter your phone number"
+                    placeholder="Enter your company name"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="designation">Designation *</Label>
+                  <Input
+                    id="designation"
+                    type="text"
+                    value={formData.designation}
+                    onChange={(e) => handleChange('designation', e.target.value)}
+                    required
+                    className="bg-white"
+                    placeholder="Enter your job title/designation"
                   />
                 </div>
 
@@ -248,108 +297,6 @@ export function ContactForm() {
                     placeholder="Tell us more about your needs..."
                     className="bg-white"
                   />
-                </div>
-
-                {/* Optional: Add Another Report */}
-                <div className="space-y-2" ref={dropdownRef}>
-                  <Label htmlFor="additionalReport">
-                    Additional Report of Interest (Optional)
-                  </Label>
-                  <p className="text-sm text-gray-600 mb-2">
-                    Search and select another report you&apos;re interested in
-                  </p>
-                  
-                  {/* Search Input */}
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                    <Input
-                      id="reportSearch"
-                      type="text"
-                      value={searchTerm}
-                      onChange={(e) => {
-                        setSearchTerm(e.target.value);
-                        setShowDropdown(true);
-                      }}
-                      onFocus={() => setShowDropdown(true)}
-                      placeholder="Search for a report..."
-                      className="bg-white pl-10 pr-10"
-                    />
-                    {searchTerm && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSearchTerm('');
-                          setFormData(prev => ({ ...prev, additionalReportId: '' }));
-                        }}
-                        className="absolute right-3 top-1/2 transform -translate-y-1/2"
-                      >
-                        <X className="h-4 w-4 text-gray-400 hover:text-gray-600" />
-                      </button>
-                    )}
-                  </div>
-
-                  {/* Dropdown Results */}
-                  {showDropdown && filteredReports.length > 0 && (
-                    <div className="relative">
-                      <div className="absolute z-50 w-full mt-1 max-h-60 overflow-auto bg-white border border-gray-300 rounded-md shadow-lg">
-                        {isLoadingReports ? (
-                          <div className="p-4 text-center text-gray-500">
-                            Loading reports...
-                          </div>
-                        ) : filteredReports.length === 0 ? (
-                          <div className="p-4 text-center text-gray-500">
-                            No reports found
-                          </div>
-                        ) : (
-                          filteredReports.slice(0, 10).map((report) => (
-                            <button
-                              key={report.id}
-                              type="button"
-                              onClick={() => {
-                                setFormData(prev => ({ 
-                                  ...prev, 
-                                  additionalReportId: report.id 
-                                }));
-                                setSearchTerm(report.title);
-                                setShowDropdown(false);
-                              }}
-                              className="w-full text-left px-4 py-3 hover:bg-indigo-50 border-b border-gray-100 last:border-b-0 transition-colors"
-                            >
-                              <div className="font-medium text-gray-900">
-                                {report.title}
-                              </div>
-                              {report.category && (
-                                <div className="text-sm text-gray-500 mt-1">
-                                  {report.category}
-                                </div>
-                              )}
-                            </button>
-                          ))
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Selected Report Display */}
-                  {formData.additionalReportId && searchTerm && (
-                    <div className="mt-2 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
-                      <div className="flex-1">
-                        <p className="text-sm text-green-800 font-medium">
-                          Selected: {searchTerm}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSearchTerm('');
-                          setFormData(prev => ({ ...prev, additionalReportId: '' }));
-                        }}
-                        className="ml-2 text-green-600 hover:text-green-800"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  )}
                 </div>
 
                 <Button 

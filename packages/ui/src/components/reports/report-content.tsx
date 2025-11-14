@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, Download, ExternalLink, Star, Building, TrendingUp, BarChart3, Eye, MessageCircle, Settings, Phone, FileText } from "lucide-react";
+import { ChevronDown, ChevronRight, ExternalLink, Star, Building, TrendingUp, BarChart3, Eye, MessageCircle, Settings, Phone, FileText } from "lucide-react";
 
 // Icon lookup for dynamic rendering
 const iconMap = {
@@ -365,12 +365,12 @@ function parseReportSummaryText(text: string): ParsedSection[] {
 // DYNAMIC SECTION RENDERER - Renders parsed text sections
 // ============================================================================
 
-const DynamicSectionRenderer = ({ section }: { section: ParsedSection }) => {
+const DynamicSectionRenderer = ({ section, reportTitle }: { section: ParsedSection; reportTitle?: string }) => {
   // Group headers - just titles without containers
   if (section.type === 'group') {
     return (
       <div className="mt-6 mb-3">
-        <h3 className="font-bold text-2xl text-gray-900 border-b-2 border-indigo-200 pb-2">
+        <h3 className="font-bold text-xl text-gray-900 border-b-2 border-indigo-200 pb-2">
           {section.title}
         </h3>
       </div>
@@ -381,16 +381,56 @@ const DynamicSectionRenderer = ({ section }: { section: ParsedSection }) => {
   if (section.type === 'summary') {
     return (
       <div>
-        <h4 className="font-bold text-xl text-gray-900 mb-3">{section.title}</h4>
+        <h4 className="font-bold text-lg text-gray-900 mb-3">{section.title}</h4>
         <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-100 shadow-sm">
-          <p className="text-gray-700 leading-relaxed">{section.content}</p>
+          <p className="text-base text-gray-700 leading-relaxed">{section.content}</p>
         </div>
       </div>
     );
   }
   
-  // Highlight metrics
+  // Highlight metrics - Parse CAGR and Market Size into separate boxes
   if (section.type === 'highlight') {
+    // Parse CAGR and Market Size from the highlight text
+    const highlightText = section.highlight || '';
+    const cagrMatch = highlightText.match(/CAGR\s*[-–—]\s*([\d.]+%)/i);
+    const marketSizeMatch = highlightText.match(/market size\s*[-–—]?\s*USD\s*([\d.]+\s*billion)/i);
+    
+    const cagrValue = cagrMatch ? cagrMatch[1] : null;
+    const marketSizeValue = marketSizeMatch ? `USD ${marketSizeMatch[1]}` : null;
+    
+    // If we successfully parsed both values, show them in separate boxes
+    if (cagrValue && marketSizeValue) {
+      return (
+        <div className="space-y-4">
+          {reportTitle && (
+            <h3 className="font-bold text-2xl text-gray-900">
+              {reportTitle}
+            </h3>
+          )}
+          <div className="grid md:grid-cols-2 gap-4">
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-5 rounded-lg border border-green-200 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <BarChart3 className="h-5 w-5 text-green-600" />
+              <h5 className="font-semibold text-gray-700 text-sm">CAGR</h5>
+            </div>
+            <p className="text-green-900 font-bold text-2xl">{cagrValue}</p>
+            <p className="text-green-700 text-xs mt-1">Compound Annual Growth Rate</p>
+          </div>
+          <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-lg border border-indigo-200 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <TrendingUp className="h-5 w-5 text-indigo-600" />
+              <h5 className="font-semibold text-gray-700 text-sm">Market Size</h5>
+            </div>
+            <p className="text-indigo-900 font-bold text-2xl">{marketSizeValue}</p>
+            <p className="text-indigo-700 text-xs mt-1">Current Market Valuation</p>
+          </div>
+          </div>
+        </div>
+      );
+    }
+    
+    // Fallback to original single-box display if parsing fails
     return (
       <div className="bg-green-50 p-4 rounded-lg border-l-4 border-green-500">
         <p className="text-green-900 font-semibold text-lg">{section.highlight}</p>
@@ -402,19 +442,19 @@ const DynamicSectionRenderer = ({ section }: { section: ParsedSection }) => {
   if (section.type === 'list') {
     return (
       <div>
-        {section.title && <h5 className="font-bold text-gray-900 mb-3">{section.title}</h5>}
+        {section.title && <h5 className="font-bold text-lg text-gray-900 mb-3">{section.title}</h5>}
         <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
           {section.items && section.items.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
               {section.items.map((item, idx) => (
-                <div key={idx} className="bg-white p-2 rounded border border-slate-200 text-sm flex items-start">
+                <div key={idx} className="bg-white p-2 rounded border border-slate-200 text-base flex items-start">
                   <span className="text-indigo-600 mr-2 flex-shrink-0">•</span>
                   <span>{item}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-gray-700 leading-relaxed">{section.content}</p>
+            <p className="text-base text-gray-700 leading-relaxed">{section.content}</p>
           )}
         </div>
       </div>
@@ -425,12 +465,12 @@ const DynamicSectionRenderer = ({ section }: { section: ParsedSection }) => {
   if (section.type === 'subsection') {
     return (
       <div>
-        <h6 className="font-semibold text-gray-900 mb-2">{section.title}</h6>
+        <h6 className="font-semibold text-base text-gray-900 mb-2">{section.title}</h6>
         <div className="bg-amber-50 p-4 rounded-lg border-l-4 border-amber-400">
           {section.subtitle && (
-            <p className="font-semibold text-amber-900 mb-2">{section.subtitle}</p>
+            <p className="font-semibold text-base text-amber-900 mb-2">{section.subtitle}</p>
           )}
-          <p className="text-gray-700 text-sm leading-relaxed">{section.content}</p>
+          <p className="text-base text-gray-700 leading-relaxed">{section.content}</p>
         </div>
       </div>
     );
@@ -439,18 +479,17 @@ const DynamicSectionRenderer = ({ section }: { section: ParsedSection }) => {
   // Default section style (Recent Development, Regional segmentation, Segment Analysis items)
   return (
     <div>
-      {section.title && <h5 className="font-bold text-gray-900 mb-3">{section.title}</h5>}
+      {section.title && <h5 className="font-bold text-lg text-gray-900 mb-3">{section.title}</h5>}
       <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-        <p className="text-gray-700 leading-relaxed">{section.content}</p>
+        {section.content && <p className="text-base text-gray-700 leading-relaxed">{section.content}</p>}
         {section.items && section.items.length > 0 && (
-          <ul className="mt-3 space-y-2">
+          <div className={section.content ? "mt-4 space-y-3" : "space-y-3"}>
             {section.items.map((item, idx) => (
-              <li key={idx} className="text-gray-700 text-sm flex items-start">
-                <span className="text-indigo-600 mr-2 mt-1 flex-shrink-0">•</span>
-                <span>{item}</span>
-              </li>
+              <p key={idx} className="text-base text-gray-700 leading-relaxed">
+                {item}
+              </p>
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>
@@ -466,14 +505,14 @@ const PreviewSectionRenderer = ({ section }: { section: PreviewSection }) => {
   if (section.type === 'segment' && section.subsections && section.subsections.length > 0) {
     return (
       <div className="bg-slate-50 p-6 rounded-lg border border-slate-200">
-        <h5 className="font-bold text-xl text-gray-900 mb-4">{section.title}</h5>
+        <h5 className="font-bold text-lg text-gray-900 mb-4">{section.title}</h5>
         <div className="grid md:grid-cols-2 gap-4">
           {section.subsections.map((sub, idx) => (
             <div key={idx} className="bg-white p-4 rounded-lg border border-slate-200 shadow-sm">
-              <p className="font-bold text-indigo-900 mb-1">{sub.label}</p>
-              <p className="font-semibold text-indigo-700 text-lg">{sub.value}</p>
+              <p className="font-bold text-base text-indigo-900 mb-1">{sub.label}</p>
+              <p className="font-semibold text-base text-indigo-700">{sub.value}</p>
               {sub.description && (
-                <p className="text-gray-600 text-sm mt-2 leading-relaxed">{sub.description}</p>
+                <p className="text-base text-gray-600 mt-2 leading-relaxed">{sub.description}</p>
               )}
             </div>
           ))}
@@ -486,11 +525,11 @@ const PreviewSectionRenderer = ({ section }: { section: PreviewSection }) => {
   if (section.type === 'summary') {
     return (
       <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-100">
-        <h4 className="font-bold text-xl text-indigo-900 mb-3">{section.title}</h4>
+        <h4 className="font-bold text-lg text-indigo-900 mb-3">{section.title}</h4>
         {section.highlight && (
-          <p className="text-indigo-900 font-semibold mb-3 text-lg">{section.highlight}</p>
+          <p className="text-base text-indigo-900 font-semibold mb-3">{section.highlight}</p>
         )}
-        <p className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: section.content }} />
+        <p className="text-base text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: section.content }} />
       </div>
     );
   }
@@ -498,13 +537,13 @@ const PreviewSectionRenderer = ({ section }: { section: PreviewSection }) => {
   // All other sections use clean, simple styling
   return (
     <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-      <h5 className="font-bold text-gray-900 mb-3">
+      <h5 className="font-bold text-lg text-gray-900 mb-3">
         {section.title}
       </h5>
       {section.highlight && (
-        <p className="font-semibold text-indigo-800 text-base mb-2">{section.highlight}</p>
+        <p className="font-semibold text-base text-indigo-800 mb-2">{section.highlight}</p>
       )}
-      <p className="text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: section.content }} />
+      <p className="text-base text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: section.content }} />
     </div>
   );
 };
@@ -524,6 +563,7 @@ export function ReportContent({
   reportSummaryText // Dynamic text-based preview
 }: ReportContentProps) {
   const [samplesOpen, setSamplesOpen] = useState(false);
+  const [showTableOfContents, setShowTableOfContents] = useState(false);
   
   // Parse the report summary text if provided
   const parsedSections = reportSummaryText ? parseReportSummaryText(reportSummaryText) : [];
@@ -534,151 +574,206 @@ export function ReportContent({
   return (
     <div className="flex-1 space-y-8">
       {/* Report Preview Frame */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl">Report Preview</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="relative bg-white rounded-lg border-2 border-gray-200 shadow-lg">
-            {/* Report Content - Dynamically adjusts to content */}
-            <div className="p-8 space-y-6">
-              {/* Header - Uses dynamic report title */}
-              <div className="flex items-center justify-between border-b border-gray-200 pb-4">
-                <div>
-                  <h3 className="font-bold text-2xl text-indigo-900">
-                    {reportPreview.reportTitle || "Market Report"}
-                  </h3>
-                  <p className="text-sm text-gray-600">Interactive Report Preview</p>
+      <div className="space-y-6">
+              {/* Header - Navigation tabs */}
+              <div className="border-b border-gray-200 pb-4">
+                <div className="flex gap-4 items-center flex-wrap">
+                  <button 
+                    onClick={() => setShowTableOfContents(false)}
+                    className={`font-bold text-2xl transition-colors text-left ${
+                      !showTableOfContents 
+                        ? 'text-indigo-900' 
+                        : 'text-gray-500 hover:text-indigo-700'
+                    }`}
+                  >
+                    Summary
+                  </button>
+                  <button 
+                    onClick={() => setShowTableOfContents(true)}
+                    className={`font-bold text-2xl transition-colors border-l-2 border-gray-300 pl-4 ${
+                      showTableOfContents 
+                        ? 'text-indigo-900' 
+                        : 'text-gray-500 hover:text-indigo-700'
+                    }`}
+                  >
+                    Table of Contents
+                  </button>
                 </div>
-                <Button 
-                  className="bg-indigo-600 hover:bg-indigo-700 text-white"
-                  onClick={onRequestSample}
-                >
-                  <Download className="h-4 w-4 mr-2" />
-                  Download Summary
-                </Button>
               </div>
               
               {/* Dynamic Report Content - Renders from text or structured data */}
               <div className="space-y-6">
-                  {/* If reportSummaryText is provided, use dynamic parser */}
-                  {parsedSections.length > 0 ? (
-                    <>
-                      {parsedSections.map((section) => (
-                        <DynamicSectionRenderer key={section.id} section={section} />
-                      ))}
-                    </>
-                  ) : (
-                    <>
-                      {/* Fallback to structured preview data */}
-                      {reportPreview.sections && reportPreview.sections.length > 0 && (
-                        <>
-                          {/* Render sections dynamically */}
-                          {reportPreview.sections.filter(s => !['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type)).map((section) => (
-                            <PreviewSectionRenderer key={section.id} section={section} />
-                          ))}
-                          
-                          {/* Group Market Dynamics sections if they exist */}
-                          {reportPreview.sections.some(s => ['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type)) && (
-                            <div>
-                              <h5 className="font-bold text-xl text-gray-900 mb-4">Market Dynamics</h5>
-                              <div className="space-y-4">
-                                {reportPreview.sections
-                                  .filter(s => ['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type))
-                                  .map((section) => (
-                                    <PreviewSectionRenderer key={section.id} section={section} />
-                                  ))}
-                              </div>
-                            </div>
-                          )}
-                        </>
-                      )}
-
-                      {/* Key Market Players */}
-                      {reportPreview.keyPlayers && reportPreview.keyPlayers.length > 0 && (
-                        <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
-                          <h5 className="font-bold text-gray-900 mb-3">Key Market Players</h5>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                            {reportPreview.keyPlayers.map((player, idx) => (
-                              <div key={idx} className="bg-white p-2 rounded border border-slate-200 shadow-sm">
-                                • {player}
-                              </div>
+                {!showTableOfContents ? (
+                  <>
+                    {/* Report Summary Content */}
+                    {/* If reportSummaryText is provided, use dynamic parser */}
+                    {parsedSections.length > 0 ? (
+                      <>
+                        {parsedSections.map((section) => (
+                          <DynamicSectionRenderer 
+                            key={section.id} 
+                            section={section} 
+                            reportTitle={reportPreview.reportTitle}
+                          />
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        {/* Fallback to structured preview data */}
+                        {reportPreview.sections && reportPreview.sections.length > 0 && (
+                          <>
+                            {/* Render sections dynamically */}
+                            {reportPreview.sections.filter(s => !['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type)).map((section) => (
+                              <PreviewSectionRenderer key={section.id} section={section} />
                             ))}
-                          </div>
-                        </div>
-                      )}
-                    </>
-                  )}
-                
-                {/* Table of Contents Section */}
-                {tableOfContents && tableOfContents.length > 0 ? (
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
-                    <h5 className="font-bold text-xl text-gray-900 mb-4 flex items-center">
-                      <FileText className="h-5 w-5 mr-2 text-indigo-600" />
-                      Table of Contents
-                    </h5>
-                    <div className="space-y-3">
-                      {tableOfContents.map((item, idx) => (
-                        <div key={idx} className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:border-indigo-300 transition-colors">
-                          <div className="flex items-start gap-3">
-                            <span className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
-                              {item.chapter}
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <h6 className="font-semibold text-gray-900 mb-1">{item.title}</h6>
-                              <p className="text-sm text-gray-600 mb-2">Pages {item.pages}</p>
-                              {item.subsections && item.subsections.length > 0 && (
-                                <ul className="space-y-1 mt-2">
-                                  {item.subsections.map((sub, subIdx) => (
-                                    <li key={subIdx} className="text-sm text-gray-600 flex items-start">
-                                      <span className="text-indigo-600 mr-2 mt-1">•</span>
-                                      <span>{sub}</span>
-                                    </li>
-                                  ))}
-                                </ul>
-                              )}
+                            
+                            {/* Group Market Dynamics sections if they exist */}
+                            {reportPreview.sections.some(s => ['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type)) && (
+                              <div>
+                                <h5 className="font-bold text-lg text-gray-900 mb-4">Market Dynamics</h5>
+                                <div className="space-y-4">
+                                  {reportPreview.sections
+                                    .filter(s => ['driver', 'restraint', 'opportunity', 'challenge'].includes(s.type))
+                                    .map((section) => (
+                                      <PreviewSectionRenderer key={section.id} section={section} />
+                                    ))}
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        )}
+
+                        {/* Key Market Players */}
+                        {reportPreview.keyPlayers && reportPreview.keyPlayers.length > 0 && (
+                          <div className="bg-slate-50 p-5 rounded-lg border border-slate-200">
+                            <h5 className="font-bold text-lg text-gray-900 mb-3">Key Market Players</h5>
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-base">
+                              {reportPreview.keyPlayers.map((player, idx) => (
+                                <div key={idx} className="bg-white p-2 rounded border border-slate-200 shadow-sm">
+                                  • {player}
+                                </div>
+                              ))}
                             </div>
                           </div>
+                        )}
+                      </>
+                    )}
+
+                    {/* Table of Contents Section - Always shown in report summary */}
+                    {tableOfContents && tableOfContents.length > 0 ? (
+                      <div id="table-of-contents-section" className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+                        <h5 className="font-bold text-lg text-gray-900 mb-4 flex items-center">
+                          <FileText className="h-5 w-5 mr-2 text-indigo-600" />
+                          Table of Contents
+                        </h5>
+                        <div className="space-y-3">
+                          {tableOfContents.map((item, idx) => (
+                            <div key={idx} className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:border-indigo-300 transition-colors">
+                              <div className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                                  {item.chapter}
+                                </span>
+                                <div className="flex-1 min-w-0">
+                                  <h6 className="font-semibold text-base text-gray-900 mb-1">{item.title}</h6>
+                                  <p className="text-sm text-gray-600 mb-2">Pages {item.pages}</p>
+                                  {item.subsections && item.subsections.length > 0 && (
+                                    <ul className="space-y-1 mt-2">
+                                      {item.subsections.map((sub, subIdx) => (
+                                        <li key={subIdx} className="text-sm text-gray-600 flex items-start">
+                                          <span className="text-indigo-600 mr-2 mt-1">•</span>
+                                          <span>{sub}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                      </div>
+                    ) : (
+                      <div id="table-of-contents-section" className="bg-gradient-to-br from-amber-50 to-orange-50 p-8 rounded-lg border-2 border-dashed border-amber-300 text-center">
+                        <div className="flex flex-col items-center space-y-4">
+                          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                            <FileText className="h-8 w-8 text-amber-600" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-lg text-gray-900 mb-4">
+                              Get detailed chapter breakdown and page-by-page content structure
+                            </p>
+                          </div>
+                          <Button 
+                            className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold shadow-lg"
+                            onClick={onRequestTableOfContents}
+                          >
+                            <FileText className="h-5 w-5 mr-2" />
+                            Request Table of Contents
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 ) : (
-                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-8 rounded-lg border-2 border-dashed border-amber-300 text-center">
-                    <div className="flex flex-col items-center space-y-4">
-                      <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
-                        <FileText className="h-8 w-8 text-amber-600" />
+                  <>
+                    {/* Table of Contents Section - Shown when TOC button is clicked */}
+                    {tableOfContents && tableOfContents.length > 0 ? (
+                      <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200">
+                        <h5 className="font-bold text-lg text-gray-900 mb-4 flex items-center">
+                          <FileText className="h-5 w-5 mr-2 text-indigo-600" />
+                          Table of Contents
+                        </h5>
+                        <div className="space-y-3">
+                          {tableOfContents.map((item, idx) => (
+                            <div key={idx} className="bg-white p-4 rounded-lg shadow-sm border border-blue-100 hover:border-indigo-300 transition-colors">
+                              <div className="flex items-start gap-3">
+                                <span className="flex-shrink-0 w-8 h-8 bg-indigo-600 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                                  {item.chapter}
+                                </span>
+                                <div className="flex-1 min-w-0">
+                                  <h6 className="font-semibold text-base text-gray-900 mb-1">{item.title}</h6>
+                                  <p className="text-sm text-gray-600 mb-2">Pages {item.pages}</p>
+                                  {item.subsections && item.subsections.length > 0 && (
+                                    <ul className="space-y-1 mt-2">
+                                      {item.subsections.map((sub, subIdx) => (
+                                        <li key={subIdx} className="text-sm text-gray-600 flex items-start">
+                                          <span className="text-indigo-600 mr-2 mt-1">•</span>
+                                          <span>{sub}</span>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-bold text-lg text-gray-900 mb-4">
-                          Get detailed chapter breakdown and page-by-page content structure
-                        </p>
+                    ) : (
+                      <div className="bg-gradient-to-br from-amber-50 to-orange-50 p-8 rounded-lg border-2 border-dashed border-amber-300 text-center">
+                        <div className="flex flex-col items-center space-y-4">
+                          <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                            <FileText className="h-8 w-8 text-amber-600" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-lg text-gray-900 mb-4">
+                              Get detailed chapter breakdown and page-by-page content structure
+                            </p>
+                          </div>
+                          <Button 
+                            className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold shadow-lg"
+                            onClick={onRequestTableOfContents}
+                          >
+                            <FileText className="h-5 w-5 mr-2" />
+                            Request Table of Contents
+                          </Button>
+                        </div>
                       </div>
-                      <Button 
-                        className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-semibold shadow-lg"
-                        onClick={onRequestTableOfContents}
-                      >
-                        <FileText className="h-5 w-5 mr-2" />
-                        Request Table of Contents
-                      </Button>
-                    </div>
-                  </div>
+                    )}
+                  </>
                 )}
               </div>
-            </div>
-          </div>
-          
-          <div className="mt-4 flex justify-center">
-            <Button 
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
-              onClick={onRequestSample}
-            >
-              <FileText className="h-4 w-4 mr-2" />
-              Request Sample Report
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      </div>
 
       {/* Executive Summary with Key Metrics */}
       {(keyMetrics.length > 0 || keyFindings.length > 0 || methodology) && (

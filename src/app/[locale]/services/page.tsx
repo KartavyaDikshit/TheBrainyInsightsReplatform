@@ -101,57 +101,53 @@ export default function ServicesPage({ params }: Props) {
           </div>
         </section>
         
-        {/* Services Section - NO IMAGES */}
-        <div className="bg-gray-50">
-          <section className="py-20 px-4">
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
-                <h2 className="mb-4 text-slate-900 text-3xl md:text-4xl">
-                  Comprehensive Market Research Solutions
-                </h2>
-                <p className="text-slate-600 text-lg max-w-2xl mx-auto">
-                  From strategic consulting to detailed market intelligence, 
-                  we provide the insights you need to make informed business decisions.
-                </p>
-              </div>
-              
-              <div className="rounded-2xl p-8 shadow-lg" style={{ backgroundColor: '#303F9F' }}>
-                <div className="space-y-6">
-                  {services.map((service, index) => (
-                    <div
-                      key={index}
-                      className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 backdrop-blur-sm border border-white/20 shadow-sm hover:shadow-xl transition-all duration-300 rounded-lg p-8"
-                    >
-                      <h3 className="mb-4 text-white text-xl font-semibold">{service.title}</h3>
-                      <p className="text-indigo-100 leading-relaxed">{service.description}</p>
-                    </div>
-                  ))}
+        {/* Services Section */}
+        <section className="py-16 bg-white">
+          <div className="container mx-auto max-w-7xl px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold mb-4">
+                Comprehensive Market Research Solutions
+              </h2>
+              <p className="text-gray-600 max-w-2xl mx-auto">
+                From strategic consulting to detailed market intelligence, 
+                we provide the insights you need to make informed business decisions.
+              </p>
+            </div>
+            
+            <div className="space-y-6">
+              {services.map((service, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl border p-6 hover:shadow-lg transition-shadow"
+                >
+                  <h3 className="text-xl font-semibold mb-3 text-gray-900">{service.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{service.description}</p>
                 </div>
-              </div>
+              ))}
+            </div>
 
-              {/* Action Buttons Section */}
-              <div className="mt-16 bg-white border border-slate-200 rounded-xl p-8 shadow-sm">
-                <div className="text-center">
-                  <h3 className="mb-4 text-slate-900 text-2xl">
-                    Get Expert Guidance
-                  </h3>
-                  <p className="text-slate-600 mb-8 max-w-2xl mx-auto">
-                    Ready to leverage our expertise? Our specialists are here to help you 
-                    with customized research solutions tailored to your needs.
-                  </p>
-                  <div className="flex justify-center">
-                    <Button 
-                      onClick={handleRequestCallback}
-                      className="bg-indigo-600 hover:bg-indigo-700 text-white border-none px-8 py-3 rounded-lg"
-                    >
-                      Request Callback
-                    </Button>
-                  </div>
+            {/* Action Buttons Section */}
+            <div className="mt-16 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-8 border">
+              <div className="text-center">
+                <h3 className="text-2xl font-semibold mb-4 text-gray-900">
+                  Get Expert Guidance
+                </h3>
+                <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
+                  Ready to leverage our expertise? Our specialists are here to help you 
+                  with customized research solutions tailored to your needs.
+                </p>
+                <div className="flex justify-center">
+                  <Button 
+                    onClick={handleRequestCallback}
+                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-3"
+                  >
+                    Request Callback
+                  </Button>
                 </div>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </>

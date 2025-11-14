@@ -31,8 +31,8 @@
   --switch-background: #cbced4;
   --font-weight-body: 400;
   --font-weight-body-medium: 500;
-  --font-weight-heading: 600;
-  --font-weight-heading-bold: 700;
+  --font-weight-heading: 800;
+  --font-weight-heading-bold: 900;
   --ring: oklch(0.708 0 0);
   --radius: 0.625rem;
 }
