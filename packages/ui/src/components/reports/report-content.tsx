@@ -383,7 +383,7 @@ const DynamicSectionRenderer = ({ section, reportTitle }: { section: ParsedSecti
       <div>
         <h4 className="font-bold text-lg text-gray-900 mb-3">{section.title}</h4>
         <div className="bg-gradient-to-r from-indigo-50 to-purple-50 p-6 rounded-lg border border-indigo-100 shadow-sm">
-          <p className="text-base text-gray-700 leading-relaxed">{section.content}</p>
+          <p className="text-base text-gray-700 leading-relaxed text-justify">{section.content}</p>
         </div>
       </div>
     );
@@ -449,12 +449,12 @@ const DynamicSectionRenderer = ({ section, reportTitle }: { section: ParsedSecti
               {section.items.map((item, idx) => (
                 <div key={idx} className="bg-white p-2 rounded border border-slate-200 text-base flex items-start">
                   <span className="text-indigo-600 mr-2 flex-shrink-0">•</span>
-                  <span>{item}</span>
+                  <span className="text-justify">{item}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-base text-gray-700 leading-relaxed">{section.content}</p>
+            <p className="text-base text-gray-700 leading-relaxed text-justify">{section.content}</p>
           )}
         </div>
       </div>
@@ -470,7 +470,7 @@ const DynamicSectionRenderer = ({ section, reportTitle }: { section: ParsedSecti
           {section.subtitle && (
             <p className="font-semibold text-base text-amber-900 mb-2">{section.subtitle}</p>
           )}
-          <p className="text-base text-gray-700 leading-relaxed">{section.content}</p>
+          <p className="text-base text-gray-700 leading-relaxed text-justify">{section.content}</p>
         </div>
       </div>
     );
@@ -481,11 +481,11 @@ const DynamicSectionRenderer = ({ section, reportTitle }: { section: ParsedSecti
     <div>
       {section.title && <h5 className="font-bold text-lg text-gray-900 mb-3">{section.title}</h5>}
       <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-        {section.content && <p className="text-base text-gray-700 leading-relaxed">{section.content}</p>}
+        {section.content && <p className="text-base text-gray-700 leading-relaxed text-justify">{section.content}</p>}
         {section.items && section.items.length > 0 && (
           <div className={section.content ? "mt-4 space-y-3" : "space-y-3"}>
             {section.items.map((item, idx) => (
-              <p key={idx} className="text-base text-gray-700 leading-relaxed">
+              <p key={idx} className="text-base text-gray-700 leading-relaxed text-justify">
                 {item}
               </p>
             ))}
@@ -512,7 +512,7 @@ const PreviewSectionRenderer = ({ section }: { section: PreviewSection }) => {
               <p className="font-bold text-base text-indigo-900 mb-1">{sub.label}</p>
               <p className="font-semibold text-base text-indigo-700">{sub.value}</p>
               {sub.description && (
-                <p className="text-base text-gray-600 mt-2 leading-relaxed">{sub.description}</p>
+                <p className="text-base text-gray-600 mt-2 leading-relaxed text-justify">{sub.description}</p>
               )}
             </div>
           ))}
@@ -529,7 +529,7 @@ const PreviewSectionRenderer = ({ section }: { section: PreviewSection }) => {
         {section.highlight && (
           <p className="text-base text-indigo-900 font-semibold mb-3">{section.highlight}</p>
         )}
-        <p className="text-base text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: section.content }} />
+        <p className="text-base text-gray-700 leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: section.content }} />
       </div>
     );
   }
@@ -543,7 +543,7 @@ const PreviewSectionRenderer = ({ section }: { section: PreviewSection }) => {
       {section.highlight && (
         <p className="font-semibold text-base text-indigo-800 mb-2">{section.highlight}</p>
       )}
-      <p className="text-base text-gray-700 leading-relaxed" dangerouslySetInnerHTML={{ __html: section.content }} />
+      <p className="text-base text-gray-700 leading-relaxed text-justify" dangerouslySetInnerHTML={{ __html: section.content }} />
     </div>
   );
 };
@@ -576,24 +576,24 @@ export function ReportContent({
       {/* Report Preview Frame */}
       <div className="space-y-6">
               {/* Header - Navigation tabs */}
-              <div className="border-b border-gray-200 pb-4">
-                <div className="flex gap-4 items-center flex-wrap">
+              <div className="border-b border-gray-200">
+                <div className="flex gap-2 items-center flex-wrap">
                   <button 
                     onClick={() => setShowTableOfContents(false)}
-                    className={`font-bold text-2xl transition-colors text-left ${
+                    className={`font-bold text-2xl transition-all text-left px-6 py-3 rounded-t-lg relative ${
                       !showTableOfContents 
-                        ? 'text-indigo-900' 
-                        : 'text-gray-500 hover:text-indigo-700'
+                        ? 'text-indigo-900 bg-indigo-50 border-b-4 border-indigo-600' 
+                        : 'text-gray-500 hover:text-indigo-700 hover:bg-gray-50'
                     }`}
                   >
                     Summary
                   </button>
                   <button 
                     onClick={() => setShowTableOfContents(true)}
-                    className={`font-bold text-2xl transition-colors border-l-2 border-gray-300 pl-4 ${
+                    className={`font-bold text-2xl transition-all text-left px-6 py-3 rounded-t-lg relative ${
                       showTableOfContents 
-                        ? 'text-indigo-900' 
-                        : 'text-gray-500 hover:text-indigo-700'
+                        ? 'text-indigo-900 bg-indigo-50 border-b-4 border-indigo-600' 
+                        : 'text-gray-500 hover:text-indigo-700 hover:bg-gray-50'
                     }`}
                   >
                     Table of Contents
@@ -805,7 +805,7 @@ export function ReportContent({
                   {keyFindings.map((finding, index) => (
                     <li key={index} className="flex items-start gap-3">
                       <span className="flex-shrink-0 w-2 h-2 bg-indigo-500 rounded-full mt-2"></span>
-                      <p>{finding}</p>
+                      <p className="text-justify">{finding}</p>
                     </li>
                   ))}
                 </ul>
